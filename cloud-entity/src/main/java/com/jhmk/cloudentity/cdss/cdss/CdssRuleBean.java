@@ -1,4 +1,4 @@
-package com.jhmk.cloudentity.cdss;
+package com.jhmk.cloudentity.cdss.cdss;
 
 import java.util.List;
 import java.util.Map;
@@ -7,15 +7,21 @@ public class CdssRuleBean {
 
 
     private String id;
+    private String doctor_id;
+    private String doctor_name;
+    private String dept_code;
     private String patient_id;
+    private String warnSource;//住院 门诊
     private String visit_id;
     private String pageSource;
     private String quezhen;
+    private String mainIllName;
     private Map<String, String> binganshouye;
     private Map<String, String> physicalSign;
     private List<Map<String, String>> binglizhenduan;
     private List<Map<String, String>> shouyezhenduan;
     private List<Map<String, String>> ruyuanjilu;
+//    private List<Map<String, List<Map<String, String>>>> jianyanbaogao;
     private List<Map<String, String>> jianyanbaogao;
     private List<Map<String, String>> jianchabaogao;
     private List<Map<String, String>> yizhu;
@@ -23,6 +29,14 @@ public class CdssRuleBean {
 
 //    private List<>shouyezhenduan;
 
+
+    public String getDept_code() {
+        return dept_code;
+    }
+
+    public void setDept_code(String dept_code) {
+        this.dept_code = dept_code;
+    }
 
     public String getId() {
         return id;
@@ -127,8 +141,41 @@ public class CdssRuleBean {
         return yizhu;
     }
 
+
+    public String getDoctor_id() {
+        return doctor_id;
+    }
+
+    public void setDoctor_id(String doctor_id) {
+        this.doctor_id = doctor_id;
+    }
+
+    public String getDoctor_name() {
+        return doctor_name;
+    }
+
+    public void setDoctor_name(String doctor_name) {
+        this.doctor_name = doctor_name;
+    }
+
+    public String getWarnSource() {
+        return warnSource;
+    }
+
+    public void setWarnSource(String warnSource) {
+        this.warnSource = warnSource;
+    }
+
     public void setYizhu(List<Map<String, String>> yizhu) {
         this.yizhu = yizhu;
+    }
+
+    public String getMainIllName() {
+        return mainIllName;
+    }
+
+    public void setMainIllName(String mainIllName) {
+        this.mainIllName = mainIllName;
     }
 }
 
