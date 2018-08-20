@@ -1,0 +1,20 @@
+server:
+  port: 9503
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@10.2.2.94:1521:jhemr
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    username: jhemr
+    password: jhemr
+#    password: 123456
+    max-active: 300
+    test-while-idle: true
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+    validation-query: select 'x'
+
+  jpa:
+    generate-ddl: true
+    show-sql: true
+
+
