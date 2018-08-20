@@ -1,4 +1,4 @@
-package com.jhmk.cloudcdss.config;
+package com.jhmk.cloudutil.config;
 
 public class CdssConstans {
     //mongo数据库配置

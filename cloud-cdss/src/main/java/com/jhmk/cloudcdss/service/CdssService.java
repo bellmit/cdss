@@ -3,8 +3,8 @@ package com.jhmk.cloudcdss.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jhmk.cloudcdss.config.CdssConstans;
 import com.jhmk.cloudentity.cdss.CdssRuleBean;
+import com.jhmk.cloudutil.config.CdssConstans;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.jhmk.cloudcdss.cdssutil.MongoUtils.getCollection;
+import static com.jhmk.cloudutil.util.MongoUtils.getCollection;
 
 
 @Service

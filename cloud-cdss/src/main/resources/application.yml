@@ -1,16 +1,17 @@
 server:
-  port: 9501
+  port: 7088
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:9701/eureka/
+      defaultZone: http://192.168.8.20:9701/eureka/
 spring:
-  application:
-    name: cdss
-  data:
-    mongodb:
-#      host: 192.168.8.22
-#      port: 20000
-#      database: BYSYDATA  #前3列作用等同于最后一列
-      uri: mongodb://192.168.8.22:20000/bysyalldept
+  datasource:
+    url: jdbc:mysql://192.168.8.22:3306/yunemr?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
+    username: root
+    password: 123456
+#    password: root
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database: mysql
 
