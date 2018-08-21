@@ -6,12 +6,12 @@ import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmShowLogRepSe
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.FormatRule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.StandardRule;
-import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
-import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudservice.warnService.service.HosptailLogService;
 import com.jhmk.cloudservice.warnService.service.RuleService;
 import com.jhmk.cloudservice.warnService.service.StandardRuleService;
 import com.jhmk.cloudservice.warnService.service.UserModelService;
+import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
+import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.config.UrlConfig;
 import com.jhmk.cloudutil.model.AtResponse;
@@ -60,6 +60,8 @@ public class StandardRuleController extends BaseController {
     UserModelService userModelService;
     @Autowired
     UrlConfig urlConfig;
+    //    @Autowired
+//    OriRuleRepService oriRuleRepService;
     @Autowired
     CdrService cdrService;
     @Autowired
@@ -155,9 +157,7 @@ public class StandardRuleController extends BaseController {
         //标准规则id
         JSONObject jsonObject = JSONObject.parseObject(map);
         String id = jsonObject.getString("id");
-        String field = jsonObject.getString("field");
-
-
+        String field = jsonObject.getString("field").replaceAll("，", ",").trim();
         String standardName = jsonObject.getString("standardName");
         //新加字段
         //查询规则实体
@@ -170,9 +170,10 @@ public class StandardRuleController extends BaseController {
             // 删除 此标准规则下所有字段 并替换新加字段  然后互相交叉添加子规则
             for (int i = 0, x = basicStandardRuleList.size(); i < x; i++) {
                 List<StandardRule> standardRuleList = basicStandardRuleList.get(i);
-                for (int j = 0, y = basicStandardRuleList.size(); j < y; j++) {
+                for (int j = 0, y = standardRuleList.size(); j < y; j++) {
                     StandardRule standardRule = standardRuleList.get(j);
                     if (standardName.equals(standardRule.getStandardValue())) {
+                        basicStandardRuleList.get(i).get(j).setAllValues(null);
                         basicStandardRuleList.get(i).get(j).setAllValues(Arrays.asList(field.split(",")));
                     }
                 }
@@ -186,11 +187,12 @@ public class StandardRuleController extends BaseController {
                     ruleService.addChildRuleByCondition(s, formatRule);
                 }
             }
+            resp.setResponseCode(ResponseCode.OK);
             //修改标准规则的子规则条件字段
         } else {
             resp.setResponseCode(ResponseCode.UPDATERULEERROR1);
-            wirte(response, resp);
         }
+        wirte(response, resp);
 
     }
 

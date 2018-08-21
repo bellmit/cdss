@@ -8,8 +8,8 @@
 Project_HOME=$(echo `pwd` | sed 's/\/sbin//')
 echo "$Project_HOME"
 #LOG_DIR=$Project_HOME/logs
-#LOG_DIR=/home/dev/waring/mongoPro/logs
-LOG_DIR=/data/1/CDSS/mongoPro/logs
+LOG_DIR=/home/dev/waring/mongoPro/logs
+#LOG_DIR=/data/1/CDSS/mongoPro/logs
 APPLICATION_MAIN=com.jhmk.cloudcdss.CdssApplication
 CLASSPATH=$Project_HOME/classes
 
