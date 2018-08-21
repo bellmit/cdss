@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"com.jhmk"})
+@ComponentScan(basePackages = {"com.jhmk.cloudentity"})
 public class CloudEntityApplication {
 
 	public static void main(String[] args) {

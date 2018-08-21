@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.jhmk.cloudutil.util.MongoUtils.getCollection;
+import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
 
 
 /**

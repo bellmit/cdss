@@ -24,14 +24,14 @@ public class CdssConstans {
     public static final String DATASOURCE = "bysyalldata";
     public static final String HOST = "192.168.8.22";
     public static final String URL = "http://192.168.8.22:8111/warn/rule/ruleMatch";
-    public static final String URLFORRULE = "http://localhost:8111/warn/match/ruleMatch";
+//    public static final String URLFORRULE = "http://localhost:8111/warn/match/ruleMatch";
 
     public static final String CDSSDATASOURCE = "cdss";
     public static final String DECISION_RULE = "decision_rule";
 
 //        public static final String URL = "http://localhost:8111/warn/rule/ruleMatch";
     //    public static final String URLFORRULE = "http://192.168.132:8111/warn/match/ruleMatch";
-//    public static final String URLFORRULE = "http://192.168.8.22:8111/warn/match/ruleMatch";
+    public static final String URLFORRULE = "http://192.168.8.22:8111/warn/match/ruleMatch";
 
 
 

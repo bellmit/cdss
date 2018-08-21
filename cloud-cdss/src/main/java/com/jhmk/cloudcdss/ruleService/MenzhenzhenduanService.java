@@ -2,7 +2,6 @@ package com.jhmk.cloudcdss.ruleService;
 
 import com.jhmk.cloudentity.cdss.bean.Misdiagnosis;
 import com.jhmk.cloudutil.config.CdssConstans;
-import com.jhmk.cloudutil.util.MongoUtils;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.jhmk.cloudutil.util.MongoUtils.getCollection;
+import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
 
 
 /**

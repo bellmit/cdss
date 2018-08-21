@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.jhmk.cloudutil.util.MongoUtils.getCollection;
+import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
 
 
 /**
@@ -58,8 +58,8 @@ public class BasyService {
         Set<String> names = new HashSet<>();
         List<Document> countPatientId = Arrays.asList(
                 new Document("$project", new Document("patient_id", 1).append("_id", 1).append("visit_id", 1).append("binganshouye", 1))
-//                , new Document("$skip", CdssConstans.BEGINCOUNT),
-//                new Document("$limit", CdssConstans.ENDCOUNT)
+                , new Document("$skip", CdssConstans.BEGINCOUNT),
+                new Document("$limit", CdssConstans.ENDCOUNT)
         );
         AggregateIterable<Document> output = binganshouye.aggregate(countPatientId);
         for (Document document : output) {

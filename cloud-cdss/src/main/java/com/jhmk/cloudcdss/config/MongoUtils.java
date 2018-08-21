@@ -1,10 +1,9 @@
-package com.jhmk.cloudutil.util;
+package com.jhmk.cloudcdss.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudutil.config.CdssConstans;
 import com.mongodb.*;
-import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.*;
 import com.mongodb.client.model.*;
 import com.mongodb.client.result.DeleteResult;
@@ -34,7 +33,7 @@ public class MongoUtils {
     		options.threadsAllowedToBlockForConnectionMultiplier(10);
     		options.writeConcern(WriteConcern.SAFE);
     		options.build();
-            MongoClientOptions myOptions = options.build();       
+            MongoClientOptions myOptions = options.build();
             try {
                 //数据库连接实例
 
@@ -158,7 +157,7 @@ public class MongoUtils {
 
 	}
 	/**
-	 * 
+	 *
 	 * @param coll document coll
 	 * @param map 查询条件map
 	 * @param fields 指定返回字段
@@ -418,32 +417,32 @@ public class MongoUtils {
 		long sum=0;
 		String lastId="";
 		try {
-	        FindIterable<Document> limit = null;  
-	        limit = coll.find().sort(new BasicDBObject("_id", 1)).limit(size);  
+	        FindIterable<Document> limit = null;
+	        limit = coll.find().sort(new BasicDBObject("_id", 1)).limit(size);
 	        for(Document doc:limit) {
 	        	String id = doc.getString("_id");
 //	        	FileUtils.writeFileByLine(file,id+System.lineSeparator()); todo 注释掉了
 
 	        	sum++;
 	        	lastId=id;
-	        } 
+	        }
 	        end = System.currentTimeMillis();
 	        System.out.println("当前位置： "+sum+"耗时"+(end-start)/1000);
 	        for(;sum<allCount;) {
-		        limit = coll  
-	                    .find(new BasicDBObject("_id", new BasicDBObject(  
-	                            QueryOperators.GT, lastId)))  
-	                    .sort(new BasicDBObject("_id", 1)).limit(size); 
+		        limit = coll
+	                    .find(new BasicDBObject("_id", new BasicDBObject(
+	                            QueryOperators.GT, lastId)))
+	                    .sort(new BasicDBObject("_id", 1)).limit(size);
 		        for(Document doc:limit) {
 		        	String id = doc.getString("_id");
 //		        	FileUtils.writeFileByLine(file,id+System.lineSeparator());
 		        	sum++;
 		        	lastId=id;
-		        } 
+		        }
 		        end = System.currentTimeMillis();
 		        System.out.println("当前位置： "+sum+"耗时"+(end-start)/1000);
 	        }
- 
+
 			return result;
 		} catch (Exception e) {
 			String msg = "["+collName+"]"+" not exist!";
@@ -535,7 +534,7 @@ public class MongoUtils {
 		}
 		return null;
 	}
-	
+
 	public static JSONObject findJsonResultByid(String collName, String _id, String field) {
 		MongoCollection<Document> coll = mongoClient.getDatabase(CdssConstans.DATASOURCE).getCollection(collName);
 		JSONObject result = null;

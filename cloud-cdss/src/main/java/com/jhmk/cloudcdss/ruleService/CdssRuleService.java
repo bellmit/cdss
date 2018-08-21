@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.jhmk.cloudutil.util.MongoUtils.getCollection;
+import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
 
 
 /**

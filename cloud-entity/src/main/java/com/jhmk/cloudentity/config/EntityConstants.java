@@ -3,7 +3,6 @@ package com.jhmk.cloudentity.config;
 import org.springframework.stereotype.Component;
 
 
-@Component
 public class EntityConstants {
 
     public static final String USER_STATUS = "0";//用户状态 0-正常 1-异常

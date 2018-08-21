@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
 import static com.jhmk.cloudcdss.service.InitService.liiNames;
-import static com.jhmk.cloudutil.util.MongoUtils.getCollection;
 
 
 /**
@@ -207,8 +207,8 @@ public class CdssService {
         List<Document> countPatientId = Arrays.asList(
                 new Document("$unwind", "$shouyezhenduan"),
                 new Document("$project", new Document("_id", 1).append("patient_id", 1).append("visit_id", 1).append("shouyezhenduan", 1))
-//                , new Document("$skip", CdssConstans.BEGINCOUNT),
-//                new Document("$limit", CdssConstans.ENDCOUNT)
+                , new Document("$skip", CdssConstans.BEGINCOUNT),
+                new Document("$limit", CdssConstans.ENDCOUNT)
 //                new Document("$limit", 500)
         );
         AggregateIterable<Document> binli = shouyezhenduan.aggregate(countPatientId);
