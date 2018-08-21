@@ -1,4 +1,4 @@
-package com.jhmk.cloudentity.cdss.cdss;
+package com.jhmk.cloudentity.cdss.pojo;
 
 import java.util.List;
 import java.util.Map;

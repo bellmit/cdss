@@ -3,7 +3,7 @@ package com.jhmk.cloudcdss.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jhmk.cloudentity.cdss.cdss.CdssRuleBean;
+import com.jhmk.cloudentity.cdss.pojo.CdssRuleBean;
 import com.jhmk.cloudutil.config.CdssConstans;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;

@@ -43,7 +43,7 @@ public class CdssConstans {
 
 
     public static final int BEGINCOUNT = 0;
-    public static final int ENDCOUNT = 40000;
+    public static final int ENDCOUNT = 500;
 
 
     static final public String DEVURL="/data/1/CDSS/data/";

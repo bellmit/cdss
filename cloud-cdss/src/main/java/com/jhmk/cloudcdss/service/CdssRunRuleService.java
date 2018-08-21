@@ -1,6 +1,6 @@
 package com.jhmk.cloudcdss.service;
 
-import com.jhmk.cloudentity.cdss.cdss.CdssRunRuleBean;
+import com.jhmk.cloudentity.cdss.pojo.CdssRunRuleBean;
 import com.jhmk.cloudutil.config.CdssConstans;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;

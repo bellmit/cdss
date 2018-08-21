@@ -7,10 +7,10 @@ import com.jhmk.cloudcdss.service.CdssService;
 import com.jhmk.cloudcdss.service.TestService;
 import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.cdss.bean.MenZhen;
-import com.jhmk.cloudentity.cdss.cdss.CdssRuleBean;
-import com.jhmk.cloudentity.cdss.cdss.CdssRunRuleBean;
+import com.jhmk.cloudentity.cdss.pojo.CdssRuleBean;
+import com.jhmk.cloudentity.cdss.pojo.CdssRunRuleBean;
 import com.jhmk.cloudentity.cdss.pojo.repository.SysDiseasesRepository;
-import com.jhmk.cloudentity.cdss.pojo.repository.SysHospitalDeptRepository;
+import com.jhmk.cloudentity.cdss.pojo.repository.service.SysDiseasesRepService;
 import com.jhmk.cloudutil.config.CdssConstans;
 import com.jhmk.cloudutil.util.StringUtil;
 import com.jhmk.cloudutil.util.ThreadUtil;
@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManagerFactory;
 
 import static com.jhmk.cloudcdss.service.InitService.caseList;
 import static com.jhmk.cloudcdss.service.InitService.diseaseNames;
@@ -43,12 +44,11 @@ import static com.jhmk.cloudcdss.service.InitService.diseaseNames;
 public class CdssController extends BaseController {
     Logger logger = LoggerFactory.getLogger(CdssController.class);
 
-    @Autowired
-    SysDiseasesRepository sysDiseasesRepository;
-    @Autowired
-    SysHospitalDeptRepository sysHospitalDeptRepository;
-    @Autowired
 
+
+    @Autowired
+    SysDiseasesRepService sysDiseasesRepository;
+    @Autowired
 
     CdssService cdssService;
     @Autowired

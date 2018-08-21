@@ -7,10 +7,11 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@ComponentScan(basePackages = {"com.jhmk.cloudutil","com.jhmk.cloudcdss","com.jhmk.cloudentity"})
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"com.jhmk.cloudentity.cdss", "com.jhmk.cloudcdss"})
 public class CdssApplication {
 
     public static void main(String[] args) {
