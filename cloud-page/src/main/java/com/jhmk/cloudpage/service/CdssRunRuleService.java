@@ -1,4 +1,4 @@
-package com.jhmk.cloudcdss.service;
+package com.jhmk.cloudpage.service;
 
 import com.jhmk.cloudentity.cdss.pojo.CdssRunRuleBean;
 import com.jhmk.cloudutil.config.CdssConstans;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
+import static com.jhmk.cloudpage.config.MongoUtils.getCollection;
 
 
 /**

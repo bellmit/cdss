@@ -1,4 +1,4 @@
-package com.jhmk.cloudcdss.ruleService;
+package com.jhmk.cloudpage.ruleService;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
+import static com.jhmk.cloudpage.config.MongoUtils.getCollection;
 
 
 /**

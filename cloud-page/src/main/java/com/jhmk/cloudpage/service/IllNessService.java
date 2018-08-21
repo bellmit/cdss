@@ -1,4 +1,4 @@
-package com.jhmk.cloudcdss.service;//package jhmk.clinic.cms.service;
+package com.jhmk.cloudpage.service;//package jhmk.clinic.cms.service;
 //
 ///**
 // * @author ziyu.zhou

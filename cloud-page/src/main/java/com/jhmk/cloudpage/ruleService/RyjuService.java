@@ -1,4 +1,4 @@
-package com.jhmk.cloudcdss.ruleService;
+package com.jhmk.cloudpage.ruleService;
 
 import com.jhmk.cloudentity.cdss.bean.Misdiagnosis;
 import com.jhmk.cloudutil.config.CdssConstans;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
+import static com.jhmk.cloudpage.config.MongoUtils.getCollection;
 
 
 /**

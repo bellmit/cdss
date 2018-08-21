@@ -1,6 +1,6 @@
-package com.jhmk.cloudcdss.service;
+package com.jhmk.cloudpage.service;
 
-import com.jhmk.cloudcdss.config.MongoUtils;
+import com.jhmk.cloudpage.config.MongoUtils;
 import com.jhmk.cloudentity.cdss.bean.MenZhen;
 import com.jhmk.cloudutil.config.CdssConstans;
 import com.mongodb.client.AggregateIterable;
@@ -14,7 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-import static com.jhmk.cloudcdss.config.MongoUtils.getCollection;
+import static com.jhmk.cloudpage.config.MongoUtils.getCollection;
 
 
 /**

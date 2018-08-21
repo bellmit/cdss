@@ -1,4 +1,4 @@
-package com.jhmk.cloudcdss;
+package com.jhmk.cloudpage;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

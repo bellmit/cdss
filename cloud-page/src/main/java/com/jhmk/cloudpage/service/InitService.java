@@ -1,9 +1,8 @@
-package com.jhmk.cloudcdss.service;
+package com.jhmk.cloudpage.service;
 
-import com.jhmk.cloudcdss.ruleService.BasyService;
+import com.jhmk.cloudpage.ruleService.BasyService;
 import com.jhmk.cloudentity.cdss.pojo.CdssRuleBean;
 import com.jhmk.cloudutil.util.MyThreadPoolManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.jhmk.cloudcdss.config;
+package com.jhmk.cloudpage.config;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
