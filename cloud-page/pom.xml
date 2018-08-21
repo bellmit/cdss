@@ -9,10 +9,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cloud-cdss</artifactId>
+    <artifactId>cloud-page</artifactId>
     <packaging>pom</packaging>
-    <name>cdss系统服务</name>
-    <description>cdss系统服务</description>
+    <name>cdss小页面服务</name>
+    <description>cdss小页面服务</description>
 
 
     <dependencyManagement>

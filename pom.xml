@@ -32,6 +32,7 @@
         <module>cloud-warn</module>
         <module>cloud-service</module>
         <module>cloud-util</module>
+        <module>cloud-page</module>
     </modules>
 
     <dependencies>
