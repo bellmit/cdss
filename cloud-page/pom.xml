@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>cloud-page</artifactId>
-    <packaging>pom</packaging>
     <name>cdss小页面服务</name>
     <description>cdss小页面服务</description>
 
