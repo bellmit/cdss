@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@ComponentScan(basePackages = {"com.jhmk.cloudentity","com.jhmk.cloudservice","com.jhmk.cloudutil"})
+@ComponentScan(basePackages = {"com.jhmk.cloudentity","com.jhmk.cloudservice","com.jhmk.cloudutil","com.jhmk.warn"})
 @EnableTransactionManagement
 public class WarnApplication {
 
