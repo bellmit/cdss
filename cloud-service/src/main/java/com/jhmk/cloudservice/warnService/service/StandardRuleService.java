@@ -224,8 +224,11 @@ public class StandardRuleService {
                         int i1 = and.indexOf(")");
                         String startStr = and.substring(0, i1);
                         String endStr = and.substring(i1);
-                        stringBuffer.append(startStr).append(endStr);
-
+                        stringBuffer.append(startStr);
+                        for (String name : childNames) {
+                            stringBuffer.append("/").append(name);
+                        }
+                        stringBuffer.append(endStr);
                         sb.append(stringBuffer);
                     } else {
                         sb.append(and);
