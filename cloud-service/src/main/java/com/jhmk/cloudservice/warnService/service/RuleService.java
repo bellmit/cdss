@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-
 import java.util.*;
 
 @Service
@@ -281,6 +280,7 @@ public class RuleService {
         //todo 获取疾病同义词，用于跑医院数据到数据库
 //        Rule sameZhenDuanList = getSameZhenDuanList(fill);
         String o = JSONObject.toJSONString(fill);
+        System.out.println(o);
         Object parse = JSONObject.parse(o);
         String data = "";
 //        System.out.println(parse.toString());
@@ -1074,13 +1074,15 @@ public class RuleService {
 
                 result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getTipList, o, String.class);
                 if (!symbol.equals(result)) {
+
+                    List<SmShowLog> existLog = smShowLogRepService.findExistLog(doctor_id, patient_id, visit_id);
+                    for (SmShowLog log : existLog) {
+                        log.setRuleStatus(3);
+                        smShowLogRepService.save(log);
+                    }
+
                     JSONArray array = JSONArray.parseArray(result);
                     Iterator<Object> iterator = array.iterator();
-                    List<SmShowLog> existLog = smShowLogRepService.findExistLog(doctor_id, patient_id, visit_id);
-                    for (SmShowLog smShowLog1 : existLog) {
-                        smShowLog1.setRuleStatus(1);
-                        smShowLogRepService.save(smShowLog1);
-                    }
                     while (iterator.hasNext()) {
                         SmShowLog smShowLog = new SmShowLog();
                         JSONObject next = (JSONObject) iterator.next();
@@ -1089,7 +1091,7 @@ public class RuleService {
                         String stat = next.getString("stat");
 
                         SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
-                        if (isExist != null) {
+                        if (isExist != null && 3 == isExist.getRuleStatus()) {
                             isExist.setRuleStatus(0);
                             smShowLogRepService.save(isExist);
                             continue;
@@ -1321,7 +1323,7 @@ public class RuleService {
         childFormat.setCreateTime(format);
         childFormat.setSubmitDate(format);
         childFormat.setParentId(ruleId);
-
+        childFormat.setIsStandard("false");
         Object o = JSONObject.toJSON(childFormat);
         String forObject = null;
         try {
