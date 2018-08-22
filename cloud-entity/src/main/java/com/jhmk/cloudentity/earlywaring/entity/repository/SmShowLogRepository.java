@@ -1,5 +1,6 @@
 package com.jhmk.cloudentity.earlywaring.entity.repository;
 
+import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,5 +24,13 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
 
     SmShowLog findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(String doctorId, String patientId, String itemName, String type, String stat, String visitId);
 
-
+    /**
+     * 查询推荐检查 此次状态为0的logs数据
+     * @param doctorId
+     * @param patientId
+     * @param visitId
+     * @return
+     */
+    @Query("select  s from SmShowLog s where s.doctorId=?1 and s.patientId=?2 and s.visitId=?3 and s.type<>'rulematch' and s.ruleStatus=0")
+    List<SmShowLog> findExistLog(String doctorId, String patientId, String visitId);
 }

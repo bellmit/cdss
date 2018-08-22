@@ -1076,6 +1076,11 @@ public class RuleService {
                 if (!symbol.equals(result)) {
                     JSONArray array = JSONArray.parseArray(result);
                     Iterator<Object> iterator = array.iterator();
+                    List<SmShowLog> existLog = smShowLogRepService.findExistLog(doctor_id, patient_id, visit_id);
+                    for (SmShowLog smShowLog1 : existLog) {
+                        smShowLog1.setRuleStatus(1);
+                        smShowLogRepService.save(smShowLog1);
+                    }
                     while (iterator.hasNext()) {
                         SmShowLog smShowLog = new SmShowLog();
                         JSONObject next = (JSONObject) iterator.next();
@@ -1085,7 +1090,7 @@ public class RuleService {
 
                         SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
                         if (isExist != null) {
-                            isExist.setRuleStatus(1);
+                            isExist.setRuleStatus(0);
                             smShowLogRepService.save(isExist);
                             continue;
                         }

@@ -75,8 +75,8 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
 
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public SmShowLog findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(String doctorId, String patientId, String ruleId,String visitId) {
-        return repository.findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(doctorId, patientId, ruleId,visitId);
+    public SmShowLog findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(String doctorId, String patientId, String ruleId, String visitId) {
+        return repository.findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(doctorId, patientId, ruleId, visitId);
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -85,8 +85,8 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public List<SmShowLog> findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(String doctorId, String patientId,String visitId) {
-        return repository.findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(doctorId, patientId,visitId);
+    public List<SmShowLog> findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(String doctorId, String patientId, String visitId) {
+        return repository.findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(doctorId, patientId, visitId);
     }
 
 
@@ -96,8 +96,13 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public SmShowLog findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(String doctorId, String patientId, String itemName, String type, String stat,String visitId) {
-        return repository.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctorId, patientId, itemName, type, stat,visitId);
+    public SmShowLog findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(String doctorId, String patientId, String itemName, String type, String stat, String visitId) {
+        return repository.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctorId, patientId, itemName, type, stat, visitId);
+    }
+
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public List<SmShowLog> findExistLog(String doctorId, String patientId, String visitId) {
+        return repository.findExistLog(doctorId, patientId, visitId);
     }
 
 }
