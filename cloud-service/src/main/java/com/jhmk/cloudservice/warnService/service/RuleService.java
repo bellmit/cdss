@@ -1085,6 +1085,8 @@ public class RuleService {
 
                         SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
                         if (isExist != null) {
+                            isExist.setRuleStatus(1);
+                            smShowLogRepService.save(isExist);
                             continue;
                         }
                         smShowLog.setItemName(itemName);
