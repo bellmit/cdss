@@ -823,7 +823,11 @@ public class RuleService {
                 if (names.contains("@")) {
                     String[] split = names.split("@");
                     name = split[0];
-                    first_order = Integer.valueOf(split[1]);
+                    try {
+                        first_order = Integer.valueOf(split[1]);
+                    } catch (Exception e) {
+                        first_order=1;
+                    }
                 } else {
                     name = names;
                 }
