@@ -2,6 +2,7 @@ package com.jhmk.cloudservice.cdssPageService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudentity.cdss.page.DrugTendency;
 import com.jhmk.cloudutil.config.CdssPageConstants;
 import com.jhmk.cloudutil.util.MapUtil;
 import org.slf4j.Logger;
@@ -148,127 +149,57 @@ public class CdssPageService {
      * @param
      * @return
      */
-    public Map<String, Map<String, Integer>> getSecondLevelCount(Map<String, Map<String, Integer>> stringMapMap, Map<String, Set<String>> nextLevelNamesAndValue) {
-        Map<String, Map<String, Integer>> resultMap = new HashMap<>();
-        //遍历时间轴
-        for (Map.Entry<String, Map<String, Integer>> entry : stringMapMap.entrySet()) {
-
-            Map<String, Integer> tempMap = new HashMap<>();
-            //药品2级名
-            String key = entry.getKey();
-            //药品成分名+数量
-            Map<String, Integer> value = entry.getValue();
-            //遍历每年药品名
-            for (Map.Entry<String, Integer> childEntry : value.entrySet()) {
-                //药品成分名
-                String childEntryKey = childEntry.getKey();
-                //数量
-                Integer childEntryValue = childEntry.getValue();
-                //遍历药品大类 子类名
-                for (Map.Entry<String, Set<String>> levelDrugName : nextLevelNamesAndValue.entrySet()) {
-                    String levelDrugNameKey = levelDrugName.getKey();
-                    Set<String> levelDrugNameValue = levelDrugName.getValue();
-                    if (levelDrugNameValue.contains(childEntryKey)) {
-                        if (tempMap.containsKey(levelDrugNameKey)) {
-                            tempMap.put(levelDrugNameKey, tempMap.get(levelDrugNameKey) + childEntryValue);
+    public List<DrugTendency> getSecondLevelCount(Map<String, Map<String, Integer>> stringMapMap, Map<String, Set<String>> nextLevelNamesAndValue) {
+        List<DrugTendency> list = new LinkedList<>();
+        // y药品
+        for (Map.Entry<String, Set<String>> levelDrugName : nextLevelNamesAndValue.entrySet()) {
+            String drugName = levelDrugName.getKey();
+            Set<String> drugValueList = levelDrugName.getValue();
+            DrugTendency tendency = new DrugTendency();
+            tendency.setName(drugName);
+            Map<String, Integer> drugMap = new HashMap<>();
+            Map<String, Map<String, Integer>> drugCountMap = new HashMap<>();
+            for (Map.Entry<String, Map<String, Integer>> entry : stringMapMap.entrySet()) {
+                //时间
+                String time = entry.getKey();
+                //疾病名 ：数量
+                Map<String, Integer> drugAndCount = entry.getValue();
+                for (Map.Entry<String, Integer> childEntry : drugAndCount.entrySet()) {
+                    //药品成分名
+                    String childEntryKey = childEntry.getKey();
+                    //数量
+                    Integer childEntryValue = childEntry.getValue();
+                    if (drugValueList.contains(childEntryKey)) {
+                        if (drugMap.containsKey(time)) {
+                            drugMap.put(time, drugMap.get(time) + childEntryValue);
                         } else {
-                            tempMap.put(levelDrugNameKey, childEntryValue);
+                            drugMap.put(time, childEntryValue);
                         }
+                        if (drugCountMap.containsKey(childEntryKey)) {
+                            Map<String, Integer> map = drugCountMap.get(childEntryKey);
+                            map.put(time, childEntryValue);
+                            drugCountMap.put(childEntryKey, map);
+                        } else {
+                            Map<String, Integer> tempMap = new HashMap<>();
+                            tempMap.put(time, childEntryValue);
+                            drugCountMap.put(childEntryKey, tempMap);
+                        }
+
                     } else {
-                        tempMap.put(levelDrugNameKey, tempMap.get(levelDrugNameKey) == null ? 0 : tempMap.get(levelDrugNameKey));
+                        drugMap.put(time, drugMap.get(time) == null ? 0 : drugMap.get(time));
                     }
+
                 }
             }
-            resultMap.put(key, tempMap);
+            tendency.setDrugMap(drugMap);
+            tendency.setDrugCount(drugCountMap);
+
+            list.add(tendency);
         }
-        return resultMap;
-    }
 
-    /**
-     * 药品出现次数
-     *
-     * @param stringMapMap           条件集合
-     * @param nextLevelNamesAndValue 下一级 药品类别名 以及成分名集合
-     * @return
-     */
-    public Map<String, Map<String, Map<String, Integer>>> getDurgCount(Map<String, Map<String, Integer>> stringMapMap, Map<String, Set<String>> nextLevelNamesAndValue) {
-        Map<String, Map<String, Map<String, Integer>>> resultMap = new HashMap<>();
-        //遍历时间轴
-        for (Map.Entry<String, Map<String, Integer>> entry : stringMapMap.entrySet()) {
-
-            Map<String, Map<String, Integer>> tempMap = new HashMap<>();
-//            Map<String, Integer> tempMap = new HashMap<>();
-            //药品2级名
-            String key = entry.getKey();
-            //药品成分名+数量
-            Map<String, Integer> value = entry.getValue();
-            //遍历每年药品名
-            for (Map.Entry<String, Integer> childEntry : value.entrySet()) {
-                //药品成分名
-                String childEntryKey = childEntry.getKey();
-                //数量
-                Integer childEntryValue = childEntry.getValue();
-                //遍历药品大类 子类名
-                for (Map.Entry<String, Set<String>> levelDrugName : nextLevelNamesAndValue.entrySet()) {
-                    String levelDrugNameKey = levelDrugName.getKey();
-                    Set<String> levelDrugNameValue = levelDrugName.getValue();
-                    if (levelDrugNameValue.contains(childEntryKey)) {
-                        if (tempMap.containsKey(levelDrugNameKey)) {
-                            Map<String, Integer> map = tempMap.get(levelDrugNameKey);
-                            map.put(childEntryKey, childEntryValue);
-//                            map.put(levelDrugName.);
-                            tempMap.put(levelDrugNameKey, map);
-                        } else {
-                            Map<String, Integer> map = new HashMap<>();
-                            map.put(childEntryKey, childEntryValue);
-                            tempMap.put(levelDrugNameKey, map);
-                        }
-                    }
-                }
-
-            }
-            resultMap.put(key, tempMap);
-        }
-        return resultMap;
-    }
-
-    public Map<String, Map<String, Integer>> getSecondLevelCount1(Map<String, Map<String, Integer>> stringMapMap, Map<String, Set<String>> nextLevelNamesAndValue) {
-        Map<String, Map<String, Integer>> resultMap = new HashMap<>();
-        //遍历时间轴
-        for (Map.Entry<String, Map<String, Integer>> entry : stringMapMap.entrySet()) {
-
-            Map<String, Integer> tempMap = new HashMap<>();
-            //药品2级名
-            String key = entry.getKey();
-            //药品成分名+数量
-            Map<String, Integer> value = entry.getValue();
-            //遍历每年药品名
-            for (Map.Entry<String, Integer> childEntry : value.entrySet()) {
-                //药品成分名
-                String childEntryKey = childEntry.getKey();
-                //数量
-                Integer childEntryValue = childEntry.getValue();
-                //遍历药品大类 子类名
-                for (Map.Entry<String, Set<String>> levelDrugName : nextLevelNamesAndValue.entrySet()) {
-                    String levelDrugNameKey = levelDrugName.getKey();
-                    Set<String> levelDrugNameValue = levelDrugName.getValue();
-                    if (levelDrugNameValue.contains(childEntryKey)) {
-                        if (tempMap.containsKey(levelDrugNameKey)) {
-                            tempMap.put(levelDrugNameKey, tempMap.get(levelDrugNameKey) + childEntryValue);
-                        } else {
-                            tempMap.put(levelDrugNameKey, childEntryValue);
-                        }
-                    }
-                }
-            }
-            resultMap.put(key, tempMap);
-        }
-        return resultMap;
+        return list;
     }
 
 
-    public static void main(String[] args) {
-
-    }
 
 }

@@ -7,6 +7,7 @@ package com.jhmk.cloudpage.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
+import com.jhmk.cloudentity.cdss.page.DrugTendency;
 import com.jhmk.cloudentity.cdss.pojo.repository.service.SysDiseasesRepService;
 import com.jhmk.cloudpage.service.CdssRunRuleService;
 import com.jhmk.cloudpage.service.CdssService;
@@ -28,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,13 +69,8 @@ public class CdssPageController extends BaseController {
         //转换为标准名
         Map<String, Map<String, Integer>> stringMapMap = cdssPageService.transform2StandardName(result);
         Map<String, Set<String>> nextLevelNamesAndValue = cdssPageService.getNextLevelNamesAndValue(drugName);
-        Map<String, Map<String, Integer>> secondLevelCount = cdssPageService.getSecondLevelCount(stringMapMap, nextLevelNamesAndValue);
-        Map<String, Map<String, Map<String, Integer>>> durgCount = cdssPageService.getDurgCount(stringMapMap, nextLevelNamesAndValue);
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("count", secondLevelCount);
-        resultMap.put("durg", durgCount);
-        System.out.println(JSONObject.toJSONString(secondLevelCount));
-        resp.setData(resultMap);
+        List<DrugTendency> secondLevelCount = cdssPageService.getSecondLevelCount(stringMapMap, nextLevelNamesAndValue);
+        resp.setData(secondLevelCount);
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
