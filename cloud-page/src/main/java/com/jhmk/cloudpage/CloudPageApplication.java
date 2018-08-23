@@ -8,7 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-@ComponentScan(basePackages = {"com.jhmk.cloudutil", "com.jhmk.cloudpage", "com.jhmk.cloudentity"})
+@ComponentScan(basePackages = {"com.jhmk.cloudutil", "com.jhmk.cloudpage", "com.jhmk.cloudentity","com.jhmk.cloudservice"})
 @EnableDiscoveryClient
 public class CloudPageApplication {
     public static void main(String[] args) {

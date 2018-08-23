@@ -10,6 +10,10 @@ package com.jhmk.cloudutil.config;
  */
 public class CdssPageConstants {
 
-    public static final String getSamilarWord = "/med/cdss/getSamilarWord.json";
-    http://192.168.8.20:8011/med/disease/getPlanStat.json
+    private static final String HEADERURL = "http://192.168.8.20:8011/med";
+
+    /**
+     * 获取药品变化趋势
+     */
+    public static final String GETPLANSTAT = HEADERURL + "/disease/getPlanStat.json";
 }

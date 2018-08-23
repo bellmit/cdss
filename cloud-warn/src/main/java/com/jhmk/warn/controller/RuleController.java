@@ -581,9 +581,6 @@ public class RuleController extends BaseEntityController<Object> {
     public void groupbycreatetime(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
         Object o = JSONObject.parse(map);
         String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.groupbycreatetime, o, String.class);
-
         wirte(response, result);
     }
-
-
 }
