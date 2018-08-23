@@ -17,6 +17,7 @@ import com.jhmk.cloudutil.config.UrlConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.MapUtil;
+import com.jhmk.cloudutil.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,6 +153,7 @@ public class StandardRuleController extends BaseController {
     @PostMapping("/addChildRuleByCondition")
     @ResponseBody
     public void addChildRuleByCondition(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
+        ThreadUtil.ThreadPool instance = ThreadUtil.getInstance();
         AtResponse resp = new AtResponse();
         //获取要删除的条件字段
         //标准规则id
@@ -182,9 +184,17 @@ public class StandardRuleController extends BaseController {
             //获取要添加的子规则条件
             List<String> list = standardRuleService.addCdssRule(basicStandardRuleList, new LinkedList<>());
             for (String s : list) {
+                final String tempStr=s;
                 if (!ruleService.isRule(s)) {
-                    s = ruleService.updateOldRule(s);
-                    ruleService.addChildRuleByCondition(s, formatRule);
+                    Runnable runnable=new Runnable() {
+                        @Override
+                        public void run() {
+                           String temp = ruleService.updateOldRule(tempStr);
+                            ruleService.addChildRuleByCondition(temp, formatRule);
+                        }
+                    };
+                    instance.execute(runnable);
+
                 }
             }
             resp.setResponseCode(ResponseCode.OK);
