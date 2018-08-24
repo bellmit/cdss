@@ -142,8 +142,12 @@ public class Binganshouye {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Binganshouye that = (Binganshouye) o;
         return id == that.id &&
                 Objects.equals(patient_id, that.patient_id) &&

@@ -47,27 +47,6 @@ public class EvaluateController extends BaseEntityController<SmEvaluate> {
         return resp;
     }
 
-//    //筛选功能 todo 待定 是否有这个功能
-//    @RequestMapping(value = "/serach")
-//    @ResponseBody
-//    public AtResponse serach(@ModelAttribute SmEvaluate evaluate, String pageNum) {
-//        int page = 1;
-//        //当前页不为空
-//        if (pageNum != null && !"".equals(pageNum.trim())) {
-//            page = new Integer(pageNum) - 1;
-//        }
-//        Map<String, String> params = new HashMap<>();
-//        params.put("","")
-//        evaluate.getUserId()
-//
-//        Map<String, Object> params = smUserService.serachData(user, page);
-//        params.put("user", user);
-//        AtResponse<Map<String, Object>> resp = new AtResponse(System.currentTimeMillis());
-//        resp.setResponseCode(ResponseCode.OK);
-//        resp.setData(params);
-//        return resp;
-//    }
-
 
     //添加操作
     @RequestMapping(value = "/addEvaluate")

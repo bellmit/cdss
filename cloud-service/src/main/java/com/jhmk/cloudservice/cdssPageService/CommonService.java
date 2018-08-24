@@ -42,9 +42,9 @@ public class CommonService {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            return list;
+            logger.debug("获取药品同义词表失败，错误原因{}",e.getCause());
         }
+        return list;
 
     }
 
@@ -90,7 +90,8 @@ public class CommonService {
 
 
     /**
-     *  根据药品名获取标准名 不存在 则返回本身
+     * 根据药品名获取标准名 不存在 则返回本身
+     *
      * @param name 药品名
      * @param list 同义词集合
      * @return

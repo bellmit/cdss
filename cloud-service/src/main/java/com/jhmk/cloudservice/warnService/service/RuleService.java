@@ -1128,7 +1128,7 @@ public class RuleService {
                 logger.error("访问{}接口出现异常，错误编码:{},错误信息:{}", "getTipList.json", e.getCause(), e.getMessage());
             }
         } else {
-//            logger.info("医生id或病人id为空,触发规则为：{}", map);
+            logger.info("医生id或病人id为空,触发规则为：{}", map);
         }
 
     }
@@ -1220,7 +1220,7 @@ public class RuleService {
      *
      * @param rule
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void saveRule2Database(Rule rule) {
         basicInfoService.saveAndFlush(rule);
         zhenduanService.saveAndFlush(rule);

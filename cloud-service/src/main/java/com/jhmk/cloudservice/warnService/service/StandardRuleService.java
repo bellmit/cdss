@@ -203,9 +203,10 @@ public class StandardRuleService {
     }
 
     /**
-     * @param field
+     * @param field        需要添加或者删除的子集字段名
      * @param standardName 标准规则名
-     * @param formatrule
+     * @param formatrule   标准股则解析的实体类
+     * @param flag   true 添加 FALSE 删除
      * @return
      */
     public boolean updataStandardChildElement(String field, String standardName, FormatRule formatrule, boolean flag) {
@@ -277,8 +278,6 @@ public class StandardRuleService {
                             System.out.println("解析错误，不能删除");
                             break;
                         }
-//                    stringBuffer.append(startStr).append("/").append(field).append(endStr);
-//                    sb.append(stringBuffer);
                     } else {
                         String[] split = and.split("/");
                         if (split.length > 1) {
@@ -315,23 +314,24 @@ public class StandardRuleService {
         param.put("childElement", replace);
         Object parse = JSONObject.toJSON(param);
         String s = "";
+        boolean isOK = true;
         try {
             s = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.updatechildelement, parse, String.class);
         } catch (Exception e) {
-            logger.info("调用" + BaseConstants.updatechildelement + "失败：{}", e.getMessage());
-            return false;
+            logger.info("调用{}借口失败,错误原因{}，错误信息{}", BaseConstants.updatechildelement, e.getCause(), e.getMessage());
+            isOK = false;
         } finally {
             if (StringUtils.isNotBlank(s)) {
                 JSONObject jsonObject = JSONObject.parseObject(s);
                 String code = jsonObject.getString("code");
                 if (BaseConstants.OK.equals(code)) {
-                    return true;
+                    isOK = true;
                 }
             } else {
-                return false;
+                isOK = false;
             }
         }
-        return true;
+        return isOK;
     }
 
     /**
@@ -389,7 +389,7 @@ public class StandardRuleService {
                         logger.debug("删除子规则失败失败，子规则id为{}，条件为{}", id, s);
                     }
                 } catch (Exception e) {
-                    logger.debug("调用" + BaseConstants.deleterule + "接口失败：{}", e.getMessage());
+                    logger.debug("删除标准规则子规则调用{}失败，错误原因{}，错误信息{}", BaseConstants.deleterule, e.getCause(), e.getMessage());
                 }
             }
 

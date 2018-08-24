@@ -127,8 +127,6 @@ public class BaseEntityController<P> extends BaseController {
         }
         params.put(WebPage.WEB_PAGE, webPage);
 
-//        OperateBean operate = this.getOperateByRoleId(roleId);
-//        params.put(LIST_OPERATE, operate);
 
         AtResponse<Map<String, Object>> resp = new AtResponse(System.currentTimeMillis());
         resp.setResponseCode(ResponseCode.OK);
@@ -179,8 +177,6 @@ public class BaseEntityController<P> extends BaseController {
         }
         params.put(WebPage.WEB_PAGE, webPage);
 
-//        OperateBean operate = this.getOperateByRoleId(roleId);
-//        params.put(LIST_OPERATE, operate);
 
         AtResponse<Map<String, Object>> resp = new AtResponse(System.currentTimeMillis());
         resp.setResponseCode(ResponseCode.OK);
@@ -227,8 +223,6 @@ public class BaseEntityController<P> extends BaseController {
         }
         params.put(WebPage.WEB_PAGE, webPage);
 
-//        OperateBean operate = this.getOperateByRoleId(roleId);
-//        params.put(LIST_OPERATE, operate);
 
         AtResponse<Map<String, Object>> resp = new AtResponse(System.currentTimeMillis());
         resp.setResponseCode(ResponseCode.OK);

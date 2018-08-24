@@ -114,8 +114,12 @@ public class Binglizhenduan {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Binglizhenduan that = (Binglizhenduan) o;
         return id == that.id &&
                 Objects.equals(visit_id, that.visit_id) &&

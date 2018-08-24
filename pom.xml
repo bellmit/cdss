@@ -27,7 +27,6 @@
         <module>eureka-server</module>
         <module>cloud-jar</module>
         <module>cloud-entity</module>
-        <module>cloud-datasource</module>
         <module>cloud-warn</module>
         <module>cloud-service</module>
         <module>cloud-util</module>

@@ -30,7 +30,6 @@ public class UserModelService {
     public List<UserModel> getVariableList() {
         //查询所有父类modul集合
         Iterable<UserModel> iterable = userModelRepService.findAll();
-//        List<UserModel> pModuls = userModulRepService.findByUmParentIdAndUmHospitalName(null, hosptialName);
         Iterator<UserModel> iterator = iterable.iterator();
         List<UserModel> pModuls = new ArrayList<>();
         while (iterator.hasNext()) {

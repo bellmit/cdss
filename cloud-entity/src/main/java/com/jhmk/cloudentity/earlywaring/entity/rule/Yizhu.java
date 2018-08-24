@@ -158,8 +158,12 @@ public class Yizhu {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Yizhu yizhu = (Yizhu) o;
         return id == yizhu.id &&
                 Objects.equals(patient_id, yizhu.patient_id) &&

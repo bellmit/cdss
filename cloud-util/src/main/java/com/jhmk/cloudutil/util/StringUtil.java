@@ -18,6 +18,7 @@ public class StringUtil {
 
     /**
      * 获取汉字串拼音首字母，英文字符不变
+     *
      * @param chinese 汉字串
      * @return 汉语拼音首字母
      */
@@ -43,6 +44,7 @@ public class StringUtil {
         }
         return pybf.toString().replaceAll("\\W", "").trim();
     }
+
     public static String getUppercaseFirstSpell(String chinese) {
         StringBuffer pybf = new StringBuffer();
         char[] arr = chinese.toCharArray();
@@ -68,6 +70,7 @@ public class StringUtil {
 
     /**
      * 判断是否是汉字
+     *
      * @param str
      * @return
      */
@@ -76,9 +79,11 @@ public class StringUtil {
         Pattern pat = Pattern.compile(regEx);
         Matcher matcher = pat.matcher(str);
         boolean flg = false;
-        if (matcher.find())
+        if (matcher.find()) {
             flg = true;
+        }
 
         return flg;
-    }}
+    }
+}
 

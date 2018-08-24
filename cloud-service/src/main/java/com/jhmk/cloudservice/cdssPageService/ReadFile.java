@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("MapOrSetKeyShouldOverrideHashCodeEquals")
 public class ReadFile {
 
     public static void main(String[] args) {
@@ -29,6 +30,7 @@ public class ReadFile {
         return drugNodes;
     }
 
+    @SuppressWarnings("MapOrSetKeyShouldOverrideHashCodeEquals")
     private static Set<DrugNode> buildTree(List<DrugNode> list, String s) {
         Set<DrugNode> menus = new HashSet<>();
 

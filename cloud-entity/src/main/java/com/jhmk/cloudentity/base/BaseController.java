@@ -73,29 +73,6 @@ public class BaseController {
         return deptName;
     }
 
-//    public String getFuDeptId() {
-//        String fuDeptName = (String) getSessionData(BaseConstants.FT_DEPT_ID);
-//        return fuDeptName;
-//    }
-
-//    public String getFuDeptName() {
-//        String fuDeptName = (String) getSessionData(BaseConstants.FT_DEPT_NAME);
-//        return fuDeptName;
-//    }
-
-//
-//    public String getCurrentRole(HttpSession httpSession) {
-////        String currentRoleId = (String) httpSession.getAttribute("currentRoleId");
-//    	  String currentRoleId = (String) getSessionData(CoreConstants.CURRENT_ROLE_ID);
-//        return currentRoleId;
-//    }
-//
-//    public void setCurrentRoleId(String roleId, HttpSession httpSession) {
-////        httpSession.setAttribute("currentRoleId", roleId);
-//    	addSessionData(CoreConstants.CURRENT_ROLE_ID, roleId);
-//    }
-
-
     public static void wirte(HttpServletResponse response, Object obj) {
         response.setCharacterEncoding("utf-8");
         try {

@@ -153,8 +153,6 @@ public class DateFormatUtil {
     public static LocalDateTime parseDateTime(String dateStr, String pattern) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime localDatetime = LocalDateTime.parse(dateStr, format);
-//        ZoneId zone = ZoneId.systemDefault();
-//        Instant instant = localDatetime.atZone(zone).toInstant();
         return localDatetime;
     }
 
@@ -399,7 +397,6 @@ public class DateFormatUtil {
     public static Date getLastYear() {
         Calendar calendar = Calendar.getInstance();
         int i = calendar.get(Calendar.YEAR - 1);
-//        calendar.set(Calendar.YEAR, year);
         calendar.roll(Calendar.DAY_OF_YEAR, -1);
         Date currYearLast = calendar.getTime();
 
@@ -410,7 +407,6 @@ public class DateFormatUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         int i = calendar.get(Calendar.YEAR);
-//        calendar.set(Calendar.YEAR, year);
         calendar.roll(Calendar.DAY_OF_YEAR, -1);
         Date currYearLast = calendar.getTime();
 
@@ -451,38 +447,6 @@ public class DateFormatUtil {
         return format;
     }
 
-    public static void main(String[] args) {
-//        String dateStr = "2016-02-29";
-//        Date date1 = DateFormatUtil.parseDate(dateStr, DATE_PATTERN_S);
-//        Date date = new Date();
-//        Date aa = DateFormatUtil.getNextNYear(date1, 1);
-//        System.out.println("------: " + aa);
-
-//        Calendar calendar = Calendar.getInstance();
-//        int i = calendar.get(Calendar.YEAR);
-//        calendar.set(Calendar.YEAR, i - 1);
-//        calendar.set(Calendar.MONTH, 11);
-//        Date currYearLast = calendar.getTime();
-//
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
-//        String format = simpleDateFormat.format(currYearLast);
-//        System.out.println(format);
-
-//        List<String> monthBetween = getMonthBetween("2017-01", "2017-12");
-//        System.out.println(monthBetween.toString());
-//        String startTime = "2017-01";
-//        String[] split = startTime.split("-");
-//        String firstDayOfMonth = DateFormatUtil.getFirstDayOfMonth(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
-//        System.out.println(firstDayOfMonth);
-
-//        Date yearFirst = getYearFirst(2018);
-//        Date yearLast = getYearLast(2018);
-
-
-        Date date = parseDate("2017-11-11 11:11:11", DateFormatUtil.DATETIME_PATTERN_SS);
-        Date date1 = parseDateBySdf("2017-11-11 11:11:11", DateFormatUtil.DATETIME_PATTERN_SS);
-
-    }
 
     public static List<String> getMonthBetween(String minDate, String maxDate) {
         ArrayList<String> result = new ArrayList<String>();

@@ -135,12 +135,18 @@ public class StandardRuleController extends BaseController {
         //查询规则实体
         FormatRule standRule = ruleService.getFormatRuleById(id);
         List<FormatRule> allChildRule = standardRuleService.findAllChildRule(id);
-        for (FormatRule formatRule : allChildRule) {
-            standardRuleService.deleteChildRuleByCondition(field, formatRule);
-        }
-        standardRuleService.updataStandardChildElement(field, standardName, standRule, false);
+        boolean b = standardRuleService.updataStandardChildElement(field, standardName, standRule, false);
         AtResponse atResponse = new AtResponse();
-        atResponse.setResponseCode(ResponseCode.OK);
+        if (b) {
+
+            for (FormatRule formatRule : allChildRule) {
+                standardRuleService.deleteChildRuleByCondition(field, formatRule);
+            }
+            atResponse.setResponseCode(ResponseCode.OK);
+        }else {
+            atResponse.setResponseCode(ResponseCode.UPDATERULEERROR1);
+
+        }
         wirte(response, atResponse);
     }
 
@@ -184,12 +190,12 @@ public class StandardRuleController extends BaseController {
             //获取要添加的子规则条件
             List<String> list = standardRuleService.addCdssRule(basicStandardRuleList, new LinkedList<>());
             for (String s : list) {
-                final String tempStr=s;
+                final String tempStr = s;
                 if (!ruleService.isRule(s)) {
-                    Runnable runnable=new Runnable() {
+                    Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
-                           String temp = ruleService.updateOldRule(tempStr);
+                            String temp = ruleService.updateOldRule(tempStr);
                             ruleService.addChildRuleByCondition(temp, formatRule);
                         }
                     };

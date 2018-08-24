@@ -49,8 +49,12 @@ public class SysDiseases {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SysDiseases that = (SysDiseases) o;
         return id == that.id &&
                 Objects.equals(chinaDiseases, that.chinaDiseases) &&

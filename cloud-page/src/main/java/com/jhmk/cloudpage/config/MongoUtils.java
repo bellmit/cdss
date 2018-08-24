@@ -592,7 +592,7 @@ public class MongoUtils {
 		try {
 			Bson orderBy = null;
 			// 降序
-			if (sorting.equals("desc")) {
+			if ("desc".equals(sorting)) {
 				orderBy = new BasicDBObject(name, -1);
 			} else {
 				orderBy = new BasicDBObject(name, 1);

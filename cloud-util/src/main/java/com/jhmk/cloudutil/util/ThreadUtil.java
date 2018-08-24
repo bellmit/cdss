@@ -106,4 +106,44 @@ public class ThreadUtil {
     }
 
 
+//    public static void main(String[] args) {
+//
+//        ThreadPool instance = ThreadUtil.getInstance();
+//        for (int i = 0; i < 100000; i++) {
+//            instance.execute(() -> {
+//                System.out.print(1);
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//        }
+//        while (true) {
+//            System.out.println();
+//
+//            int queueSize = instance.mExecutor.getQueue().size();
+//            System.out.println("当前排队线程数：" + queueSize);
+//
+//            int activeCount = instance.mExecutor.getActiveCount();
+//            System.out.println("当前活动线程数：" + activeCount);
+//            int corePoolSize = instance.mExecutor.getCorePoolSize();
+//            System.out.println("当前核心线程数：" + corePoolSize);
+//            int poolSize = instance.mExecutor.getPoolSize();
+//            System.out.println("当前所有线程数：" + poolSize);
+//
+//
+//            long completedTaskCount = instance.mExecutor.getCompletedTaskCount();
+//            System.out.println("执行完成线程数：" + completedTaskCount);
+//
+//            long taskCount = instance.mExecutor.getTaskCount();
+//            System.out.println("总线程数：" + taskCount);
+//
+//            try {
+//                Thread.sleep(3000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }

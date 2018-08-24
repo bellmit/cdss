@@ -135,8 +135,12 @@ public class Ruyuanjilu {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Ruyuanjilu that = (Ruyuanjilu) o;
         return id == that.id &&
                 Objects.equals(patient_id, that.patient_id) &&

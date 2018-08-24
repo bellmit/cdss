@@ -113,17 +113,6 @@ public class SmUserService {
     }
 
     /**
-     * 删除
-     *
-     * @param userId
-     * @return
-     */
-//    public int delete(String userId) {
-//        smRoleService.updateRoleUser(userId, null);
-//        return smUsersRepService.setUserDeleted("1", userId);
-//    }
-
-    /**
      * 保存编辑
      *
      * @param user

@@ -257,7 +257,7 @@ public class CdssService {
             List<Document> diagnosisName = (List) ruyuanjilu.get("diagnosis_name");
             if (diagnosisName != null) {
                 for (Document d : diagnosisName) {
-                    if (d.get("diagnosis_num") != null && d.get("diagnosis_num").toString().equals("1")) {
+                    if (d.get("diagnosis_num") != null && "1".equals(d.get("diagnosis_num").toString())) {
                         selbinglizhenduan.setQuezhen(d.get("diagnosis_name").toString());
                         break;
                     }
@@ -600,7 +600,7 @@ public class CdssService {
         Map<String, Object> endparamMap = new HashMap<String, Object>();
         endparamMap.putAll(paramMap);
         for (String key : paramMap.keySet()) {
-            if (key.equals("ruyuanjilu")) {
+            if ("ruyuanjilu".equals(key)) {
                 String ryjl = String.valueOf(paramMap.get("ruyuanjilu"));
                 JSONArray jsonArray = JSON.parseArray(ryjl);
                 Iterator<Object> it = jsonArray.iterator();
@@ -610,25 +610,25 @@ public class CdssService {
                     String ryjlkey = ob.getString("key");
                     String value = ob.getString("value");
                     if (value != null && !value.isEmpty()) {
-                        if (ryjlkey.equals("既往史")) {
+                        if ("既往史".equals(ryjlkey)) {
                             ryjlMap.put("history_of_past_illness", value);
-                        } else if (ryjlkey.equals("主诉")) {
+                        } else if ("主诉".equals(ryjlkey)) {
                             ryjlMap.put("chief_complaint", value);
-                        } else if (ryjlkey.equals("现病史")) {
+                        } else if ("现病史".equals(ryjlkey)) {
                             ryjlMap.put("history_of_present_illness", value);
-                        } else if (ryjlkey.equals("家族史")) {
+                        } else if ("家族史".equals(ryjlkey)) {
                             ryjlMap.put("history_of_family_member_diseases", value);
-                        } else if (ryjlkey.equals("婚姻史")) {
+                        } else if ("婚姻史".equals(ryjlkey)) {
                             ryjlMap.put("menstrual_and_obstetrical_histories", value);
-                        } else if (ryjlkey.equals("辅助检查")) {
+                        } else if ("辅助检查".equals(ryjlkey)) {
                             ryjlMap.put("auxiliary_examination", value);
-                        } else if (ryjlkey.equals("体格检查")) {
+                        } else if ("体格检查".equals(ryjlkey)) {
                             ryjlMap.put("physical_examination", value);
                         }
                     }
                 }
                 endparamMap.put("ruyuanjilu", ryjlMap);
-            } else if (key.equals("jianyanbaogao")) {
+            } else if ("jianyanbaogao".equals(key)) {
                 String jybg = String.valueOf(paramMap.get("jianyanbaogao"));
                 JSONArray jsonArray = JSON.parseArray(jybg);
                 Iterator<Object> it = jsonArray.iterator();

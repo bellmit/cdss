@@ -419,7 +419,7 @@ public class RuleController extends BaseEntityController<Object> {
 
             smShowLogRepService.update(ruleStatus, id);
         } catch (Exception e) {
-            logger.info("更新失败：" + e.getMessage());
+            logger.info("更新诊疗提醒失败{},数据为{},原因为{}" + e.getMessage(),map,e.getCause());
         }
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);

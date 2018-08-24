@@ -105,8 +105,12 @@ public class BasicInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         BasicInfo basicInfo = (BasicInfo) o;
         return id == basicInfo.id &&
                 Objects.equals(doctor_id, basicInfo.doctor_id) &&

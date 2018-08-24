@@ -1,6 +1,7 @@
 package com.jhmk.cloudservice.cdssPageService;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class DrugNode {
@@ -71,4 +72,20 @@ public class DrugNode {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DrugNode drugNode = (DrugNode) o;
+        return Objects.equals(name, drugNode.name) &&
+                Objects.equals(pName, drugNode.pName) &&
+                Objects.equals(childTrees, drugNode.childTrees) &&
+                Objects.equals(names, drugNode.names);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, pName, childTrees, names);
+    }
 }

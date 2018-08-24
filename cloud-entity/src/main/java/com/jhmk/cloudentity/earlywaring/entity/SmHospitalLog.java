@@ -227,8 +227,12 @@ public class SmHospitalLog {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SmHospitalLog that = (SmHospitalLog) o;
         return id == that.id &&
                 Objects.equals(patientId, that.patientId) &&

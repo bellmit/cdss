@@ -186,7 +186,6 @@ public class CompareUtil {
                 if (value1 == null || value2 == null) {
                     continue;
                 }
-//                DateFormatUtil.parseDate(value1,"");
             }
             return 0;
         }
