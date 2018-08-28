@@ -57,6 +57,11 @@ public class CdssPageController extends BaseController {
     CdssPageService cdssPageService;
 
 
+    /**
+     * 用药变化趋势
+     * @param response
+     * @param map
+     */
     @PostMapping("/getPlanStat")
     public void getPlanStat(HttpServletResponse response, @RequestBody(required = false) String map) {
         System.out.println("接受数据为：==========" + map);
