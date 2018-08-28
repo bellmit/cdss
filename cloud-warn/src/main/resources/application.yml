@@ -1,10 +1,10 @@
 server:
-  port: 8001
+  port: 8111
 
 eureka:
   client:
     service-url:
-      defaultZone: http://192.168.8.20:8000/eureka/
+      defaultZone: http://localhost:8000/eureka/
 
 spring:
   datasource:
@@ -50,4 +50,5 @@ url:
 #  cdssurl : http://192.168.8.20:8011
   cdssurl : http://192.168.8.20:8010
 #  cdssurl : http://192.168.132.7:8010
-
+logging:
+  config: logback-spring.xml
