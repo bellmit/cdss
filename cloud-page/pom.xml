@@ -71,11 +71,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.4.3</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.mongodb</groupId>-->
+            <!--<artifactId>mongo-java-driver</artifactId>-->
+            <!--<version>3.4.3</version>-->
+        <!--</dependency>-->
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
 
         <dependency>
@@ -102,12 +102,12 @@
             <groupId>com.jhmk</groupId>
             <artifactId>cloud-service</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-devtools</artifactId>-->
-            <!--<optional>true</optional>-->
-            <!--<scope>true</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+            <scope>true</scope>
+        </dependency>
 
 
     </dependencies>
