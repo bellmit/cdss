@@ -4,6 +4,8 @@ import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
+import com.jhmk.cloudutil.model.AtResponse;
+import com.jhmk.cloudutil.model.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +53,12 @@ public class ClickRateController extends BaseController {
     @PostMapping("/add")
     public void add(HttpServletResponse response, @RequestBody ClickRate clickRate) {
         ClickRateService.addDate2Map(clickRate);
+        AtResponse resp=new AtResponse();
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response,resp);
     }
     @PostMapping("/show")
     public void showDate(){
-        Map<String, Integer> clickRateMap = ClickRateService.clickRateMap;
-        System.out.println(clickRateMap.toString());
+
     }
 }
