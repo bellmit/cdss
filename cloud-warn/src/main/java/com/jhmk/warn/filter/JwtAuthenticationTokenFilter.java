@@ -43,9 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (token == null) {
             String requestURI = request.getRequestURI();
 //            System.out.println(requestURI);
-            if ("/warn/rule/ruleMatch".equals(requestURI)
-                    || requestURI.contains("warn/match")
-                    || requestURI.contains("warn/rule/match")
+            if (requestURI.contains("/match")
                     || requestURI.contains("warn/users")
                     || requestURI.contains("warn/dept")
                     || requestURI.contains("warn/login")
@@ -75,7 +73,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             }
 
         }
-        BaseController.wirte(response,resp);
+        BaseController.wirte(response, resp);
     }
 
 }

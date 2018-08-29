@@ -50,6 +50,7 @@ public class BaseController {
 
     /**
      * 获取权限范围 1 查看自己提交的规则 2.查看所有提交的规则
+     *
      * @return
      */
     public String getCurrentRoleRange() {
@@ -76,9 +77,11 @@ public class BaseController {
     public static void wirte(HttpServletResponse response, Object obj) {
         response.setCharacterEncoding("utf-8");
         try {
+            //todo response 注意reset后缓存消失，设置消失。  getWriter() has already been called for this response问题解决
             PrintWriter writer = response.getWriter();
             writer.print(JSON.toJSON(obj));
             writer.close();
+//            response.reset();
         } catch (IOException e) {
             e.printStackTrace();
 

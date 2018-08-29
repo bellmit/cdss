@@ -228,7 +228,7 @@ public class RuleController extends BaseEntityController<Object> {
         }
         //预警等级
         if (map.get("warninglevel") != null) {
-            search.put("warninglevel", map.get("warninglevel"));
+                search.put("warninglevel", map.get("warninglevel"));
         }
         //是否运行
         if (map.get("is_run") != null) {
