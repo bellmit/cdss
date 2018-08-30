@@ -25,7 +25,10 @@ public class SchedulerTask {
     ClickRateRepService clickRateRepService;
     private int count = 0;
 
-    @Scheduled(cron = "0 0 24 * * ?")
+    /**
+     * 23时59分59秒执行次任务
+     */
+    @Scheduled(cron = "59 59 23 * * ?")
     private void process() {
         System.out.println("this is scheduler task runing  " + (count++));
         Map<String, Integer> clickRateMap = ClickRateService.clickRateMap;
