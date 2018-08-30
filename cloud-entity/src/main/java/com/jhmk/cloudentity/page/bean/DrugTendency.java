@@ -1,4 +1,4 @@
-package com.jhmk.cloudentity.cdss.page;
+package com.jhmk.cloudentity.page.bean;
 
 /**
  * @author ziyu.zhou

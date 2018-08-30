@@ -1,9 +1,9 @@
-package com.jhmk.cloudentity.cdss.pojo.repository.service;
+package com.jhmk.cloudentity.page.service;
 
 
 import com.jhmk.cloudentity.base.BaseRepService;
-import com.jhmk.cloudentity.cdss.pojo.JhauthRemind;
-import com.jhmk.cloudentity.cdss.pojo.repository.JhauthRemindRepository;
+import com.jhmk.cloudentity.page.bean.JhauthRemind;
+import com.jhmk.cloudentity.page.repository.JhauthRemindRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

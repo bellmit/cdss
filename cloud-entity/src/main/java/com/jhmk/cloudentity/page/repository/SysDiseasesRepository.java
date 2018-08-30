@@ -1,6 +1,6 @@
-package com.jhmk.cloudentity.cdss.pojo.repository;
+package com.jhmk.cloudentity.page.repository;
 
-import com.jhmk.cloudentity.cdss.pojo.SysDiseases;
+import com.jhmk.cloudentity.page.bean.SysDiseases;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

@@ -1,13 +1,12 @@
-package com.jhmk.cloudentity.cdss.pojo.repository.service;
+package com.jhmk.cloudentity.page.service;
 
 
 import com.jhmk.cloudentity.base.BaseRepService;
-import com.jhmk.cloudentity.cdss.pojo.SysDiseases;
-import com.jhmk.cloudentity.cdss.pojo.repository.SysDiseasesRepository;
+import com.jhmk.cloudentity.page.bean.SysDiseases;
+import com.jhmk.cloudentity.page.repository.SysDiseasesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

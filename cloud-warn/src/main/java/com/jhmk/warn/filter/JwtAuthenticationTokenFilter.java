@@ -43,7 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (token == null) {
             String requestURI = request.getRequestURI();
 //            System.out.println(requestURI);
-            if (requestURI.contains("/match")
+            if (requestURI.contains("ruleMatch")
                     || requestURI.contains("warn/users")
                     || requestURI.contains("warn/dept")
                     || requestURI.contains("warn/login")

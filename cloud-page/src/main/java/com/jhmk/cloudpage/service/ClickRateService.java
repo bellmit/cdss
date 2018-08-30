@@ -20,6 +20,11 @@ public class ClickRateService {
     private static final String SPLITSYMPOL = "&&&";
     public static Map<String, Integer> clickRateMap;
 
+    /**
+     * 初始化一个map
+     * @return
+     */
+
     public static Map<String, Integer> initMaps() {
         clickRateMap = new ConcurrentHashMap<>();
         return clickRateMap;
