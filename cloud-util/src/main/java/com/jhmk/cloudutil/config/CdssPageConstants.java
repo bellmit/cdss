@@ -10,7 +10,7 @@ package com.jhmk.cloudutil.config;
  */
 public class CdssPageConstants {
 
-    private static final String HEADERURL = "http://192.168.8.20:8011/med";
+    private static final String HEADERURL = "http://192.168.132.7:8010/med";
 
     /**
      * 获取药品变化趋势
