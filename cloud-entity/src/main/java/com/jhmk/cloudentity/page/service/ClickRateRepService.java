@@ -66,7 +66,7 @@ public class ClickRateRepService extends BaseRepService<ClickRate, Integer> {
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public ClickRate findByDoctorIdAndCreateTimeAndType(String doctorId, Date createTime, String type) {
+    public ClickRate findByDoctorIdAndCreateTimeAndType(String doctorId, String createTime, String type) {
         return repository.findByDoctorIdAndCreateTimeAndType(doctorId, createTime, type);
     }
 

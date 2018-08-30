@@ -8,6 +8,6 @@ import java.util.Date;
 
 public interface ClickRateRepository extends PagingAndSortingRepository<ClickRate, Integer>, JpaSpecificationExecutor<ClickRate> {
 
-    ClickRate findByDoctorIdAndCreateTimeAndType(String doctorId, Date createTime, String type);
+    ClickRate findByDoctorIdAndCreateTimeAndType(String doctorId, String createTime, String type);
 
 }

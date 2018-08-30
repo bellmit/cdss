@@ -46,7 +46,13 @@ public class SchedulerTask {
                 clickRate.setType(type);
                 clickRate.setCreateTime(createTime);
                 clickRate.setSubmitTime(new Timestamp(System.currentTimeMillis()));
-                clickRateRepService.save(clickRate);
+                ClickRate old = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, createTime, type);
+                if (old != null) {
+                    old.setCount(old.getCount() + value);
+                    clickRateRepService.save(old);
+                } else {
+                    clickRateRepService.save(clickRate);
+                }
             } else {
                 logger.info("添加统计次数出现错误，数据为：{}", key);
             }

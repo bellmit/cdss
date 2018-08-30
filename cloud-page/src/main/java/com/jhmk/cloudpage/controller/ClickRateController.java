@@ -6,6 +6,7 @@ import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ public class ClickRateController extends BaseController {
         String type = clickRate.getType();
         String doctorId = clickRate.getDoctorId();
         Date date = new Date();
-        java.sql.Date sdate = new java.sql.Date(date.getTime());
-        ClickRate oldBean = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, sdate, type);
+        String format = DateFormatUtil.format(date, DateFormatUtil.DATE_PATTERN_S);
+        ClickRate oldBean = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, format, type);
         if (oldBean != null) {
             oldBean.setCount(oldBean.getCount() + 1);
             clickRateRepService.save(oldBean);
