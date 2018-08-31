@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author zzy on 18/08/19.
  */
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager",
-        basePackages = {"com.jhmk.cloudentity", "com.jhmk.cloudcdss"},
+        basePackages = {"com.jhmk.cloudentity", "com.jhmk.cloudpage"},
         enableDefaultTransactions = false)
 @Configuration
 public class CdssJpaConfig {

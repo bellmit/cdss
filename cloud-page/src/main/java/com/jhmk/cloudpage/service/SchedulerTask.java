@@ -23,14 +23,14 @@ public class SchedulerTask {
 
     @Autowired
     ClickRateRepService clickRateRepService;
-    private int count = 0;
 
     /**
      * 23时59分59秒执行次任务
+     * 统计医生点击cdss小界面次数入库
      */
-    @Scheduled(cron = "59 59 23 * * ?")
+//    @Scheduled(cron = "59 59 23 * * ?")
+    @Scheduled(cron = "*/30 * * * * ?")
     private void process() {
-        System.out.println("this is scheduler task runing  " + (count++));
         Map<String, Integer> clickRateMap = ClickRateService.clickRateMap;
         for (Map.Entry<String, Integer> entry : clickRateMap.entrySet()) {
             Integer value = entry.getValue();
@@ -45,7 +45,6 @@ public class SchedulerTask {
                 clickRate.setDoctorId(doctorId);
                 clickRate.setType(type);
                 clickRate.setCreateTime(createTime);
-                clickRate.setSubmitTime(new Timestamp(System.currentTimeMillis()));
                 ClickRate old = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, createTime, type);
                 if (old != null) {
                     old.setCount(old.getCount() + value);
