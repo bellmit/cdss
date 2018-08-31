@@ -28,9 +28,8 @@ public class SchedulerTask {
      * 23时59分59秒执行次任务
      * 统计医生点击cdss小界面次数入库
      */
-//    @Scheduled(cron = "59 59 23 * * ?")
-    @Scheduled(cron = "*/30 * * * * ?")
-    private void process() {
+    @Scheduled(cron = "59 59 23 * * ?")
+    public void addClickCount2DateTable() {
         Map<String, Integer> clickRateMap = ClickRateService.clickRateMap;
         for (Map.Entry<String, Integer> entry : clickRateMap.entrySet()) {
             Integer value = entry.getValue();
