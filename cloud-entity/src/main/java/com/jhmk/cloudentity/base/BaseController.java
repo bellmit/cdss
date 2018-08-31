@@ -5,6 +5,7 @@ import com.jhmk.cloudutil.config.BaseConstants;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -78,10 +79,9 @@ public class BaseController {
         response.setCharacterEncoding("utf-8");
         try {
             //todo response 注意reset后缓存消失，设置消失。  getWriter() has already been called for this response问题解决
-            PrintWriter writer = response.getWriter();
-            writer.print(JSON.toJSON(obj));
-            writer.close();
-//            response.reset();
+            ServletOutputStream outputStream = response.getOutputStream();
+            outputStream.print(JSON.toJSONString(obj));
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
 
