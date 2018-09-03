@@ -13,7 +13,7 @@ import java.net.URL;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "HdrQueryDataService", targetNamespace = "http://ws.edi.hdr.goodwill.com/", wsdlLocation = "http://10.2.2.56:9010/hdr-edi/ws/hdrQueryDataWS?wsdl")
+@WebServiceClient(name = "HdrQueryDataService", targetNamespace = "http://ws.edi.hdr.goodwill.com/", wsdlLocation = "http://10.2.2.71:8084/hdr-edi/ws/hdrQueryDataWS?wsdl")
 public class HdrQueryDataService
     extends Service
 {
@@ -26,7 +26,7 @@ public class HdrQueryDataService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://10.2.2.56:9010/hdr-edi/ws/hdrQueryDataWS?wsdl");
+            url = new URL("http://10.2.2.71:8084/hdr-edi/ws/hdrQueryDataWS?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

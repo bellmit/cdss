@@ -243,7 +243,7 @@ public class RuleService {
             String field = analyzeBean.getField();
             Optional.ofNullable(userModelRepService.findByUmName(field.substring(field.lastIndexOf("_") + 1)).get(0))
                     .ifPresent(s -> {
-                        analyzeBean.setUmType(s.getUmType());
+                        analyzeBean.setType(s.getUmType());
                     });
 
             //java8
@@ -826,7 +826,7 @@ public class RuleService {
                     try {
                         first_order = Integer.valueOf(split[1]);
                     } catch (Exception e) {
-                        first_order=1;
+                        first_order = 1;
                     }
                 } else {
                     name = names;
@@ -1213,6 +1213,39 @@ public class RuleService {
         List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
         rule.setOriginalJianyanbaogaos(originalJianyanbaogaos);
         return rule;
+    }
+
+    /**
+     * 获取医嘱
+     *
+     * @param rule
+     * @return
+     */
+    public List<Yizhu> getYizhu(Rule rule) {
+
+        //基础map 放相同数据
+        Map<String, String> baseParams = new HashMap<>();
+        baseParams.put("oid", BaseConstants.OID);
+        baseParams.put("patient_id", rule.getPatient_id());
+        baseParams.put("visit_id", rule.getVisit_id());
+        Map<String, String> params = new HashMap<>();
+        //获取医嘱
+        params.put("ws_code", BaseConstants.JHHDRWS012A);
+        params.putAll(baseParams);
+
+        //获取当前再用医嘱 结束时间大约当前时间
+        List<Map<String, String>> listConditions = new LinkedList<>();
+        Map<String, String> conditionParams = new HashMap<>();
+        conditionParams.put("elemName", "ORDER_END_TIME");
+        conditionParams.put("value", DateFormatUtil.format(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
+        conditionParams.put("operator", "&lt;=");
+        listConditions.add(conditionParams);
+
+        //获取入出转xml
+        String yizhuData = cdrService.getDataByCDR(params, listConditions);
+        //获取入院时间 出院时间
+        List<Yizhu> maps = analysisXmlService.analysisXml2Yizhu(yizhuData);
+        return maps;
     }
 
     /**

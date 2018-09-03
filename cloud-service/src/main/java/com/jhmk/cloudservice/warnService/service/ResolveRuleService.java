@@ -11,6 +11,7 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.FormatRule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.StandardRule;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.MapUtil;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -254,14 +255,81 @@ public class ResolveRuleService {
             List<UserModel> userModelList = userModelRepService.findByUmName(lastName);
             if (Objects.nonNull(userModelList)) {
                 String umType = userModelList.get(0).getUmType();
-                rule.setUmType(umType);
+                rule.setType(umType);
             }
+            rule.setId(String.valueOf(byUmNamePath.getUdmmId()));
             rule.setFlag("1");
-            rule.setValues(value);
+            if (ifNeedSplitValue(value)) {
+                Map<String, String> map = splitValue(value);
+                rule.setValues(map.get("value"));
+                rule.setUnit(map.get("unit"));
+            } else {
+                rule.setValues(value);
+            }
+//            病案首页_基本信息_年龄
+
             rule.setField(oldField);
             rule.setExp(sympol);
         }
         return rule;
     }
 
+    /**
+     * 切分12岁 这种问题
+     *
+     * @return
+     */
+    public boolean ifNeedSplitValue(String value) {
+        if (value.length() < 2) {
+            return false;
+        }
+
+        if (value.lastIndexOf("小时") == value.length() - 2 && StringUtil.isInteger(value.substring(0, value.length() - 2))) {
+            return true;
+        } else if (value.lastIndexOf("天") == value.length() - 1 && StringUtil.isInteger(value.substring(0, value.length() - 1))) {
+            return true;
+
+        } else if (value.lastIndexOf("月") == value.length() - 1 && StringUtil.isInteger(value.substring(0, value.length() - 1))) {
+            return true;
+
+        } else if (value.lastIndexOf("日") == value.length() - 1 && StringUtil.isInteger(value.substring(0, value.length() - 1))) {
+            return true;
+
+        } else if (value.lastIndexOf("年") == value.length() - 1 && StringUtil.isInteger(value.substring(0, value.length() - 1))) {
+            return true;
+
+        } else if (value.lastIndexOf("岁") == value.length() - 1 && StringUtil.isInteger(value.substring(0, value.length() - 1))) {
+            return true;
+        }
+        return false;
+    }
+
+    //切分数值和单位
+    public static Map<String, String> splitValue(String value) {
+        Map<String, String> map = new HashMap<>();
+        if (value.contains("小时")) {
+            map.put("value", value.substring(0, value.length() - 2));
+            map.put("unit", value.substring(value.length() - 2));
+            map.put(value.substring(0, value.length() - 2), value.substring(value.length() - 2));
+        } else if (value.contains("天")) {
+            map.put("value", value.substring(0, value.length() - 1));
+            map.put("unit", value.substring(value.length() - 1));
+        } else if (value.contains("月")) {
+            map.put("value", value.substring(0, value.length() - 1));
+            map.put("unit", value.substring(value.length() - 1));
+        } else if (value.contains("日")) {
+
+        } else if (value.contains("年")) {
+            map.put("value", value.substring(0, value.length() - 1));
+            map.put("unit", value.substring(value.length() - 1));
+        } else if (value.contains("岁")) {
+            map.put("value", value.substring(0, value.length() - 1));
+            map.put("unit", value.substring(value.length() - 1));
+        }
+        return map;
+    }
+
+    public static void main(String[] args) {
+        Map<String, String> map = splitValue("88岁");
+    }
 }
