@@ -268,7 +268,7 @@ public class ResolveRuleService {
             }
 //            病案首页_基本信息_年龄
 
-            rule.setField(oldField);
+            rule.setField(oldField.substring(oldField.lastIndexOf("_")+1));
             rule.setExp(sympol);
         }
         return rule;
