@@ -14,6 +14,7 @@ public class AnalyzeBean implements Serializable{
     private String field;
     private String values;
     private String exp;
+    private String name;
 
     /**
      * 以下字段为接受已有的mongo库的规则 ，解析为原前台传过来的字段，方便前台重新编辑规则信息
@@ -21,6 +22,13 @@ public class AnalyzeBean implements Serializable{
     private List<String> value=new LinkedList<>();//等同于values
     private String type;// suerModel 的 类型
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getId() {
         return id;
