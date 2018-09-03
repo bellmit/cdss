@@ -1,4 +1,4 @@
-package com.jhmk.cloudentity.cdss.pojo;
+package com.jhmk.cloudentity.page.bean;
 
 import javax.persistence.*;
 import java.util.Date;

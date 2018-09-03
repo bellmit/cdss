@@ -1,5 +1,6 @@
 package com.jhmk.cloudservice.warnService.webservice;
 
+import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
 import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
 import com.jhmk.cloudutil.util.RegularUtils;
@@ -426,6 +427,7 @@ public class AnalysisXmlService {
 
     /**
      * JHHDRWS021B 病历章节（反结构化）获取一诉五史 辅助检查 专科检查
+     *
      * @param str
      * @return
      */
@@ -442,7 +444,7 @@ public class AnalysisXmlService {
                     Element element = items.get(i);
                     Element dg_name = element.element("DG_NAME");
                     Element dg_plain_content_blob = element.element("DG_PLAIN_CONTENT_BLOB");
-                    if (Objects.nonNull(dg_name)&&Objects.nonNull(dg_plain_content_blob)){
+                    if (Objects.nonNull(dg_name) && Objects.nonNull(dg_plain_content_blob)) {
                         Map<String, String> zs = new HashMap<>();
                         zs.put("key", dg_name.getText());
                         zs.put("value", dg_plain_content_blob.getText());
@@ -460,12 +462,13 @@ public class AnalysisXmlService {
 
     /**
      * 体征  JHHDRWS017
+     *
      * @param str
      * @return
      */
     public List<Map<String, String>> analysisXml2physicalSign(String str) {
         List<Map<String, String>> ruyuanjiluList = new LinkedList<>();
-        Map<String,String>tzMap=new HashMap<>();
+        Map<String, String> tzMap = new HashMap<>();
         try {
             Document dom = DocumentHelper.parseText(str);
             Element root = dom.getRootElement();
@@ -488,7 +491,7 @@ public class AnalysisXmlService {
 
                     Element dg_name = element.element("DG_NAME");
                     Element dg_plain_content_blob = element.element("DG_PLAIN_CONTENT_BLOB");
-                    if (Objects.nonNull(dg_name)&&Objects.nonNull(dg_plain_content_blob)){
+                    if (Objects.nonNull(dg_name) && Objects.nonNull(dg_plain_content_blob)) {
                         Map<String, String> zs = new HashMap<>();
                         zs.put("key", dg_name.getText());
                         zs.put("value", dg_plain_content_blob.getText());
@@ -502,6 +505,66 @@ public class AnalysisXmlService {
             e.printStackTrace();
         }
         return ruyuanjiluList;
+    }
+
+    /**
+     * 医嘱  JHHDRWS012A
+     *
+     * @param str
+     * @return
+     */
+    public List<Yizhu> analysisXml2Yizhu(String str) {
+        List<Yizhu> yizhuList = new LinkedList<>();
+        Map<String, String> tzMap = new HashMap<>();
+        try {
+            Document dom = DocumentHelper.parseText(str);
+            Element root = dom.getRootElement();
+            List<Element> items = root.elements();
+            if (Objects.nonNull(items)) {
+
+                for (int i = 0; i < items.size(); i++) {
+                    JianyanbaogaoForAuxiliary mx = new JianyanbaogaoForAuxiliary();
+                    Element element = items.get(i);
+                    //名称 体温 脉搏等
+                    String orderItemName = element.element("ORDER_ITEM_NAME").getText();
+                    String orderItemCode = element.element("ORDER_ITEM_CODE").getText();
+                    //规格
+                    String specification = element.element("SPECIFICATION").getText();
+                    //频率
+                    String frequencyName = element.element("FREQUENCY_NAME").getText();
+                    //编码
+                    String frequencyCode = element.element("FREQUENCY_CODE").getText();
+                    //单位 mg
+                    String dosageUnit = element.element("DOSAGE_UNIT").getText();
+                    String orderClassName = element.element("ORDER_CLASS_NAME").getText();
+                    //用药方式
+                    String pharmacyWayName = element.element("PHARMACY_WAY_NAME").getText();
+                    String orderBeginTime = element.element("ORDER_BEGIN_TIME").getText();
+                    String orderEndTime = element.element("ORDER_END_TIME").getText();
+                    String dosageValue = element.element("DOSAGE_VALUE").getText();
+                    String orderPropertiesName = element.element("ORDER_PROPERTIES_NAME").getText();
+
+
+                    if (Objects.nonNull(orderItemName)) {
+                        Yizhu yizhu = new Yizhu();
+                        yizhu.setOrder_item_name(orderItemName);
+                        yizhu.setSpecification(specification);
+                        yizhu.setFrequency_name(frequencyName);
+                        yizhu.setFrequency_code(frequencyCode);
+                        yizhu.setDrug_amount_value(dosageValue);
+                        yizhu.setOrder_begin_time(orderBeginTime);
+                        yizhu.setOrder_end_time(orderEndTime);
+
+                        yizhuList.add(yizhu);
+                    }
+
+                }
+            }
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        return yizhuList;
     }
 
 

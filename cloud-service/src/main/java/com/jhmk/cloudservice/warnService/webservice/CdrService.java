@@ -1,9 +1,9 @@
 package com.jhmk.cloudservice.warnService.webservice;
 
 
-import com.jhmk.cloudentity.config.EntityConstants;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataService;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataWsImpl;
+import com.jhmk.cloudutil.config.BaseConstants;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,21 +19,10 @@ import java.util.Objects;
 @Service
 public class CdrService {
     public static String getXml(Map<String, String> params, List<Map<String, String>> conditions) {
-//        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-//                "<MSG>" +
-//                "<HOSPITAL_OID>" + EntityConstants.OID + "</HOSPITAL_OID>" +
-//                "<PATIENT_ID>" + params.get("patient_id") + "</PATIENT_ID>" +
-//                "<VISIT_ID>" + params.get("visit_id") + "</VISIT_ID>" +
-//                "<WS_CODE>" + params.get("ws_code") + "</WS_CODE>" +
-//                "<CONDITION>" +
-//                "<ELEM NAME=\"" + params.get("elemName") + "\" VALUE=\"" + params.get("value") + "\"  OPERATOR=\"" + params.get("operator") + "\"></ELEM>" +
-//                "</CONDITION>" +
-//                "</MSG>";
-
         StringBuffer sb = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         sb.append("<MSG>")
                 .append("<HOSPITAL_OID>")
-                .append(EntityConstants.OID)
+                .append(BaseConstants.OID)
                 .append("</HOSPITAL_OID>")
                 .append("<PATIENT_ID>")
                 .append(params.get("patient_id"))
@@ -72,12 +61,12 @@ public class CdrService {
 
     public static void main(String[] args) {
         Map<String, String> params = new HashMap<>();
-        params.put("oid", EntityConstants.OID);
+        params.put("oid", BaseConstants.OID);
         params.put("patient_id", "000571764100");
-//        params.put("visit_id", "1");
+        params.put("visit_id", "1");
         //检验数据
 //        params.put("ws_code", "JHHDRWS006B");
-        params.put("ws_code", "JHHDRWS004A");
+        params.put("ws_code", "JHHDRWS012A");
 //        params.put("elemName", "REPORT_TIME");
 //        params.put("value", "2017-08-15 06:40:26");
 //        params.put("operator", "=");

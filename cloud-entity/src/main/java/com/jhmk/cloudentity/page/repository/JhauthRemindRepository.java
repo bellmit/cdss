@@ -1,6 +1,6 @@
-package com.jhmk.cloudentity.cdss.pojo.repository;
+package com.jhmk.cloudentity.page.repository;
 
-import com.jhmk.cloudentity.cdss.pojo.JhauthRemind;
+import com.jhmk.cloudentity.page.bean.JhauthRemind;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

@@ -8,21 +8,35 @@ import java.util.List;
  * 添加规则时  用于解析的实体类
  */
 public class AnalyzeBean implements Serializable{
+    private String id;
     private String unit;
     private String flag;
     private String field;
     private String values;
     private String exp;
+    private String name;
 
     /**
      * 以下字段为接受已有的mongo库的规则 ，解析为原前台传过来的字段，方便前台重新编辑规则信息
      */
     private List<String> value=new LinkedList<>();//等同于values
-    private String umType;// suerModel 的 类型
+    private String type;// suerModel 的 类型
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUnit() {
         return unit;
@@ -60,6 +74,14 @@ public class AnalyzeBean implements Serializable{
         return exp;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void setExp(String exp) {
         this.exp = exp;
     }
@@ -72,11 +94,5 @@ public class AnalyzeBean implements Serializable{
         this.value = value;
     }
 
-    public String getUmType() {
-        return umType;
-    }
 
-    public void setUmType(String umType) {
-        this.umType = umType;
-    }
 }

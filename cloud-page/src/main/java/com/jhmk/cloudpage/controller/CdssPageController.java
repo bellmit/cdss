@@ -7,14 +7,10 @@ package com.jhmk.cloudpage.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
-import com.jhmk.cloudentity.cdss.page.DrugTendency;
-import com.jhmk.cloudentity.earlywaring.entity.*;
-import com.jhmk.cloudentity.page.bean.ClickRate;
-import com.jhmk.cloudentity.page.service.ClickRateRepService;
+import com.jhmk.cloudentity.page.bean.DrugTendency;
 import com.jhmk.cloudservice.cdssPageService.CdssPageService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
-import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

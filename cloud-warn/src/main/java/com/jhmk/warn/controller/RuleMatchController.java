@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseEntityController;
 import com.jhmk.cloudentity.earlywaring.entity.UserModel;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudservice.warnService.service.RuleService;
+import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -33,6 +36,8 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
 
     @Autowired
     RuleService ruleService;
+    @Autowired
+    AnalysisXmlService analysisXmlService;
 
     /**
      * 下医嘱规则匹配
@@ -77,13 +82,16 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
     @PostMapping("/ruleMatchByDiagnose")
     @ResponseBody
     public void ruleMatchByDiagnose(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
-        Map<String,String> parse = (Map) JSONObject.parse(map);
+        Map<String, String> parse = (Map) JSONObject.parse(map);
         String s = ruleService.anaRule(parse);
         //解析一诉五史
         JSONObject jsonObject = JSONObject.parseObject(s);
         Rule rule = Rule.fill(jsonObject);
+
         //获取 拼接检验检查报告
-//        rule = ruleService.getbaogao(rule);
+        rule = ruleService.getbaogao(rule);
+        List<Yizhu> yizhu = ruleService.getYizhu(rule);
+        rule.setYizhu(yizhu);
         String data = "";
         try {
             //规则匹配
