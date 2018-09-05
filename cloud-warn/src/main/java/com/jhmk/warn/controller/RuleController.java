@@ -361,7 +361,7 @@ public class RuleController extends BaseEntityController<Object> {
 
     @PostMapping("/ruleMatch")
     @ResponseBody
-    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
+    public AtResponse ruleMatch(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         List<SmShowLog> logList = null;
         Map<String, String> paramMap = (Map) JSON.parse(map);
@@ -385,8 +385,8 @@ public class RuleController extends BaseEntityController<Object> {
         }
         logList = ruleService.add2ShowLog(rule, data, map);
         resp.setData(logList);
-        wirte(response, resp);
         ruleService.saveRule2Database(rule);
+        return resp;
     }
 
 

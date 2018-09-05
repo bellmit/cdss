@@ -84,7 +84,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
      */
     @PostMapping("/ruleMatchByDiagnose")
     @ResponseBody
-    public void ruleMatchByDiagnose(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
+    public AtResponse ruleMatchByDiagnose(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         Map<String, String> parse = (Map) JSONObject.parse(map);
         String s = ruleService.anaRule(parse);
@@ -93,7 +93,9 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         Rule rule = Rule.fill(jsonObject);
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
+        System.out.println("===================获取到检验检查");
         List<Yizhu> yizhu = ruleService.getYizhu(rule);
+        System.out.println("===================获取到医嘱");
         rule.setYizhu(yizhu);
         String data = "";
         try {
@@ -110,8 +112,8 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         resp.setData(logList);
         resp.setResponseCode(ResponseCode.OK);
         //一诉五史信息入库
-        wirte(response, resp);
         ruleService.saveRule2Database(rule);
+        return resp;
 
     }
 
