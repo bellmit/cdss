@@ -4,6 +4,7 @@ package com.jhmk.warn.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseEntityController;
+import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmShowLogRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
@@ -21,6 +22,7 @@ import com.jhmk.cloudutil.config.UrlConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.DateFormatUtil;
+import com.jhmk.cloudutil.util.ThreadUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,7 +37,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 /**
  * 规则管理
@@ -96,7 +98,7 @@ public class RuleController extends BaseEntityController<Object> {
 //        String ruleCondition = userModelService.analyzeOldRule(condition);
         String ruleCondition = userModelService.getOldRule(condition);
         param.put("ruleCondition", ruleCondition);
-        String isStandard =  (String)param.get("isStandard");
+        String isStandard = (String) param.get("isStandard");
         if ("true".equals(isStandard)) {
             param.put("childElement", ruleCondition);
         }
@@ -228,7 +230,7 @@ public class RuleController extends BaseEntityController<Object> {
         }
         //预警等级
         if (map.get("warninglevel") != null) {
-                search.put("warninglevel", map.get("warninglevel"));
+            search.put("warninglevel", map.get("warninglevel"));
         }
         //是否运行
         if (map.get("is_run") != null) {
@@ -360,28 +362,43 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/ruleMatch")
     @ResponseBody
     public void ruleMatch(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
-        Map<String, String> paramMap = (Map) JSON.parse(map);
-        //解析规则 一诉五史 检验报告等
-        String s = ruleService.anaRule(paramMap);
-        String s2 = ruleService.stringTransform(s);
-        JSONObject parse = JSONObject.parseObject(s2);
-        Rule rule = Rule.fill(parse);
-        String data = "";
-        try {
-            //规则匹配
-            data = ruleService.ruleMatchGetResp(rule);
-            wirte(response, data);
-        } catch (Exception e) {
-            logger.info("规则匹配失败:{}", e.getMessage());
-        }
-        if (StringUtils.isNotBlank(data)) {
-            ruleService.add2LogTable(data, rule);
-            ruleService.add2ShowLog(rule, data);
-        }
-        ruleService.getTipList2ShowLog(rule, map);
-        //一诉五史信息入库
-        ruleService.saveRule2Database(rule);
+        ExecutorService executorService = Executors.newFixedThreadPool(8);
+        Callable<List<SmShowLog>> callable = new Callable<List<SmShowLog>>() {
+            @Override
+            public List<SmShowLog> call() throws Exception {
+                List<SmShowLog> logList = null;
+                Map<String, String> paramMap = (Map) JSON.parse(map);
+                //解析规则 一诉五史 检验报告等
+                String s = ruleService.anaRule(paramMap);
+                String s2 = ruleService.stringTransform(s);
+                JSONObject parse = JSONObject.parseObject(s2);
+                Rule rule = Rule.fill(parse);
+                String data = "";
+                try {
+                    //规则匹配
+                    data = ruleService.ruleMatchGetResp(rule);
+                } catch (Exception e) {
+                    logger.info("规则匹配失败:{}", e.getMessage());
+                }
+                if (StringUtils.isNotBlank(data)) {
+                    //获取保存信息 返回前台显示
+                    ruleService.add2LogTable(data, rule);
+                    //todo  删除触发规则保存到sm_show_log表中，改为从sm_hospital表获取数据
+                    logList = ruleService.add2ShowLog(rule, data, map);
+                }
+                ruleService.saveRule2Database(rule);
+                return logList;
+            }
 
+        };
+
+        AtResponse resp = new AtResponse();
+        Future<List<SmShowLog>> submit = executorService.submit(callable);
+        List<SmShowLog> logList = submit.get();
+        resp.setData(logList);
+        wirte(response, resp);
+
+        //一诉五史信息入库
     }
 
 
@@ -419,7 +436,7 @@ public class RuleController extends BaseEntityController<Object> {
 
             smShowLogRepService.update(ruleStatus, id);
         } catch (Exception e) {
-            logger.info("更新诊疗提醒失败{},数据为{},原因为{}" + e.getMessage(),map,e.getCause());
+            logger.info("更新诊疗提醒失败{},数据为{},原因为{}" + e.getMessage(), map, e.getCause());
         }
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);

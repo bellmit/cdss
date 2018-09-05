@@ -26,11 +26,15 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
 
     /**
      * 查询推荐检查 此次状态为0的logs数据
+     *
      * @param doctorId
      * @param patientId
      * @param visitId
      * @return
      */
+    @Query("select  s from SmShowLog s where s.doctorId=?1 and s.patientId=?2 and s.visitId=?3 and s.type='rulematch' and s.ruleStatus=0")
+    List<SmShowLog> findExistLogByRuleMatch(String doctorId, String patientId, String visitId);
+
     @Query("select  s from SmShowLog s where s.doctorId=?1 and s.patientId=?2 and s.visitId=?3 and s.type<>'rulematch' and s.ruleStatus=0")
     List<SmShowLog> findExistLog(String doctorId, String patientId, String visitId);
 }
