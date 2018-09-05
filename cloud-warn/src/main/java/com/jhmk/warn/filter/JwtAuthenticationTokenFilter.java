@@ -1,6 +1,7 @@
 package com.jhmk.warn.filter;
 
 
+import com.alibaba.fastjson.JSON;
 import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudutil.model.AtResponse;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -37,7 +39,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         Object sessionToken = request.getSession().getAttribute("token");
         //设置session过期时间，每次访问资源都会经过过滤器，如超过2小时时间不访问则过期
         response.setCharacterEncoding("utf-8");
-//        PrintWriter writer = response.getWriter();
+        PrintWriter writer = response.getWriter();
         AtResponse resp = new AtResponse();
 
         if (token == null) {
@@ -72,9 +74,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     resp.setResponseCode(ResponseCode.INERERROR5);
                 }
             }
-
         }
-        BaseController.wirte(response, resp);
+        writer.print(JSON.toJSONString(resp));
     }
 
 }

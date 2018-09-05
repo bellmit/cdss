@@ -78,13 +78,8 @@ public class BaseController {
     public static void wirte(HttpServletResponse response, Object obj) {
         response.setCharacterEncoding("utf-8");
         try {
-            //todo response 注意reset后缓存消失，设置消失。  getWriter() has already been called for this response问题解决
-            response.reset();
-            response.setContentType("application/json");
-            response.setCharacterEncoding("utf-8");
             PrintWriter writer = response.getWriter();
             writer.print(JSON.toJSON(obj));
-            writer.flush();
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
