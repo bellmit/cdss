@@ -361,7 +361,7 @@ public class RuleController extends BaseEntityController<Object> {
 
     @PostMapping("/ruleMatch")
     @ResponseBody
-    public void ruleMatch(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
+    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         List<SmShowLog> logList = null;
         Map<String, String> paramMap = (Map) JSON.parse(map);

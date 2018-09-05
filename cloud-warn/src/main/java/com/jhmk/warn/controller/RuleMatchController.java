@@ -70,7 +70,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
             ruleService.add2LogTable(data, fill);
 //            ruleService.add2ShowLog(fill, data);
         }
-        ruleService.getTipList2ShowLog(fill, map);
+//        ruleService.getTipList2ShowLog(fill, map);
     }
 
 

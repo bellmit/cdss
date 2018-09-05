@@ -350,7 +350,7 @@ public class RuleService {
 
 
                         List<LogMapping> notSaveLogMapping = getNotSaveLogMapping(mes, diseaseMessageMap);
-                        Collections.sort(notSaveLogMapping, CompareUtil.createComparator(1, "logTime"));
+                        Collections.sort(notSaveLogMapping, CompareUtil.createComparator(-1, "logTime"));
                         String logTime = notSaveLogMapping.get(0).getLogTime();
                         if (StringUtils.isNotBlank(logTime)) {
                             smHospitalLog.setCreateTime(DateFormatUtil.parseDateBySdf(logTime, DateFormatUtil.DATETIME_PATTERN_SS));
@@ -375,18 +375,23 @@ public class RuleService {
 
     }
 
+
+    /**
+     * 添加触发规则项到sm_show_log 在查询显示
+     *
+     * @param data
+     * @param fromData
+     * @param map
+     * @return
+     */
     public List<SmShowLog> add2ShowLog(Rule data, String fromData, String map) {
-        long startTime = System.currentTimeMillis();
-        List<SmShowLog> logList = new ArrayList<>();
-        if (StringUtils.isNotBlank(fromData)) {
-            List<SmShowLog> smShowLogs = addHintRule2ShowLogTable(data, fromData);
-            logList.addAll(smShowLogs);
-        }
-        List<SmShowLog> tipList2ShowLog = getTipList2ShowLog(data, map);
-        logList.addAll(tipList2ShowLog);
-        long endTime = System.currentTimeMillis();
-        System.out.println("===================" + (endTime - startTime));
-        return logList;
+        String doctor_id = data.getDoctor_id();
+        String patient_id = data.getPatient_id();
+        String visit_id = data.getVisit_id();
+        addHintRule2ShowLogTable(data, fromData);
+        getTipList2ShowLog(data, map);
+        List<SmShowLog> byDoctorIdAndPatientId = smShowLogRepService.findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(doctor_id, patient_id, visit_id);
+        return byDoctorIdAndPatientId;
     }
 
 
@@ -775,7 +780,7 @@ public class RuleService {
                 logger.error("访问{}接口出现异常，错误编码:{},错误信息:{}", "getTipList.json", e.getCause(), e.getMessage());
             }
         } else {
-            logger.info("医生id或病人id为空,触发规则为：{}", map);
+            logger.info("医生id或病人id为空,医生id:{},病人id:{}", doctor_id, patient_id);
         }
         return resultList;
     }
