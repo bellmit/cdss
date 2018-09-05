@@ -280,13 +280,11 @@ public class RuleService {
         //todo 获取疾病同义词，用于跑医院数据到数据库
 //        Rule sameZhenDuanList = getSameZhenDuanList(fill);
         String o = JSONObject.toJSONString(fill);
-        System.out.println(o);
         Object parse = JSONObject.parse(o);
         String data = "";
-//        System.out.println(parse.toString());
         try {
             data = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.matchrule, parse, String.class);
-            logger.info("匹配规则结果为{}", data);
+//            logger.info("匹配规则结果为{}", data);
         } catch (Exception e) {
             logger.info("规则匹配失败：原因：" + e.getMessage() + data);
         }
