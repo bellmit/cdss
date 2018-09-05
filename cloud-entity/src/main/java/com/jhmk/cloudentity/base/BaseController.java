@@ -84,6 +84,7 @@ public class BaseController {
             response.setCharacterEncoding("utf-8");
             PrintWriter writer = response.getWriter();
             writer.print(JSON.toJSON(obj));
+            writer.flush();
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

@@ -861,6 +861,8 @@ public class RuleService {
         List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
         List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
         rule.setOriginalJianyanbaogaos(originalJianyanbaogaos);
+        System.out.println("检查报告："+rule.getJianchabaogao());
+        System.out.println("检验报告："+rule.getJianyanbaogao());
         return rule;
     }
 
