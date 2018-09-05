@@ -126,7 +126,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
     @PostMapping("/ruleMatchByDoctorAdvice")
     @ResponseBody
     public void ruleMatchByDoctorAdvice(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
-
+        AtResponse resp = new AtResponse();
         JSONObject jsonObject = JSONObject.parseObject(map);
         if (Objects.nonNull(jsonObject)) {
 
@@ -139,15 +139,16 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
             try {
                 //规则匹配
                 data = ruleService.ruleMatchGetResp(ruleBean);
-                wirte(response, data);
             } catch (Exception e) {
                 logger.info("规则匹配失败:{}" + e.getMessage());
             }
             if (StringUtils.isNotBlank(data)) {
                 ruleService.add2LogTable(data, ruleBean);
-//                ruleService.add2ShowLog(ruleBean, data);
             }
-            ruleService.getTipList2ShowLog(ruleBean, map);
+            List<SmShowLog> logList = ruleService.add2ShowLog(rule, data, map);
+            resp.setResponseCode(ResponseCode.OK);
+            resp.setData(logList);
+            wirte(response, resp);
         } else {
             logger.info("医嘱规则匹配传递信息为{}" + map);
         }
