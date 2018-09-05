@@ -521,37 +521,47 @@ public class AnalysisXmlService {
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
+                Yizhu yizhu = null;
 
                 for (int i = 0; i < items.size(); i++) {
-                    JianyanbaogaoForAuxiliary mx = new JianyanbaogaoForAuxiliary();
+                    yizhu = new Yizhu();
                     Element element = items.get(i);
                     //名称 体温 脉搏等
                     String orderItemName = element.element("ORDER_ITEM_NAME").getText();
-                    String orderItemCode = element.element("ORDER_ITEM_CODE").getText();
                     //规格
-                    String specification = element.element("SPECIFICATION").getText();
-                    //频率
-                    String frequencyName = element.element("FREQUENCY_NAME").getText();
+                    String specification = "";
+                    if (element.element("SPECIFICATION") != null) {
+                        specification = element.element("SPECIFICATION").getText();
+                    }
+//                    频率
+                    String frequencyName = "";
+                    if (element.element("FREQUENCY_NAME") != null) {
+                        frequencyName = element.element("FREQUENCY_NAME").getText();
+                    }
                     //编码
                     String frequencyCode = element.element("FREQUENCY_CODE").getText();
                     //单位 mg
-                    String dosageUnit = element.element("DOSAGE_UNIT").getText();
-                    String orderClassName = element.element("ORDER_CLASS_NAME").getText();
+//                    String dosageUnit = element.element("DOSAGE_UNIT").getText();
+//                    String orderClassName = element.element("ORDER_CLASS_NAME").getText();
                     //用药方式
-                    String pharmacyWayName = element.element("PHARMACY_WAY_NAME").getText();
+//                    String pharmacyWayName = element.element("PHARMACY_WAY_NAME").getText();
                     String orderBeginTime = element.element("ORDER_BEGIN_TIME").getText();
                     String orderEndTime = element.element("ORDER_END_TIME").getText();
-                    String dosageValue = element.element("DOSAGE_VALUE").getText();
-                    String orderPropertiesName = element.element("ORDER_PROPERTIES_NAME").getText();
+                    Element dosage_value = element.element("DOSAGE_VALUE");
+                    if (dosage_value != null) {
+
+                        String dosageValue = element.element("DOSAGE_VALUE").getText();
+                        yizhu.setDrug_amount_value(dosageValue);
+
+                    }
+//                    String orderPropertiesName = element.element("ORDER_PROPERTIES_NAME").getText();
 
 
                     if (Objects.nonNull(orderItemName)) {
-                        Yizhu yizhu = new Yizhu();
                         yizhu.setOrder_item_name(orderItemName);
                         yizhu.setSpecification(specification);
                         yizhu.setFrequency_name(frequencyName);
                         yizhu.setFrequency_code(frequencyCode);
-                        yizhu.setDrug_amount_value(dosageValue);
                         yizhu.setOrder_begin_time(orderBeginTime);
                         yizhu.setOrder_end_time(orderEndTime);
 

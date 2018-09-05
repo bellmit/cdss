@@ -505,13 +505,13 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
         SmHospitalLog smHospitalLog = new SmHospitalLog();
         smHospitalLog.setDoctorId(rule.getDoctor_id());
         smHospitalLog.setDoctorName(rule.getDoctor_name());
-        if (StringUtils.isNotBlank(rule.getDoctor_name())) {
-
-            List<SmUsers> byUserName = smUsersRepService.findByUserName(rule.getDoctor_name());
-            if (byUserName != null && byUserName.size() > 0) {
-                smHospitalLog.setDoctorId(byUserName.get(0).getUserId());
-            }
-        }
+//        if (StringUtils.isNotBlank(rule.getDoctor_name())) {
+//
+//            List<SmUsers> byUserName = smUsersRepService.findByUserName(rule.getDoctor_name());
+//            if (byUserName != null && byUserName.size() > 0) {
+//                smHospitalLog.setDoctorId(byUserName.get(0).getUserId());
+//            }
+//        }
         smHospitalLog.setDeptCode(rule.getDept_code());
         //病人id
         smHospitalLog.setPatientId(rule.getPatient_id());

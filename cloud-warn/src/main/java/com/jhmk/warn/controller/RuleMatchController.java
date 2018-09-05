@@ -2,11 +2,14 @@ package com.jhmk.warn.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseEntityController;
+import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudentity.earlywaring.entity.UserModel;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudservice.warnService.service.RuleService;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
+import com.jhmk.cloudutil.model.AtResponse;
+import com.jhmk.cloudutil.model.ResponseCode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +68,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         }
         if (StringUtils.isNotBlank(data)) {
             ruleService.add2LogTable(data, fill);
-            ruleService.add2ShowLog(fill, data);
+//            ruleService.add2ShowLog(fill, data);
         }
         ruleService.getTipList2ShowLog(fill, map);
     }
@@ -82,12 +85,12 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
     @PostMapping("/ruleMatchByDiagnose")
     @ResponseBody
     public void ruleMatchByDiagnose(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
+        AtResponse resp = new AtResponse();
         Map<String, String> parse = (Map) JSONObject.parse(map);
         String s = ruleService.anaRule(parse);
         //解析一诉五史
         JSONObject jsonObject = JSONObject.parseObject(s);
         Rule rule = Rule.fill(jsonObject);
-
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
         List<Yizhu> yizhu = ruleService.getYizhu(rule);
@@ -96,17 +99,20 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         try {
             //规则匹配
             data = ruleService.ruleMatchGetResp(rule);
-            wirte(response, data);
+            System.out.println("匹配结果为======================:" + data);
         } catch (Exception e) {
             logger.info("规则匹配失败:{}" + e.getMessage());
         }
         if (StringUtils.isNotBlank(data)) {
             ruleService.add2LogTable(data, rule);
-            ruleService.add2ShowLog(rule, data);
         }
-        ruleService.getTipList2ShowLog(rule, map);
+        List<SmShowLog> logList = ruleService.add2ShowLog(rule, data, map);
+        resp.setData(logList);
+        resp.setResponseCode(ResponseCode.OK);
         //一诉五史信息入库
+        wirte(response, resp);
         ruleService.saveRule2Database(rule);
+
     }
 
     /**
@@ -139,7 +145,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
             }
             if (StringUtils.isNotBlank(data)) {
                 ruleService.add2LogTable(data, ruleBean);
-                ruleService.add2ShowLog(ruleBean, data);
+//                ruleService.add2ShowLog(ruleBean, data);
             }
             ruleService.getTipList2ShowLog(ruleBean, map);
         } else {
