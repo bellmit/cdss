@@ -362,43 +362,31 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/ruleMatch")
     @ResponseBody
     public void ruleMatch(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(8);
-        Callable<List<SmShowLog>> callable = new Callable<List<SmShowLog>>() {
-            @Override
-            public List<SmShowLog> call() throws Exception {
-                List<SmShowLog> logList = null;
-                Map<String, String> paramMap = (Map) JSON.parse(map);
-                //解析规则 一诉五史 检验报告等
-                String s = ruleService.anaRule(paramMap);
-                String s2 = ruleService.stringTransform(s);
-                JSONObject parse = JSONObject.parseObject(s2);
-                Rule rule = Rule.fill(parse);
-                String data = "";
-                try {
-                    //规则匹配
-                    data = ruleService.ruleMatchGetResp(rule);
-                } catch (Exception e) {
-                    logger.info("规则匹配失败:{}", e.getMessage());
-                }
-                if (StringUtils.isNotBlank(data)) {
-                    //获取保存信息 返回前台显示
-                    ruleService.add2LogTable(data, rule);
-                    //todo  删除触发规则保存到sm_show_log表中，改为从sm_hospital表获取数据
-                    logList = ruleService.add2ShowLog(rule, data, map);
-                }
-                ruleService.saveRule2Database(rule);
-                return logList;
-            }
-
-        };
-
         AtResponse resp = new AtResponse();
-        Future<List<SmShowLog>> submit = executorService.submit(callable);
-        List<SmShowLog> logList = submit.get();
+        List<SmShowLog> logList = null;
+        Map<String, String> paramMap = (Map) JSON.parse(map);
+        //解析规则 一诉五史 检验报告等
+        String s = ruleService.anaRule(paramMap);
+        String s2 = ruleService.stringTransform(s);
+        JSONObject parse = JSONObject.parseObject(s2);
+        Rule rule = Rule.fill(parse);
+        String data = "";
+        try {
+            //规则匹配
+            data = ruleService.ruleMatchGetResp(rule);
+        } catch (Exception e) {
+            logger.info("规则匹配失败:{}", e.getMessage());
+        }
+        if (StringUtils.isNotBlank(data)) {
+            //获取保存信息 返回前台显示
+            ruleService.add2LogTable(data, rule);
+            //todo  删除触发规则保存到sm_show_log表中，改为从sm_hospital表获取数据
+
+        }
+        logList = ruleService.add2ShowLog(rule, data, map);
         resp.setData(logList);
         wirte(response, resp);
-
-        //一诉五史信息入库
+        ruleService.saveRule2Database(rule);
     }
 
 
