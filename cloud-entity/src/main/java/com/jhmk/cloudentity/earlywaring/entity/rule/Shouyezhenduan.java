@@ -22,6 +22,7 @@ public class Shouyezhenduan {
     private String diagnosis_type_name;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

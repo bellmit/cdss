@@ -24,6 +24,7 @@ public class Ruyuanjilu {
     private String auxiliary_examination;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
