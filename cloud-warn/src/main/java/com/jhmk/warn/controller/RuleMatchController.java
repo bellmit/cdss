@@ -93,15 +93,12 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         Rule rule = Rule.fill(jsonObject);
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
-        System.out.println("===================获取到检验检查");
         List<Yizhu> yizhu = ruleService.getYizhu(rule);
-        System.out.println("===================获取到医嘱");
         rule.setYizhu(yizhu);
         String data = "";
         try {
             //规则匹配
             data = ruleService.ruleMatchGetResp(rule);
-            System.out.println("匹配结果为======================:" + data);
         } catch (Exception e) {
             logger.info("规则匹配失败:{}" + e.getMessage());
         }
