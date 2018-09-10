@@ -54,6 +54,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     || requestURI.contains("/updateShowLog")
                     || requestURI.contains("/getLogFile")
                     ) {
+                response.reset();
                 chain.doFilter(request, response);
             } else {
                 logger.info("请求网址为：" + requestURI);
