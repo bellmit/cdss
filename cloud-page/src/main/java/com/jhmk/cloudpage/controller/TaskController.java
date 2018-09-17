@@ -26,6 +26,7 @@ public class TaskController extends BaseController {
     public void addClickCount2DateTable() {
 
         schedulerTask.addClickCount2DateTable();
+        logger.info("记录点击事件完成");
     }
 
 }

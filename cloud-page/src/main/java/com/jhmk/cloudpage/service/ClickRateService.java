@@ -50,6 +50,7 @@ public class ClickRateService {
         } else {
             clickRateMap.put(key, 1);
         }
+        System.out.println("添加点击事件成功");
     }
 
 

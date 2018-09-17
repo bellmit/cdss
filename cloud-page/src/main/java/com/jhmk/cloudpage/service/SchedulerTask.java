@@ -31,6 +31,7 @@ public class SchedulerTask {
     @Scheduled(cron = "59 59 23 * * ?")
     public void addClickCount2DateTable() {
         Map<String, Integer> clickRateMap = ClickRateService.clickRateMap;
+        logger.info("点击事件数量{}",clickRateMap.size());
         for (Map.Entry<String, Integer> entry : clickRateMap.entrySet()) {
             Integer value = entry.getValue();
             String key = entry.getKey();
