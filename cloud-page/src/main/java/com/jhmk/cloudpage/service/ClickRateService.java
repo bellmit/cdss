@@ -1,13 +1,17 @@
 package com.jhmk.cloudpage.service;
 
 import com.jhmk.cloudentity.page.bean.ClickRate;
+import com.jhmk.cloudutil.model.WebPage;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -42,7 +46,7 @@ public class ClickRateService {
         // 封装用户统计的request，并且用hash算法分布到不同的队列当中
         String doctorId = clickRate.getDoctorId();
         String type = clickRate.getType();
-        String createTime = clickRate.getCreateTime();
+        Date createTime = clickRate.getCreateTime();
         String key = doctorId + SPLITSYMPOL + type + SPLITSYMPOL + createTime;
         if (clickRateMap.containsKey(key)) {
             Integer integer = clickRateMap.get(key);

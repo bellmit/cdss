@@ -1,12 +1,19 @@
 package com.jhmk.cloudpage.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
+import com.jhmk.cloudentity.base.BaseEntityController;
+import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
+import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.DateFormatUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ziyu.zhou
@@ -27,45 +33,64 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/page/clickrate")
-public class ClickRateController extends BaseController {
+public class ClickRateController extends BaseEntityController<ClickRate> {
     Logger logger = LoggerFactory.getLogger(ClickRateController.class);
 
     @Autowired
+    SmDeptsRepService smDeptsRepService;
+    @Autowired
+    SmUsersRepService smUsersRepService;
+    @Autowired
     ClickRateRepService clickRateRepService;
-
-    /**
-     * 统计cdss小界面点击量
-     */
-    @PostMapping("/statisticsClickCount")
-    public void statisticsClickCount(HttpServletResponse response, @RequestBody ClickRate clickRate) {
-        String type = clickRate.getType();
-        String doctorId = clickRate.getDoctorId();
-        Date date = new Date();
-        String format = DateFormatUtil.format(date, DateFormatUtil.DATE_PATTERN_S);
-        ClickRate oldBean = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, format, type);
-        if (oldBean != null) {
-            oldBean.setCount(oldBean.getCount() + 1);
-            clickRateRepService.save(oldBean);
-        } else {
-            clickRate.setCount(1);
-            clickRateRepService.save(clickRate);
-        }
-    }
 
 
     @PostMapping("/add")
     public void add(HttpServletResponse response, @RequestBody ClickRate clickRate) {
-        String format = DateFormatUtil.format(new Date(), DateFormatUtil.DATE_PATTERN_S);
-        clickRate.setCreateTime(format);
-        clickRate.setSubmitTime(new Timestamp(System.currentTimeMillis()));
+
+        String doctorId = clickRate.getDoctorId();
+        clickRate.setCreateTime(new java.sql.Date(System.currentTimeMillis()));
         ClickRateService.addDate2Map(clickRate);
         AtResponse resp = new AtResponse();
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
 
-    @PostMapping("/show")
-    public void showDate() {
 
+    @PostMapping("/view")
+    public void showDate(HttpServletResponse response, @RequestBody(required = false) String map) {
+        JSONObject jsonObject = JSONObject.parseObject(map);
+        Date startTime = jsonObject.getDate("startTime");
+        Date endTime = jsonObject.getDate("endTime");
+        String deptCode = jsonObject.getString("deptCode");
+        Map<String,Object>param=new HashMap<>();
+        param.put("deptCode",deptCode);
+        List<ClickRate> dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        AtResponse resp = new AtResponse();
+        resp.setData(dataByCondition);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
     }
+
+    @PostMapping("/getDeptMap")
+    public void getDeptMap(HttpServletResponse response) {
+        Map<String, String> result = new HashMap<>();
+        AtResponse resp = new AtResponse();
+        List<String> distinctDoctorId = clickRateRepService.getDistinctDoctorId();
+        for (String doctor_id : distinctDoctorId) {
+            SmUsers one = smUsersRepService.findOne(doctor_id);
+            if (one != null) {
+                String deptId = one.getUserDept();
+                if (StringUtils.isNotBlank(deptId)) {
+                    SmDepts firstByDeptCode = smDeptsRepService.findFirstByDeptCode(deptId);
+                    if (Objects.nonNull(firstByDeptCode)) {
+                        result.put(firstByDeptCode.getDeptName(), firstByDeptCode.getDeptCode());
+                    }
+                }
+            }
+        }
+        resp.setResponseCode(ResponseCode.OK);
+        resp.setData(result);
+        wirte(response, resp);
+    }
+
 }

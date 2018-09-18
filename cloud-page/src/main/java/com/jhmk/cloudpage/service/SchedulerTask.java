@@ -1,14 +1,18 @@
 package com.jhmk.cloudpage.service;
 
 import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
+import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.service.ClickRateRepService;
+import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -21,6 +25,8 @@ import java.util.Map;
 public class SchedulerTask {
     static final Logger logger = LoggerFactory.getLogger(SchedulerTask.class);
 
+    @Autowired
+    SmUsersRepService smUsersRepService;
     @Autowired
     ClickRateRepService clickRateRepService;
 
@@ -40,12 +46,18 @@ public class SchedulerTask {
                 String doctorId = split[0];
                 String type = split[1];
                 String createTime = split[2];
+                Date createDate = Date.valueOf(createTime);
                 ClickRate clickRate = new ClickRate();
                 clickRate.setCount(value);
                 clickRate.setDoctorId(doctorId);
                 clickRate.setType(type);
-                clickRate.setCreateTime(createTime);
-                ClickRate old = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, createTime, type);
+                clickRate.setCreateTime(createDate);
+                SmUsers one = smUsersRepService.findOne(doctorId);
+                //科室code码
+                if (one != null) {
+                    clickRate.setDeptCode(one.getUserDept());
+                }
+                ClickRate old = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, createDate, type);
                 if (old != null) {
                     old.setCount(old.getCount() + value);
                     clickRateRepService.save(old);

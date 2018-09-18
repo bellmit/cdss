@@ -1,8 +1,8 @@
 package com.jhmk.cloudentity.page.bean;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.Objects;
 
 /**
@@ -16,9 +16,9 @@ public class ClickRate {
     private int id;
     private String type;
     private String doctorId;
-    private String createTime;
+    private Date createTime;
+    private String deptCode;
     private int count;
-    private Timestamp submitTime;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -47,17 +47,28 @@ public class ClickRate {
         return doctorId;
     }
 
+
     public void setDoctorId(String doctorId) {
         this.doctorId = doctorId;
     }
 
     @Basic
+    @Column(name = "dept_code", nullable = false, length = 32)
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
+    }
+
+    @Basic
     @Column(name = "create_time", nullable = false)
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -71,13 +82,7 @@ public class ClickRate {
         this.count = count;
     }
 
-    public Timestamp getSubmitTime() {
-        return submitTime;
-    }
 
-    public void setSubmitTime(Timestamp submitTime) {
-        this.submitTime = submitTime;
-    }
 
     @Override
     public boolean equals(Object o) {

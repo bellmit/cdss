@@ -11,6 +11,13 @@ import java.util.List;
 
 public interface ClickRateRepository extends PagingAndSortingRepository<ClickRate, Integer>, JpaSpecificationExecutor<ClickRate> {
 
-    ClickRate findByDoctorIdAndCreateTimeAndType(String doctorId, String createTime, String type);
+    ClickRate findByDoctorIdAndCreateTimeAndType(String doctorId, java.sql.Date createTime, String type);
+
+    /**
+     * 查询表中 所有医生id
+     * @return
+     */
+    @Query("select distinct (c.doctorId) from ClickRate c ")
+    List<String> getDistinctDoctorId();
 
 }
