@@ -1,12 +1,17 @@
 package com.jhmk.cloudservice.cdssPageService;
-
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.page.bean.DrugTendency;
 import com.jhmk.cloudutil.config.CdssPageConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -31,7 +36,7 @@ public class CdssPageService {
      * @param map
      * @return
      */
-    public JSONObject   getPlanStat(String map) {
+    public JSONObject getPlanStat(String map) {
         JSONObject jsonObject = null;
         Object s = JSONObject.parseObject(map);
         try {
@@ -288,8 +293,37 @@ public class CdssPageService {
     }
 
 
-    public static void main(String[] args) {
-
+    /**
+     * 获取诊疗计划
+     *
+     * @param data id集合
+     */
+    public String getTreatPlan(List<String> data) {
+        String data1 = getData(data);
+        return data1;
     }
+
+
+    public String getData(List<String> ids) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        StringBuilder sb = new StringBuilder();
+        for (String id : ids) {
+            sb.append("\"").append(id).append("\"").append(",");
+        }
+        String substring = sb.substring(0, sb.length() - 1);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+//        map.add("map", "");
+//        map.add("keywords", "{\"page\":\"0\",\"size\":\"1\",\"expressions\":[[{\"field\":\"fieldId\",\"exp\":\"等于\",\"values\":[" + substring + "]}]]}");
+        map.add("keywords", "");
+        map.add("map", "{\"page\":\"0\",\"size\":\"1\",\"expressions\":[[{\"field\":\"fieldId\",\"exp\":\"等于\",\"values\":[" + substring + "]}]]}");
+        System.out.println(map.get("map").toString());
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(CdssPageConstants.TREATPLAN, request, String.class);
+        return response.getBody();
+    }
+
+
 
 }

@@ -58,15 +58,33 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 
     @PostMapping("/view")
     public void showDate(HttpServletResponse response, @RequestBody(required = false) String map) {
-        JSONObject jsonObject = JSONObject.parseObject(map);
-        Date startTime = jsonObject.getDate("startTime");
-        Date endTime = jsonObject.getDate("endTime");
-        String deptCode = jsonObject.getString("deptCode");
-        Map<String,Object>param=new HashMap<>();
-        param.put("deptCode",deptCode);
-        List<ClickRate> dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        List<ClickRate> dataByCondition = null;
+        if (StringUtils.isNotBlank(map)) {
+            JSONObject jsonObject = JSONObject.parseObject(map);
+            Date startTime = jsonObject.getDate("startTime");
+            Date endTime = jsonObject.getDate("endTime");
+            String deptCode = jsonObject.getString("deptCode");
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition=  clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+        }
+        Map<String, Integer> params = new HashMap<>();
+        for (ClickRate clickRate : dataByCondition) {
+            String type = clickRate.getType();
+            int count = clickRate.getCount();
+            if (params.containsKey(type)) {
+                params.put(type, params.get(type) + count);
+            } else {
+                params.put(type, count);
+            }
+        }
         AtResponse resp = new AtResponse();
-        resp.setData(dataByCondition);
+        resp.setData(params);
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
