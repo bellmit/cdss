@@ -85,4 +85,14 @@ public class BaseController {
             e.printStackTrace();
         }
     }
+    public static void wirte(HttpServletResponse response, String obj) {
+        response.setCharacterEncoding("utf-8");
+        try {
+            PrintWriter writer = response.getWriter();
+            writer.print(obj);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
