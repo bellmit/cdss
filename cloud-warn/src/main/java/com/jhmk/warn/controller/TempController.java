@@ -34,6 +34,7 @@ public class TempController  extends BaseController {
     @ResponseBody
     public void getCdrData(HttpServletResponse response, @RequestBody String map) {
         Map<String, String> parse = (Map) JSONObject.parse(map);
+        Map<String, Object> result = (Map) JSONObject.parse(map);
 
         String s = ruleService.anaRule(parse);
         //解析一诉五史
@@ -42,9 +43,9 @@ public class TempController  extends BaseController {
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
         List<Yizhu> yizhu = ruleService.getYizhu(rule);
-        parse.put("jianyanbaogao",JSONObject.toJSONString(rule.getJianchabaogao()));
-        parse.put("jianchabaogao",JSONObject.toJSONString(rule.getJianchabaogao()));
-        parse.put("yizhu",JSONObject.toJSONString(yizhu));
-        wirte(response,parse);
+        result.put("jianyanbaogao",rule.getJianchabaogao());
+        result.put("jianchabaogao",rule.getJianchabaogao());
+        result.put("yizhu",yizhu);
+        wirte(response,result);
     }
 }
