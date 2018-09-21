@@ -157,7 +157,7 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/findallnotsubmitrule")
-    @ResponseBody
+    
     public void findallnotsubmitrule(HttpServletResponse response, @RequestBody(required = false) Map map) {
 
         String userId = getUserId();
@@ -186,7 +186,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/findallsubmitrule")
-    @ResponseBody
     public void findallsubmitrule(HttpServletResponse response) {
         String userId = getUserId();
         Map<String, String> params = new HashMap<>();
@@ -212,7 +211,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param map
      */
     @PostMapping("/findrulebycondition")
-    @ResponseBody
     public void findRuleByCondition(HttpServletResponse response, @RequestBody(required = false) Map map) {
 
         Map<String, Object> params = new HashMap<>();
@@ -291,7 +289,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/submitrule")
-    @ResponseBody
     public void submitrule(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
         String forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.submitrule, parse, String.class);
@@ -305,7 +302,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/changewarninglevel")
-    @ResponseBody
     public void changewarninglevel(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
         String forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.changewarninglevel, parse, String.class);
@@ -318,7 +314,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/examinerule")
-    @ResponseBody
     public void examinerule(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
         String forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.examinerule, parse, String.class);
@@ -332,7 +327,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/isrunruler")
-    @ResponseBody
     public void isrunruler(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
         String forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.isrunruler, parse, String.class);
@@ -345,7 +339,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/changeIdentification")
-    @ResponseBody
     public void changeIdentification(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
         String forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.changeIdentification, parse, String.class);
@@ -360,8 +353,7 @@ public class RuleController extends BaseEntityController<Object> {
      */
 
     @PostMapping("/ruleMatch")
-    @ResponseBody
-    public AtResponse ruleMatch(HttpServletResponse response, @RequestBody String map) {
+    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         List<SmShowLog> logList = null;
         Map<String, String> paramMap = (Map) JSON.parse(map);
@@ -385,8 +377,8 @@ public class RuleController extends BaseEntityController<Object> {
         }
         logList = ruleService.add2ShowLog(rule, data, map);
         resp.setData(logList);
+        wirte(response,resp);
         ruleService.saveRule2Database(rule);
-        return resp;
     }
 
 
@@ -399,7 +391,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @throws InterruptedException
      */
     @PostMapping("/getShowLog")
-    @ResponseBody
     public void getShowRuleLog(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
         AtResponse resp = new AtResponse();
         JSONObject jsonObject = JSONObject.parseObject(map);
@@ -414,7 +405,6 @@ public class RuleController extends BaseEntityController<Object> {
 
 
     @PostMapping("/updateShowLog")
-    @ResponseBody
     public void updateShowLog(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
         AtResponse resp = new AtResponse();
         JSONObject jsonObject = JSONObject.parseObject(map);
@@ -439,7 +429,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param map
      */
     @PostMapping("/getRuleById")
-    @ResponseBody
     public void getRuleById(HttpServletResponse response, @RequestBody String map) {
 
         //todo 根据id获取原始规则
@@ -466,7 +455,6 @@ public class RuleController extends BaseEntityController<Object> {
 
 
     @PostMapping("/deleterule")
-    @ResponseBody
     public void deleterule(HttpServletResponse response, @RequestBody String map) {
         Map parse = (Map) JSONObject.parse(map);
         String result = null;
@@ -488,7 +476,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @param map
      */
     @PostMapping("/updaterule")
-    @ResponseBody
     public void updaterule(HttpServletResponse response, @RequestBody String map) {
 
         //获取原始规则条件
@@ -522,7 +509,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @throws InterruptedException
      */
     @PostMapping("/statisticsrulercount")
-    @ResponseBody
     public void statisticsrulercount(HttpServletResponse response) throws ExecutionException, InterruptedException {
         String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.statisticsrulercount, "", String.class);
 
@@ -537,7 +523,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @throws InterruptedException
      */
     @PostMapping("/groupbyclassification")
-    @ResponseBody
     public void groupbyclassification(HttpServletResponse response) throws ExecutionException, InterruptedException {
         String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.groupbyclassification, "", String.class);
 
@@ -552,7 +537,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @throws InterruptedException
      */
     @PostMapping("/groupbywarninglevel")
-    @ResponseBody
     public void groupbywarninglevel(HttpServletResponse response) throws ExecutionException, InterruptedException {
         String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.groupbywarninglevel, "", String.class);
 
@@ -567,7 +551,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @throws InterruptedException
      */
     @PostMapping("/groupbyidentification")
-    @ResponseBody
     public void groupbyidentification(HttpServletResponse response) throws ExecutionException, InterruptedException {
         String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.groupbyidentification, "", String.class);
 
@@ -582,7 +565,6 @@ public class RuleController extends BaseEntityController<Object> {
      * @throws InterruptedException
      */
     @PostMapping("/groupbycreatetime")
-    @ResponseBody
     public void groupbycreatetime(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
         Object o = JSONObject.parse(map);
         String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.groupbycreatetime, o, String.class);
