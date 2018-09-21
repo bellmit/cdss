@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.base.BaseEntityController;
 import com.jhmk.cloudentity.earlywaring.entity.UserModel;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudservice.warnService.service.RuleService;
@@ -27,9 +28,10 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("warn/temp")
-public class TempController  extends BaseController {
+public class TempController extends BaseController {
     @Autowired
     RuleService ruleService;
+
     @PostMapping("/getCdrData")
     @ResponseBody
     public void getCdrData(HttpServletResponse response, @RequestBody String map) {
@@ -43,9 +45,12 @@ public class TempController  extends BaseController {
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
         List<Yizhu> yizhu = ruleService.getYizhu(rule);
-        result.put("jianyanbaogao",rule.getJianchabaogao());
-        result.put("jianchabaogao",rule.getJianchabaogao());
-        result.put("yizhu",yizhu);
-        wirte(response,result);
+        result.put("jianyanbaogao", rule.getOriginalJianyanbaogaos());
+        List<Jianchabaogao> jianchabaogao = rule.getJianchabaogao();
+        if (jianchabaogao != null) {
+            result.put("jianchabaogao", JSONObject.toJSON(rule.getJianchabaogao()));
+        }
+        result.put("yizhu", yizhu);
+        wirte(response, result);
     }
 }
