@@ -21,7 +21,7 @@ public class CdssPageConstants {
      * 诊疗计划
      */
 //    public static final String TREATPLAN = "http://192.168.8.23:8098/med/advanced/query/treatPlan.json";
-    public static final String TREATPLAN = "http://192.168.132.13:8098/med/advanced/query/treatPlan.json";
+    public static final String TREATPLAN = "http://192.168.132.13:8800/med/advanced/query/treatPlan.json";
 
 
 }
