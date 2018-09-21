@@ -525,7 +525,12 @@ public class AnalysisXmlService {
 
                 for (int i = 0; i < items.size(); i++) {
                     yizhu = new Yizhu();
+
                     Element element = items.get(i);
+                    Element order_end_time = element.element("ORDER_END_TIME");
+                    if (Objects.nonNull(order_end_time)){
+                        continue;
+                    }
                     //名称 体温 脉搏等
                     String orderItemName = element.element("ORDER_ITEM_NAME").getText();
                     //规格
@@ -546,7 +551,6 @@ public class AnalysisXmlService {
                     //用药方式
 //                    String pharmacyWayName = element.element("PHARMACY_WAY_NAME").getText();
                     String orderBeginTime = element.element("ORDER_BEGIN_TIME").getText();
-                    String orderEndTime = element.element("ORDER_END_TIME").getText();
                     Element dosage_value = element.element("DOSAGE_VALUE");
                     if (dosage_value != null) {
 
@@ -563,8 +567,6 @@ public class AnalysisXmlService {
                         yizhu.setFrequency_name(frequencyName);
                         yizhu.setFrequency_code(frequencyCode);
                         yizhu.setOrder_begin_time(orderBeginTime);
-                        yizhu.setOrder_end_time(orderEndTime);
-
                         yizhuList.add(yizhu);
                     }
 

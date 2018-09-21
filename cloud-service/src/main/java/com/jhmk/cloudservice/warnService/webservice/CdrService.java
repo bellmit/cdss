@@ -4,12 +4,11 @@ package com.jhmk.cloudservice.warnService.webservice;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataService;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataWsImpl;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.util.DateFormatUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author ziyu.zhou
@@ -26,11 +25,15 @@ public class CdrService {
                 .append("</HOSPITAL_OID>")
                 .append("<PATIENT_ID>")
                 .append(params.get("patient_id"))
-                .append("</PATIENT_ID>")
-                .append("<VISIT_ID>")
-                .append(params.get("visit_id"))
-                .append("</VISIT_ID>")
-                .append("<WS_CODE>")
+                .append("</PATIENT_ID>");
+        if (StringUtils.isNotBlank(params.get("visit_id"))) {
+            sb.append("<VISIT_ID>")
+                    .append(params.get("visit_id"))
+                    .append("</VISIT_ID>");
+
+        }
+
+        sb.append("<WS_CODE>")
                 .append(params.get("ws_code"))
                 .append("</WS_CODE>");
         if (Objects.nonNull(conditions)) {
@@ -60,23 +63,38 @@ public class CdrService {
 
 
     public static void main(String[] args) {
+//        String xml="<?xml version=\"1.0\" encoding=\"UTF-8\"?><MSG><HOSPITAL_OID>1.2.156.112636.1.2.46</HOSPITAL_OID><PATIENT_ID>001652668700</PATIENT_ID><VISIT_ID>1</VISIT_ID><WS_CODE>JHHDRWS005</WS_CODE><CONDITION><ELEM NAME=\"REPORT_TIME\" VALUE=\"2018-09-16 13:07:57\"  OPERATOR=\"&gt;=\"></ELEM></CONDITION></MSG>";
+//        String xml="<?xml version=\"1.0\" encoding=\"UTF-8\"?><MSG><HOSPITAL_OID>1.2.156.112636.1.2.46</HOSPITAL_OID><PATIENT_ID>001652668700</PATIENT_ID><VISIT_ID>1</VISIT_ID><WS_CODE>JHHDRWS005</WS_CODE></MSG>";
         Map<String, String> params = new HashMap<>();
         params.put("oid", BaseConstants.OID);
-        params.put("patient_id", "000571764100");
-        params.put("visit_id", "1");
-        //检验数据
-//        params.put("ws_code", "JHHDRWS006B");
-        params.put("ws_code", "JHHDRWS012A");
-//        params.put("elemName", "REPORT_TIME");
-//        params.put("value", "2017-08-15 06:40:26");
-//        params.put("operator", "=");
+        params.put("patient_id", "001652668700");
+//        params.put("patient_id", "000571764100");
+//        params.put("visit_id", "1");
+//        //检验数据
+        params.put("ws_code", "JHHDRWS005");
+//        params.put("ws_code", "JHHDRWS006A");
+//        params.put("ws_code", "JHHDRWS012A");
+////        params.put("elemName", "REPORT_TIME");
+////        params.put("value", "2017-08-15 06:40:26");
+////        params.put("operator", "=");
         String xml = getXml(params, null);
-
+        System.out.println(xml);
         HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
         HdrQueryDataWsImpl hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
         String data = hdrQueryDataWsImplPort.queryData(xml);
         System.out.println(data);
         AnalysisXmlService analysisXmlService = new AnalysisXmlService();
 //        analysisXmlService.analysisXml2Binganshouye(data);
+    }
+
+    public List<Map<String, String>> aa() {
+        List<Map<String, String>> listConditions = new LinkedList<>();
+        Map<String, String> conditionParams = new HashMap<>();
+        conditionParams.put("elemName", "ORDER_PROPERTIES_NAME");
+        conditionParams.put("value", "长期");
+        conditionParams.put("operator", "=");
+
+
+        return listConditions;
     }
 }

@@ -815,12 +815,19 @@ public class RuleService {
         /**
          * 根据入院出院时间  获取时间段内的检验检查报告
          */
+        /**
+         *检查数据
+         */
+        List<Jianchabaogao> jianchabaogaoList = getJianchabaogaoFromCdr(rule, hospitalDateMap);
+        rule.setJianchabaogao(jianchabaogaoList);
+
         List<Map<String, String>> listConditions = new LinkedList<>();
         if (StringUtils.isNotBlank(admission_time)) {
             Map<String, String> conditionParams = new HashMap<>();
             conditionParams.put("elemName", "REPORT_TIME");
             conditionParams.put("value", admission_time);
-            conditionParams.put("operator", ">=");
+//            conditionParams.put("operator", ">=");
+            conditionParams.put("operator", "&gt;=");
             listConditions.add(conditionParams);
             rule.setAdmission_time(admission_time);
         }
@@ -833,19 +840,6 @@ public class RuleService {
             rule.setDischarge_time(discharge_time);
 
         }
-
-        /**
-         *检查数据
-         */
-        params.put("ws_code", "JHHDRWS005");
-        String jianchaXML = cdrService.getDataByCDR(params, listConditions);
-        List<Map<String, String>> jianchabaogao = analysisXmlService.analysisXml2Jianchabaogao(jianchaXML);
-        List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
-        for (Map<String, String> map : jianchabaogao) {
-            Jianchabaogao jiancha = MapUtil.map2Bean(map, Jianchabaogao.class);
-            jianchabaogaoList.add(jiancha);
-        }
-        rule.setJianchabaogao(jianchabaogaoList);
 
         //检验数据
 //        params.put("ws_code", BaseConstants.JHHDRWS004A);
@@ -861,9 +855,61 @@ public class RuleService {
         List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
         List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
         rule.setOriginalJianyanbaogaos(originalJianyanbaogaos);
-        System.out.println("检查报告："+rule.getJianchabaogao());
-        System.out.println("检验报告："+rule.getJianyanbaogao());
+        System.out.println("检查报告：" + rule.getJianchabaogao());
+        System.out.println("检验报告：" + rule.getJianyanbaogao());
         return rule;
+    }
+
+    /**
+     * 从数据中心获取检查数据
+     */
+    public List<Jianchabaogao> getJianchabaogaoFromCdr(Rule rule,Map<String, String> hospitalDateMap) {
+        //基础map 放相同数据
+        Map<String, String> baseParams = new HashMap<>();
+        baseParams.put("oid", BaseConstants.OID);
+        baseParams.put("patient_id", rule.getPatient_id());
+        Map<String, String> params = new HashMap<>();
+        params.putAll(baseParams);
+
+        //入院时间
+        String admission_time = hospitalDateMap.get("admission_time");
+        //出院时间
+        String discharge_time = hospitalDateMap.get("discharge_time");
+
+        /**
+         * 根据入院出院时间  获取时间段内的检验检查报告
+         */
+        List<Map<String, String>> listConditions = new LinkedList<>();
+        if (StringUtils.isNotBlank(admission_time)) {
+            Map<String, String> conditionParams = new HashMap<>();
+            conditionParams.put("elemName", "REPORT_TIME");
+            conditionParams.put("value", admission_time);
+//            conditionParams.put("operator", ">=");
+            conditionParams.put("operator", "&gt;=");
+            listConditions.add(conditionParams);
+            rule.setAdmission_time(admission_time);
+        }
+        if (StringUtils.isNotBlank(discharge_time)) {
+            Map<String, String> conditionParams = new HashMap<>();
+            conditionParams.put("elemName", "REPORT_TIME");
+            conditionParams.put("value", discharge_time);
+            conditionParams.put("operator", "&lt;=");
+            listConditions.add(conditionParams);
+            rule.setDischarge_time(discharge_time);
+
+        }
+        /**
+         *检查数据
+         */
+        params.put("ws_code", "JHHDRWS005");
+        String jianchaXML = cdrService.getDataByCDR(params, listConditions);
+        List<Map<String, String>> jianchabaogao = analysisXmlService.analysisXml2Jianchabaogao(jianchaXML);
+        List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
+        for (Map<String, String> map : jianchabaogao) {
+            Jianchabaogao jiancha = MapUtil.map2Bean(map, Jianchabaogao.class);
+            jianchabaogaoList.add(jiancha);
+        }
+        return jianchabaogaoList;
     }
 
     /**
@@ -884,12 +930,12 @@ public class RuleService {
         params.put("ws_code", BaseConstants.JHHDRWS012A);
         params.putAll(baseParams);
 
-        //获取当前再用医嘱 结束时间大约当前时间
+        //获取医嘱类型为长期医嘱的 并且ORDER_END_TIME 为null的 表示没有结束
         List<Map<String, String>> listConditions = new LinkedList<>();
         Map<String, String> conditionParams = new HashMap<>();
-        conditionParams.put("elemName", "ORDER_END_TIME");
-        conditionParams.put("value", DateFormatUtil.format(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
-        conditionParams.put("operator", "&gt;=");
+        conditionParams.put("elemName", "ORDER_PROPERTIES_NAME");
+        conditionParams.put("value", "长期");
+        conditionParams.put("operator", "=");
         listConditions.add(conditionParams);
 
         //获取入出转xml

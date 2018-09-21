@@ -53,6 +53,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     || requestURI.contains("/getShowLog")
                     || requestURI.contains("/updateShowLog")
                     || requestURI.contains("/getLogFile")
+                    || requestURI.contains("/temp")
                     ) {
                 response.reset();
                 chain.doFilter(request, response);
