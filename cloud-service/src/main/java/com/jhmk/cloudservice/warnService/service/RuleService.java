@@ -400,17 +400,15 @@ public class RuleService {
      * @param fromData
      * @return
      */
-    public List<SmShowLog> addHintRule2ShowLogTable(Rule data, String fromData) {
-        //保存返回结果
-        List<SmShowLog> resultList = new ArrayList<>();
+    public void addHintRule2ShowLogTable(Rule data, String fromData) {
         String doctor_id = data.getDoctor_id();
         String patient_id = data.getPatient_id();
         String visit_id = data.getVisit_id();
         if (StringUtils.isNotBlank(patient_id) && StringUtils.isNotBlank(doctor_id)) {
 
             Map<String, Object> parse = (Map) JSON.parse(fromData);
-            Object result = parse.get("result");
-            if (ObjectUtils.anyNotNull(result) && !symbol.equals(result)) {
+            JSONArray result = (JSONArray)parse.get("result");
+            if (result.size()>0) {
 
                 JSONArray array = (JSONArray) result;
                 Iterator<Object> iterator = array.iterator();
@@ -421,6 +419,7 @@ public class RuleService {
 
                     String rule_id = jsonObject.getString("_id");
                     List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+                    //todo 可优化 写sql语句 一次完成
                     for (SmShowLog log : existLog) {
                         log.setRuleStatus(3);
                         smShowLogRepService.save(log);
@@ -430,8 +429,7 @@ public class RuleService {
                     //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有处罚此规则，前台自动变灰
                     if (log != null && 3 == log.getRuleStatus()) {
                         log.setRuleStatus(0);
-                        SmShowLog save = smShowLogRepService.save(log);
-                        resultList.add(save);
+                        smShowLogRepService.save(log);
                     } else {
                         SmShowLog newLog = new SmShowLog();
                         newLog.setPatientId(patient_id);
@@ -441,15 +439,17 @@ public class RuleService {
                         newLog.setRuleStatus(0);
                         newLog.setType("ruleMatch");
                         newLog.setHintContent(hintContent);
-                        SmShowLog save = smShowLogRepService.save(newLog);
-                        resultList.add(save);
-
+                        smShowLogRepService.save(newLog);
                     }
-
+                }
+            } else {
+                List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+                for (SmShowLog log : existLog) {
+                    log.setRuleStatus(3);
+                    smShowLogRepService.save(log);
                 }
             }
         }
-        return resultList;
     }
 
     public List<LogMapping> getNotSaveLogMapping(Rule rule, JSONArray diseaseMessageArray) {
@@ -715,8 +715,7 @@ public class RuleService {
         return list;
     }
 
-    public List<SmShowLog> getTipList2ShowLog(Rule fill, String map) {
-        List<SmShowLog> resultList = new ArrayList<>();
+    public void getTipList2ShowLog(Rule fill, String map) {
         String doctor_id = fill.getDoctor_id();
         String patient_id = fill.getPatient_id();
         String visit_id = fill.getVisit_id();
@@ -768,8 +767,7 @@ public class RuleService {
                             smShowLog.setDoctorId(doctor_id);
                             smShowLog.setVisitId(visit_id);
                             smShowLog.setDate(DateFormatUtil.format(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
-                            SmShowLog save = smShowLogRepService.save(smShowLog);
-                            resultList.add(save);
+                            smShowLogRepService.save(smShowLog);
                         }
                     }
                 }
@@ -780,7 +778,6 @@ public class RuleService {
         } else {
             logger.info("医生id或病人id为空,医生id:{},病人id:{}", doctor_id, patient_id);
         }
-        return resultList;
     }
 
 
@@ -863,7 +860,7 @@ public class RuleService {
     /**
      * 从数据中心获取检查数据
      */
-    public List<Jianchabaogao> getJianchabaogaoFromCdr(Rule rule,Map<String, String> hospitalDateMap) {
+    public List<Jianchabaogao> getJianchabaogaoFromCdr(Rule rule, Map<String, String> hospitalDateMap) {
         //基础map 放相同数据
         Map<String, String> baseParams = new HashMap<>();
         baseParams.put("oid", BaseConstants.OID);
