@@ -33,7 +33,6 @@ public class TempController  extends BaseController {
     @PostMapping("/getCdrData")
     @ResponseBody
     public void getCdrData(HttpServletResponse response, @RequestBody String map) {
-        AtResponse resp = new AtResponse();
         Map<String, String> parse = (Map) JSONObject.parse(map);
         String s = ruleService.anaRule(parse);
         //解析一诉五史
@@ -43,8 +42,6 @@ public class TempController  extends BaseController {
         rule = ruleService.getbaogao(rule);
         List<Yizhu> yizhu = ruleService.getYizhu(rule);
         rule.setYizhu(yizhu);
-        resp.setResponseCode(ResponseCode.OK);
-        resp.setData(rule);
-        wirte(response,resp);
+        wirte(response,rule);
     }
 }
