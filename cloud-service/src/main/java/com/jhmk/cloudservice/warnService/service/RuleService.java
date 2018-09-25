@@ -408,7 +408,8 @@ public class RuleService {
 
             Map<String, Object> parse = (Map) JSON.parse(fromData);
             JSONArray result = (JSONArray)parse.get("result");
-            if (result.size()>0) {
+
+            if (result!=null&&result.size()>0) {
 
                 JSONArray array = (JSONArray) result;
                 Iterator<Object> iterator = array.iterator();
