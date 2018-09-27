@@ -389,7 +389,11 @@ public class RuleService {
                             newLog.setVisitId(visit_id);
                             newLog.setRuleId(rule_id);
                             newLog.setSmHospitalLogId(id);
-                            newLog.setDate(DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
+                            if (logTime != null) {
+                                newLog.setDate(logTime);
+                            } else {
+                                newLog.setDate(DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
+                            }
                             newLog.setDoctorId(doctor_id);
                             newLog.setRuleStatus(0);
                             newLog.setType("ruleMatch");
