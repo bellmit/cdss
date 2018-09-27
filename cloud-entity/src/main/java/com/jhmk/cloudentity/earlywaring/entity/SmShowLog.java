@@ -27,6 +27,12 @@ public class SmShowLog {
     private String ruleId;
     private String hintContent;
     private String ruleCondition;
+    private String classification;
+    private String mainIllName;
+    private String otherIllName;
+    private String otherMap;
+    private String sex;
+    private Integer smHospitalLogId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -216,5 +222,65 @@ public class SmShowLog {
     public int hashCode() {
 
         return Objects.hash(id, doctorId, patientId, visitId, date, ruleStatus, type, value, itemName, orderItemNames, drugAllergyName, significance, stat, ruleId, hintContent, ruleCondition);
+    }
+
+    @Basic
+    @Column(name = "classification", nullable = true, length = 8)
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+
+    @Basic
+    @Column(name = "main_ill_name", nullable = true, length = 20)
+    public String getMainIllName() {
+        return mainIllName;
+    }
+
+    public void setMainIllName(String mainIllName) {
+        this.mainIllName = mainIllName;
+    }
+
+    @Basic
+    @Column(name = "other_ill_name", nullable = true, length = 20)
+    public String getOtherIllName() {
+        return otherIllName;
+    }
+
+    public void setOtherIllName(String otherIllName) {
+        this.otherIllName = otherIllName;
+    }
+
+    @Basic
+    @Column(name = "other_map", nullable = true, length = 100)
+    public String getOtherMap() {
+        return otherMap;
+    }
+
+    public void setOtherMap(String otherMap) {
+        this.otherMap = otherMap;
+    }
+
+    @Basic
+    @Column(name = "sex", nullable = true, length = 10)
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    @Basic
+    @Column(name = "sm_hospital_log_id", nullable = true)
+    public Integer getSmHospitalLogId() {
+        return smHospitalLogId;
+    }
+
+    public void setSmHospitalLogId(Integer smHospitalLogId) {
+        this.smHospitalLogId = smHospitalLogId;
     }
 }

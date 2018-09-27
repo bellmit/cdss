@@ -388,9 +388,8 @@ public class RuleService {
                             newLog.setPatientId(patient_id);
                             newLog.setVisitId(visit_id);
                             newLog.setRuleId(rule_id);
-                            SmHospitalLog one = smHospitalLogRepService.findOne(Integer.valueOf(rule_id));
-                            Date createTime = one.getCreateTime();
-                            newLog.setDate(DateFormatUtil.formatBySdf(createTime, DateFormatUtil.DATETIME_PATTERN_SS));
+                            newLog.setSmHospitalLogId(id);
+                            newLog.setDate(DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
                             newLog.setDoctorId(doctor_id);
                             newLog.setRuleStatus(0);
                             newLog.setType("ruleMatch");
