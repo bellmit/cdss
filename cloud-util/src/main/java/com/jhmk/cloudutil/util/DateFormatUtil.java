@@ -115,6 +115,15 @@ public class DateFormatUtil {
         return dateStr;
     }
 
+    public static String formatBySdf(Date date, String pattern) {
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        String format = sdf.format(date);
+        return format;
+    }
+
     public static String format(Timestamp timestamp, String pattern) {
         if (timestamp == null) {
             return "";
@@ -126,7 +135,6 @@ public class DateFormatUtil {
         String timeStr = localDateTime.format(format);
         return timeStr;
     }
-
 
 
     public static Date parseDate(String dateStr, String pattern) {
@@ -386,12 +394,11 @@ public class DateFormatUtil {
     public static Date getYearLast(int year) {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
-        calendar.set(Calendar.YEAR, year+1);
+        calendar.set(Calendar.YEAR, year + 1);
         Date currYearLast = calendar.getTime();
 
         return currYearLast;
     }
-
 
 
     public static Date getLastYear() {

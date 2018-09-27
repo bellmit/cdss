@@ -407,17 +407,15 @@ public class RuleService {
         if (StringUtils.isNotBlank(patient_id) && StringUtils.isNotBlank(doctor_id)) {
 
             Map<String, Object> parse = (Map) JSON.parse(fromData);
-            JSONArray result = (JSONArray)parse.get("result");
+            JSONArray result = (JSONArray) parse.get("result");
 
-            if (result!=null&&result.size()>0) {
+            if (result != null && result.size() > 0) {
 
                 JSONArray array = (JSONArray) result;
                 Iterator<Object> iterator = array.iterator();
                 while (iterator.hasNext()) {
                     JSONObject jsonObject = (JSONObject) iterator.next();
                     String hintContent = jsonObject.getString("hintContent");
-
-
                     String rule_id = jsonObject.getString("_id");
                     List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
                     //todo 可优化 写sql语句 一次完成
@@ -436,6 +434,9 @@ public class RuleService {
                         newLog.setPatientId(patient_id);
                         newLog.setVisitId(visit_id);
                         newLog.setRuleId(rule_id);
+                        SmHospitalLog one = smHospitalLogRepService.findOne(Integer.valueOf(rule_id));
+                        Date createTime = one.getCreateTime();
+                        newLog.setDate(DateFormatUtil.formatBySdf(createTime, DateFormatUtil.DATETIME_PATTERN_SS));
                         newLog.setDoctorId(doctor_id);
                         newLog.setRuleStatus(0);
                         newLog.setType("ruleMatch");
