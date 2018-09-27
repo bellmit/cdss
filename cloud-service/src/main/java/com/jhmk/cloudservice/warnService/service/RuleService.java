@@ -318,6 +318,9 @@ public class RuleService {
         if (!symbol.equals(jsonObject.getString(resultSym))) {
             Object result = jsonObject.get(resultSym);
             SmHospitalLog smHospitalLog = hosptailLogService.addLog(mes);
+            String doctor_id = mes.getDoctor_id();
+            String patient_id = mes.getPatient_id();
+            String visit_id = mes.getVisit_id();
             if (ObjectUtils.anyNotNull(result)) {
                 //todo 预警等级需要返回
                 JSONArray ja = (JSONArray) result;
@@ -330,7 +333,8 @@ public class RuleService {
                         String warninglevel = object.getString("warninglevel");
                         smHospitalLog.setAlarmLevel(warninglevel);
                         //释义
-                        smHospitalLog.setHintContent(object.getString("hintContent"));
+                        String hintContent = object.getString("hintContent");
+                        smHospitalLog.setHintContent(hintContent);
                         smHospitalLog.setSignContent(object.getString("signContent"));
                         smHospitalLog.setRuleSource(object.getString("ruleSource"));
                         smHospitalLog.setClassification(object.getString("classification"));
@@ -361,12 +365,47 @@ public class RuleService {
                         for (LogMapping mapping : notSaveLogMapping) {
                             mapping.setLogId(id);
                             logMappingRepService.save(mapping);
-
                         }
                         if (save == null) {
                             logger.info("入日志库失败:" + save.toString());
                         }
+
+                        String rule_id = jsonObject.getString("_id");
+                        List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+                        //todo 可优化 写sql语句 一次完成
+                        for (SmShowLog log : existLog) {
+                            log.setRuleStatus(3);
+                            smShowLogRepService.save(log);
+                        }
+
+                        SmShowLog log = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(doctor_id, patient_id, rule_id, visit_id);
+                        //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有处罚此规则，前台自动变灰
+                        if (log != null && 3 == log.getRuleStatus()) {
+                            log.setRuleStatus(0);
+                            smShowLogRepService.save(log);
+                        } else {
+                            SmShowLog newLog = new SmShowLog();
+                            newLog.setPatientId(patient_id);
+                            newLog.setVisitId(visit_id);
+                            newLog.setRuleId(rule_id);
+                            SmHospitalLog one = smHospitalLogRepService.findOne(Integer.valueOf(rule_id));
+                            Date createTime = one.getCreateTime();
+                            newLog.setDate(DateFormatUtil.formatBySdf(createTime, DateFormatUtil.DATETIME_PATTERN_SS));
+                            newLog.setDoctorId(doctor_id);
+                            newLog.setRuleStatus(0);
+                            newLog.setType("ruleMatch");
+                            newLog.setHintContent(hintContent);
+                            smShowLogRepService.save(newLog);
+                        }
+
+
                     }
+                }
+            } else {
+                List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+                for (SmShowLog log : existLog) {
+                    log.setRuleStatus(3);
+                    smShowLogRepService.save(log);
                 }
             }
         }
@@ -386,7 +425,7 @@ public class RuleService {
         String doctor_id = data.getDoctor_id();
         String patient_id = data.getPatient_id();
         String visit_id = data.getVisit_id();
-        addHintRule2ShowLogTable(data, fromData);
+//        addHintRule2ShowLogTable(data, fromData);
         getTipList2ShowLog(data, map);
         List<SmShowLog> byDoctorIdAndPatientId = smShowLogRepService.findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(doctor_id, patient_id, visit_id);
         return byDoctorIdAndPatientId;
