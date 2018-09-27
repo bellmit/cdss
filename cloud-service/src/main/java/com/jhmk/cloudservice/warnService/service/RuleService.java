@@ -382,6 +382,12 @@ public class RuleService {
                         //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有处罚此规则，前台自动变灰
                         if (log != null && 3 == log.getRuleStatus()) {
                             log.setRuleStatus(0);
+                            log.setSmHospitalLogId(id);
+                            if (logTime != null) {
+                                log.setDate(logTime);
+                            } else {
+                                log.setDate(DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
+                            }
                             smShowLogRepService.save(log);
                         } else {
                             SmShowLog newLog = new SmShowLog();
