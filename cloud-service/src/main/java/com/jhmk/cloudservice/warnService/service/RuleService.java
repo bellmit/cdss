@@ -344,8 +344,9 @@ public class RuleService {
                             String condition = disposeRuleCondition(ruleCondition);
                             smHospitalLog.setRuleCondition(condition);
                         }
+                         String rule_id = object.getString("_id");
                         //获取触发的规则id
-                        smHospitalLog.setRuleId(object.getString("_id"));
+                        smHospitalLog.setRuleId(rule_id);
 //                        List<LogMapping> notSaveLogMapping = getNotSaveLogMapping(mes, resultData);
 
                         JSONArray diseaseMessageMap = object.getJSONArray("diseaseMessageMap");
@@ -370,7 +371,6 @@ public class RuleService {
                             logger.info("入日志库失败:" + save.toString());
                         }
 
-                        String rule_id = jsonObject.getString("_id");
                         List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
                         //todo 可优化 写sql语句 一次完成
                         for (SmShowLog log : existLog) {
@@ -765,6 +765,11 @@ public class RuleService {
         return list;
     }
 
+    /**
+     * 诊疗提醒状态修改（既往史）
+     * @param fill
+     * @param map
+     */
     public void getTipList2ShowLog(Rule fill, String map) {
         String doctor_id = fill.getDoctor_id();
         String patient_id = fill.getPatient_id();
@@ -786,7 +791,6 @@ public class RuleService {
                     JSONArray array = JSONArray.parseArray(result);
                     Iterator<Object> iterator = array.iterator();
                     while (iterator.hasNext()) {
-                        SmShowLog smShowLog = new SmShowLog();
                         JSONObject next = (JSONObject) iterator.next();
                         String itemName = next.getString("itemName");
                         String type = next.getString("type");
@@ -795,14 +799,16 @@ public class RuleService {
                         SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
                         if (isExist != null && 3 == isExist.getRuleStatus()) {
                             isExist.setRuleStatus(0);
+                            String data = next.getString("data");
+                            isExist.setDate(data);
                             smShowLogRepService.save(isExist);
                             continue;
                         }
+                        SmShowLog smShowLog = new SmShowLog();
                         smShowLog.setItemName(itemName);
                         smShowLog.setType(type);
                         smShowLog.setStat(stat);
                         String data = next.getString("data");
-//                    smShowLog.setDate(DateFormatUtil.format(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
                         smShowLog.setDate(data);
                         String significance = next.getString("significance");
 
@@ -816,7 +822,6 @@ public class RuleService {
                             smShowLog.setPatientId(patient_id);
                             smShowLog.setDoctorId(doctor_id);
                             smShowLog.setVisitId(visit_id);
-                            smShowLog.setDate(DateFormatUtil.format(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
                             smShowLogRepService.save(smShowLog);
                         }
                     }
