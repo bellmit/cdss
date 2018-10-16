@@ -334,8 +334,9 @@ public class RuleService {
                         smHospitalLog.setAlarmLevel(warninglevel);
                         //释义
                         String hintContent = object.getString("hintContent");
+                        String signContent = object.getString("signContent");
                         smHospitalLog.setHintContent(hintContent);
-                        smHospitalLog.setSignContent(object.getString("signContent"));
+                        smHospitalLog.setSignContent(signContent);
                         smHospitalLog.setRuleSource(object.getString("ruleSource"));
                         smHospitalLog.setClassification(object.getString("classification"));
                         smHospitalLog.setIdentification(object.getString("identification"));

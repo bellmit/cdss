@@ -15,7 +15,8 @@ import java.util.Objects;
  * @date 2018/9/3 15:40
  */
 
-public class YizhuService {
+public class 
+YizhuService {
     public static void main(String[] args) {
 
         Map<String, String> params = new HashMap<>();
