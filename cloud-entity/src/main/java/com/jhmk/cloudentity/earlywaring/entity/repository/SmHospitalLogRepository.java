@@ -58,7 +58,7 @@ public interface SmHospitalLogRepository extends PagingAndSortingRepository<SmHo
     List<SmHospitalLog> getDeptCountByYear(Date startTime, Date endTime);
 
 
-    @Query("select distinct (d.deptCode)from SmHospitalLog d ")
+    @Query("select distinct (d.deptCode)from SmHospitalLog d where d.deptCode<>null")
     List<String> getCountByDistinctDeptCode();
 
 
