@@ -286,7 +286,7 @@ public class RuleService {
             data = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.matchrule, parse, String.class);
 //            logger.info("匹配规则结果为{}", data);
         } catch (Exception e) {
-            logger.info("规则匹配失败：原因：" + e.getMessage() + data);
+            logger.info("规则匹配失败：,url={},原因:{},返回结果为：{}", urlConfig.getCdssurl() + BaseConstants.matchrule, e.getMessage(), data);
         }
         return data;
     }
@@ -345,7 +345,7 @@ public class RuleService {
                             String condition = disposeRuleCondition(ruleCondition);
                             smHospitalLog.setRuleCondition(condition);
                         }
-                         String rule_id = object.getString("_id");
+                        String rule_id = object.getString("_id");
                         //获取触发的规则id
                         smHospitalLog.setRuleId(rule_id);
 //                        List<LogMapping> notSaveLogMapping = getNotSaveLogMapping(mes, resultData);
@@ -407,8 +407,6 @@ public class RuleService {
                             newLog.setHintContent(hintContent);
                             smShowLogRepService.save(newLog);
                         }
-
-
                     }
                 }
             } else {
@@ -438,6 +436,7 @@ public class RuleService {
 //        addHintRule2ShowLogTable(data, fromData);
         getTipList2ShowLog(data, map);
         List<SmShowLog> byDoctorIdAndPatientId = smShowLogRepService.findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(doctor_id, patient_id, visit_id);
+        logger.info("提醒数量为：" + byDoctorIdAndPatientId.size());
         return byDoctorIdAndPatientId;
     }
 
@@ -768,6 +767,7 @@ public class RuleService {
 
     /**
      * 诊疗提醒状态修改（既往史）
+     *
      * @param fill
      * @param map
      */
@@ -779,9 +779,8 @@ public class RuleService {
             Object o = JSONObject.parse(map);
             String result = "";
             try {
-
                 result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getTipList, o, String.class);
-                if (!symbol.equals(result)) {
+                if (StringUtils.isNotBlank(result) && !symbol.equals(result)) {
 
                     List<SmShowLog> existLog = smShowLogRepService.findExistLog(doctor_id, patient_id, visit_id);
                     for (SmShowLog log : existLog) {

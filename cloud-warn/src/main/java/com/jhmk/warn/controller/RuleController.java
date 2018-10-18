@@ -157,7 +157,7 @@ public class RuleController extends BaseEntityController<Object> {
      * @param response
      */
     @PostMapping("/findallnotsubmitrule")
-    
+
     public void findallnotsubmitrule(HttpServletResponse response, @RequestBody(required = false) Map map) {
 
         String userId = getUserId();
@@ -275,9 +275,8 @@ public class RuleController extends BaseEntityController<Object> {
             Map<String, Object> mapData = ruleService.formatData(forObject);
             foramtData.putAll(mapData);
         } catch (Exception e) {
-            logger.info("按条件查询规则信息失败：" + e.getMessage());
+            logger.info("按条件查询规则信息失败,url:{},请求参数：{},原因：{}", urlConfig.getCdssurl() + BaseConstants.findrulebycondition, o, e.getCause() + "/" + e.getMessage());
         } finally {
-
             wirte(response, foramtData);
         }
 
@@ -366,18 +365,19 @@ public class RuleController extends BaseEntityController<Object> {
         try {
             //规则匹配
             data = ruleService.ruleMatchGetResp(rule);
+            logger.info("规则匹配返回结果为：{}",data);
         } catch (Exception e) {
-            logger.info("规则匹配失败:{}", e.getMessage());
+            logger.info("规则匹配失败:{},请求数据为：{}", e.getMessage(), map);
         }
         if (StringUtils.isNotBlank(data)) {
             //获取保存信息 返回前台显示
             ruleService.add2LogTable(data, rule);
             //todo  删除触发规则保存到sm_show_log表中，改为从sm_hospital表获取数据
-
         }
         logList = ruleService.add2ShowLog(rule, data, map);
+        logger.info("提示信息结果为：{}",JSONObject.toJSONString(logList));
         resp.setData(logList);
-        wirte(response,resp);
+        wirte(response, resp);
         ruleService.saveRule2Database(rule);
     }
 
