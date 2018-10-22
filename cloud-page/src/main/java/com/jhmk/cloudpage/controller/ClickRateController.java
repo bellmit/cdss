@@ -69,7 +69,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
                 param = new HashMap<>();
                 param.put("deptCode", deptCode);
             }
-            dataByCondition=  clickRateRepService.getDataByCondition(startTime, endTime, param);
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
         } else {
             dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
         }
@@ -108,6 +108,14 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         }
         resp.setResponseCode(ResponseCode.OK);
         resp.setData(result);
+        wirte(response, resp);
+    }
+
+
+    @PostMapping("/getClickRateByCondition")
+    public void getAllData(HttpServletResponse response, @RequestBody(required = false) Map<String, Object> map) {
+        AtResponse<Map<String, Object>> resp = super.listData(map, clickRateRepService, null);
+        resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
 

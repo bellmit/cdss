@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class DeptsController extends BaseEntityController<SmDepts> {
     //分页展示
     @RequestMapping(value = "/listData")
     @ResponseBody
-    public AtResponse userList(@RequestParam Map<String, Object> reqParams) {
+    public void userList(HttpServletResponse response, @RequestParam Map<String, Object> reqParams) {
 
 
         AtResponse<Map<String, Object>> resp = listData(reqParams, smDeptsRepService, null);
@@ -44,13 +45,13 @@ public class DeptsController extends BaseEntityController<SmDepts> {
         data.put(LIST_DATA, uu);
         resp.setResponseCode(ResponseCode.OK);
         resp.setData(data);
-        return resp;
+        wirte(response, resp);
     }
 
 
     @RequestMapping(value = "add")
     @ResponseBody
-    public AtResponse save(@ModelAttribute SmDepts dept) {
+    public AtResponse save(HttpServletResponse response,@ModelAttribute SmDepts dept) {
         SmDepts save = smDeptsRepService.save(dept);
         AtResponse<Map<String, Object>> resp = new AtResponse(System.currentTimeMillis());
         resp.setResponseCode(ResponseCode.OK);
@@ -61,7 +62,7 @@ public class DeptsController extends BaseEntityController<SmDepts> {
     //删除
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public AtResponse<String> delete(@RequestParam(name = "userId", required = true) String userId) {
+    public AtResponse<String> delete(HttpServletResponse response,@RequestParam(name = "userId", required = true) String userId) {
         smDeptsRepService.delete(userId);
         String message;
         AtResponse<String> resp = new AtResponse(System.currentTimeMillis());
@@ -75,7 +76,7 @@ public class DeptsController extends BaseEntityController<SmDepts> {
 
     @RequestMapping(value = "view")
     @ResponseBody
-    public AtResponse view(@RequestParam String id) {
+    public AtResponse view(HttpServletResponse response,@RequestParam String id) {
         Map<String, Object> params = new HashMap<>();
         SmDepts one = smDeptsRepService.findOne(id);
         params.put("user", one);
@@ -93,7 +94,7 @@ public class DeptsController extends BaseEntityController<SmDepts> {
 
     @RequestMapping(value = "editor")
     @ResponseBody
-    public AtResponse edit(@ModelAttribute SmDepts dept) {
+    public AtResponse edit(HttpServletResponse response,@ModelAttribute SmDepts dept) {
         AtResponse<Object> resp = new AtResponse(System.currentTimeMillis());
         String message;
         SmDepts save = smDeptsRepService.save(dept);
