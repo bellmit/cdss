@@ -708,9 +708,9 @@ public class RuleService {
                             if (sbobj.getString("unit") != null) {
                                 jcbg.put("lab_result_value_unit", sbobj.getString("unit"));
                             }
-//                            if (sbobj.getString("lab_result_value") != null) {
-//                                jcbg.put("lab_result_value", sbobj.getString("lab_result_value"));
-//                            }
+                            if (sbobj.getString("lab_result_value") != null) {
+                                jcbg.put("lab_result_value", sbobj.getString("lab_result_value"));
+                            }
                             if (sbobj.getString("lab_result") != null) {
                                 jcbg.put("lab_result_value", sbobj.getString("lab_result"));
                             }

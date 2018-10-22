@@ -3,6 +3,7 @@ package com.jhmk.cloudservice.warnService.webservice;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
 import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
+import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.RegularUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -529,7 +530,13 @@ public class AnalysisXmlService {
                     Element element = items.get(i);
                     Element order_end_time = element.element("ORDER_END_TIME");
                     if (Objects.nonNull(order_end_time)){
-                        continue;
+
+                        String text = order_end_time.getText();
+                        Date date = DateFormatUtil.parseDate(text, DateFormatUtil.DATETIME_PATTERN_SS);
+                        if (date.before(new Date())){
+                            continue;
+                        }
+
                     }
                     //名称 体温 脉搏等
                     String orderItemName = element.element("ORDER_ITEM_NAME").getText();
