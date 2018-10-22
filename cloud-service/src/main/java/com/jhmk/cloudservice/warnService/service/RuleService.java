@@ -708,15 +708,18 @@ public class RuleService {
                             if (sbobj.getString("unit") != null) {
                                 jcbg.put("lab_result_value_unit", sbobj.getString("unit"));
                             }
-                            if (sbobj.getString("lab_result_value") != null) {
-                                jcbg.put("lab_result_value", sbobj.getString("lab_result_value"));
+//                            if (sbobj.getString("lab_result_value") != null) {
+//                                jcbg.put("lab_result_value", sbobj.getString("lab_result_value"));
+//                            }
+                            if (sbobj.getString("lab_result") != null) {
+                                jcbg.put("lab_result_value", sbobj.getString("lab_result"));
                             }
                             if (sbobj.getString("result_status_code") != null) {
                                 jcbg.put("result_status_code", sbobj.getString("result_status_code"));
                             }
+                            jybgMap.add(jcbg);
                         }
                     }
-                    jybgMap.add(jcbg);
 
                 }
                 endparamMap.put(key, jybgMap);

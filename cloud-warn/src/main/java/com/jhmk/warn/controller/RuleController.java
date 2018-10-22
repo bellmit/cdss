@@ -361,6 +361,7 @@ public class RuleController extends BaseEntityController<Object> {
         String s2 = ruleService.stringTransform(s);
         JSONObject parse = JSONObject.parseObject(s2);
         Rule rule = Rule.fill(parse);
+        System.out.println(JSONObject.toJSONString(rule));
         String data = "";
         try {
             //规则匹配
