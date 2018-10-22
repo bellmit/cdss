@@ -114,7 +114,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 
     @PostMapping("/getClickRateByCondition")
     public void getAllData(HttpServletResponse response, @RequestBody(required = false) Map<String, Object> map) {
-        AtResponse<Map<String, Object>> resp = super.listData(map, clickRateRepService, null);
+        AtResponse<Map<String, Object>> resp = super.listData(map, clickRateRepService, "createTime");
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
