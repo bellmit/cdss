@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 部门对外接口
+ */
 @Controller
 @RequestMapping("/warn/depts")
 public class DeptsController extends BaseEntityController<SmDepts> {
@@ -25,19 +28,16 @@ public class DeptsController extends BaseEntityController<SmDepts> {
     @Autowired
     SmDeptsRepService smDeptsRepService;
 
-    //增删改查
-    @RequestMapping("")
-    public String list() {
-        return "/list";
-    }
 
-
-    //分页展示
+    /**
+     * 分页展示所有部门信息
+     *
+     * @param response
+     * @param reqParams
+     */
     @RequestMapping(value = "/listData")
     @ResponseBody
     public void userList(HttpServletResponse response, @RequestParam Map<String, Object> reqParams) {
-
-
         AtResponse<Map<String, Object>> resp = listData(reqParams, smDeptsRepService, null);
         Map<String, Object> data = resp.getData();
         Map<String, String> mm = (Map<String, String>) data.get("params");
@@ -49,9 +49,16 @@ public class DeptsController extends BaseEntityController<SmDepts> {
     }
 
 
+    /**
+     * 添加部门信息
+     *
+     * @param response
+     * @param dept
+     * @return
+     */
     @RequestMapping(value = "add")
     @ResponseBody
-    public AtResponse save(HttpServletResponse response,@ModelAttribute SmDepts dept) {
+    public AtResponse save(HttpServletResponse response, @ModelAttribute SmDepts dept) {
         SmDepts save = smDeptsRepService.save(dept);
         AtResponse<Map<String, Object>> resp = new AtResponse(System.currentTimeMillis());
         resp.setResponseCode(ResponseCode.OK);
@@ -59,10 +66,12 @@ public class DeptsController extends BaseEntityController<SmDepts> {
     }
 
 
-    //删除
+    /**
+     * 删除部门
+     */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public AtResponse<String> delete(HttpServletResponse response,@RequestParam(name = "userId", required = true) String userId) {
+    public AtResponse<String> delete(HttpServletResponse response, @RequestParam(name = "userId", required = true) String userId) {
         smDeptsRepService.delete(userId);
         String message;
         AtResponse<String> resp = new AtResponse(System.currentTimeMillis());
@@ -74,9 +83,15 @@ public class DeptsController extends BaseEntityController<SmDepts> {
     }
 
 
+    /**
+     * 查看部门信息
+     * @param response
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "view")
     @ResponseBody
-    public AtResponse view(HttpServletResponse response,@RequestParam String id) {
+    public AtResponse view(HttpServletResponse response, @RequestParam String id) {
         Map<String, Object> params = new HashMap<>();
         SmDepts one = smDeptsRepService.findOne(id);
         params.put("user", one);
@@ -92,9 +107,15 @@ public class DeptsController extends BaseEntityController<SmDepts> {
 
     }
 
+    /**
+     * 修改部门信息
+     * @param response
+     * @param dept
+     * @return
+     */
     @RequestMapping(value = "editor")
     @ResponseBody
-    public AtResponse edit(HttpServletResponse response,@ModelAttribute SmDepts dept) {
+    public AtResponse edit(HttpServletResponse response, @ModelAttribute SmDepts dept) {
         AtResponse<Object> resp = new AtResponse(System.currentTimeMillis());
         String message;
         SmDepts save = smDeptsRepService.save(dept);

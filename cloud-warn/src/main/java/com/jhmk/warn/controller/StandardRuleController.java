@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
+ * 标准规则对外接口
  * @author ziyu.zhou
  * @date 2018/8/8 19:29
  */

@@ -24,8 +24,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
-//import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-
+/**
+ * 用户管理对外接口
+ */
 @Controller
 @RequestMapping("/warn/users")
 public class UsersController extends BaseEntityController<SmUsers> {

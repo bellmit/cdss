@@ -1,5 +1,6 @@
 package com.jhmk.warn.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseEntityController;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
@@ -27,11 +28,12 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 /**
+ * 规则匹配对外接口（规则匹配专用，用于不同医院）
  * @author ziyu.zhou
  * @date 2018/7/24 15:46
  */
 @Controller
-    @RequestMapping("/warn/match")
+@RequestMapping("/warn/match")
 public class RuleMatchController extends BaseEntityController<UserModel> {
 
     private static final Logger logger = LoggerFactory.getLogger(RuleMatchController.class);
@@ -51,27 +53,43 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
      * @throws InterruptedException
      */
 
+    /**
+     * 规则匹配，不获取其他数据进行拼接
+     * @param response
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+
     @PostMapping("/ruleMatch")
-    @ResponseBody
-    public void ruleMatch(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
-        String s2 = ruleService.stringTransform(map);
+    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse();
+        List<SmShowLog> logList = null;
+        Map<String, String> paramMap = (Map) JSON.parse(map);
+        //解析规则 一诉五史 检验报告等
+        String s = ruleService.anaRule(paramMap);
+        String s2 = ruleService.stringTransform(s);
         JSONObject parse = JSONObject.parseObject(s2);
-        Rule fill = Rule.fill(parse);
-//        Rule rule = ruleService.anaRule1(paramMap);
+        Rule rule = Rule.fill(parse);
+        System.out.println(JSONObject.toJSONString(rule));
         String data = "";
         try {
-
-            data = ruleService.ruleMatchGetResp(fill);
-            wirte(response, data);
+            //规则匹配
+            data = ruleService.ruleMatchGetResp(rule);
+            logger.info("规则匹配返回结果为：{}", data);
         } catch (Exception e) {
-            logger.info("规则匹配失败:{}" + e.getMessage());
+            logger.info("规则匹配失败:{},请求数据为：{}", e.getMessage(), map);
         }
         if (StringUtils.isNotBlank(data)) {
-            ruleService.add2LogTable(data, fill);
-//            ruleService.add2ShowLog(fill, data);
+            //获取保存信息 返回前台显示
+            ruleService.add2LogTable(data, rule);
         }
-//        ruleService.getTipList2ShowLog(fill, map);
+        logList = ruleService.add2ShowLog(rule, data, map);
+        logger.info("提示信息结果为：{}", JSONObject.toJSONString(logList));
+        resp.setData(logList);
+        wirte(response, resp);
+        ruleService.saveRule2Database(rule);
     }
+
 
 
     /**
@@ -84,7 +102,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
      */
     @PostMapping("/ruleMatchByDiagnose")
     @ResponseBody
-    public AtResponse ruleMatchByDiagnose(HttpServletResponse response, @RequestBody String map) {
+    public void ruleMatchByDiagnose(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         Map<String, String> parse = (Map) JSONObject.parse(map);
         String s = ruleService.anaRule(parse);
@@ -93,6 +111,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         Rule rule = Rule.fill(jsonObject);
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
+        //获取数据中心医嘱
         List<Yizhu> yizhu = ruleService.getYizhu(rule);
         rule.setYizhu(yizhu);
         String data = "";
@@ -108,10 +127,9 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         List<SmShowLog> logList = ruleService.add2ShowLog(rule, data, map);
         resp.setData(logList);
         resp.setResponseCode(ResponseCode.OK);
+        wirte(response,resp);
         //一诉五史信息入库
         ruleService.saveRule2Database(rule);
-        return resp;
-
     }
 
     /**

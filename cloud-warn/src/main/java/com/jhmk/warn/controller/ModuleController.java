@@ -22,6 +22,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 菜单对外接口
+ */
 @Controller
 @RequestMapping("/warn/module")
 public class ModuleController extends BaseEntityController<SmModule> {

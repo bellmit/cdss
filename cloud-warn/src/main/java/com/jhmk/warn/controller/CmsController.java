@@ -39,6 +39,13 @@ public class CmsController extends BaseEntityController<SmUsers> {
     SmUsersRepService smUsersRepService;
     private static final Logger logger = LoggerFactory.getLogger(CmsController.class);
 
+    /**
+     * 登录功能
+     * @param httpServletRequest
+     * @param response
+     * @param map
+     */
+
     @RequestMapping(value = "/warn/login", method = RequestMethod.POST)
     @ResponseBody
     public void loginPost(HttpServletRequest httpServletRequest, HttpServletResponse response, @RequestBody String map) {
@@ -107,6 +114,11 @@ public class CmsController extends BaseEntityController<SmUsers> {
 
     }
 
+    /**
+     * 注销功能
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "/warn/loginout", method = RequestMethod.POST)
     @ResponseBody
     public void loginout(HttpServletRequest request, HttpServletResponse response) {

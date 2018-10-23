@@ -33,6 +33,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * 触发规则日志对外接口
+ */
 @Controller
 @RequestMapping("/warn/smHosptailLog")
 public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
@@ -282,7 +285,7 @@ public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
         JSONObject jsonObject = JSONObject.parseObject(map);
         Integer logId = jsonObject.getInteger("logId");
         List<LogMapping> allByLogId = logMappingRepService.findAllByLogId(logId);
-        Collections.sort(allByLogId, CompareUtil.createComparator(1,"logTime","logOrderF","logOrderS"));
+        Collections.sort(allByLogId, CompareUtil.createComparator(1, "logTime", "logOrderF", "logOrderS"));
         AtResponse atsp = new AtResponse();
         atsp.setResponseCode(ResponseCode.OK);
         atsp.setData(allByLogId);

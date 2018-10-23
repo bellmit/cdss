@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 角色管理
+ * 角色管理对外接口
  */
 @Controller
 @RequestMapping("/warn/role")
@@ -30,6 +30,11 @@ public class RoleController extends BaseEntityController<SmRole> {
     SmRoleRepService roleRepository;
 
 
+    /**
+     * 条件查询
+     * @param response
+     * @param params
+     */
     @RequestMapping(value = "/list")
     @ResponseBody
     public void roleList(HttpServletResponse response, @RequestBody String params) {
@@ -39,6 +44,11 @@ public class RoleController extends BaseEntityController<SmRole> {
     }
 
 
+    /**
+     * 添加角色
+     * @param response
+     * @param role
+     */
     @RequestMapping(value = "/add")
     @ResponseBody
     public void add(HttpServletResponse response, @RequestBody SmRole role) {
@@ -49,7 +59,11 @@ public class RoleController extends BaseEntityController<SmRole> {
         wirte(response, resp);
     }
 
-
+    /**
+     * 修改角色
+     * @param response
+     * @param role
+     */
     @RequestMapping(value = "/editor")
     @ResponseBody
     public void editor(HttpServletResponse response, @RequestBody SmRole role) {
@@ -59,7 +73,11 @@ public class RoleController extends BaseEntityController<SmRole> {
         wirte(response, resp);
 
     }
-
+    /**
+     * 查看单角色
+     * @param response
+     * @param role
+     */
     @RequestMapping(value = "/view")
     @ResponseBody
     public void viewDetail(HttpServletResponse response, @RequestBody String params) {
@@ -78,7 +96,11 @@ public class RoleController extends BaseEntityController<SmRole> {
         }
         wirte(response, resp);
     }
-
+    /**
+     * 删除角色
+     * @param response
+     * @param role
+     */
     @RequestMapping(value = "/delete")
     @ResponseBody
     public void delete(HttpServletResponse response, @RequestBody String params) {

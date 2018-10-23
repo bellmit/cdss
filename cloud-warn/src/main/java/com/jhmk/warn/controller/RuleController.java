@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 /**
- * 规则管理
+ * 规则管理对外接口
  */
 @Controller
 @RequestMapping("/warn/rule")
@@ -141,25 +141,16 @@ public class RuleController extends BaseEntityController<Object> {
         } finally {
             wirte(response, formatRule);
         }
-
-
-//        JSONObject jsonObject = JSONObject.parseObject(map);
-//        String id = jsonObject.getString("_id");
-//        OriRule one = oriRuleRepService.findOne(id);
-//        String rule = one.getRule();
-//        wirte(response, rule);
     }
 
 
     /**
-     * 6.查询所有未提交的规则信息
+     * 查询所有未提交的规则信息
      *
      * @param response
      */
     @PostMapping("/findallnotsubmitrule")
-
     public void findallnotsubmitrule(HttpServletResponse response, @RequestBody(required = false) Map map) {
-
         String userId = getUserId();
         Map<String, String> params = new HashMap<>();
         params.put("doctorId", userId);
@@ -170,7 +161,6 @@ public class RuleController extends BaseEntityController<Object> {
         String forObject = "";
         Map<String, Object> foramtData = null;
         try {
-//            System.out.println(BaseConstants.findallnotsubmitrule);
             forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.findallnotsubmitrule, o, String.class);
             foramtData = ruleService.formatData(forObject);
         } catch (Exception e) {
@@ -346,6 +336,7 @@ public class RuleController extends BaseEntityController<Object> {
 
 
     /**
+     * 规则匹配
      * @param response
      * @throws ExecutionException
      * @throws InterruptedException
@@ -366,7 +357,7 @@ public class RuleController extends BaseEntityController<Object> {
         try {
             //规则匹配
             data = ruleService.ruleMatchGetResp(rule);
-            logger.info("规则匹配返回结果为：{}",data);
+            logger.info("规则匹配返回结果为：{}", data);
         } catch (Exception e) {
             logger.info("规则匹配失败:{},请求数据为：{}", e.getMessage(), map);
         }
@@ -376,7 +367,7 @@ public class RuleController extends BaseEntityController<Object> {
             //todo  删除触发规则保存到sm_show_log表中，改为从sm_hospital表获取数据
         }
         logList = ruleService.add2ShowLog(rule, data, map);
-        logger.info("提示信息结果为：{}",JSONObject.toJSONString(logList));
+        logger.info("提示信息结果为：{}", JSONObject.toJSONString(logList));
         resp.setData(logList);
         wirte(response, resp);
         ruleService.saveRule2Database(rule);
