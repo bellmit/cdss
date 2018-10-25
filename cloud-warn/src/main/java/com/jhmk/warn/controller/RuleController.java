@@ -108,12 +108,12 @@ public class RuleController extends BaseEntityController<Object> {
         String time = DateFormatUtil.format(new Timestamp(System.currentTimeMillis()), DateFormatUtil.DATETIME_PATTERN_SS);
         param.put("createTime", time);
         Object o = JSON.toJSON(param);
-        logger.info("添加条件为：{}",JSONObject.toJSONString(param));
+        logger.info("添加条件为：{}", JSONObject.toJSONString(param));
         String forObject = "";
         try {
             forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.addrule, o, String.class);
         } catch (Exception e) {
-            logger.error("添加规则失败,Message:{},cause:{}" ,e.getMessage(),e.getCause());
+            logger.error("添加规则失败,Message:{},cause:{}", e.getMessage(), e.getCause());
         } finally {
             wirte(response, forObject);
         }
@@ -338,6 +338,7 @@ public class RuleController extends BaseEntityController<Object> {
 
     /**
      * 规则匹配
+     *
      * @param response
      * @throws ExecutionException
      * @throws InterruptedException

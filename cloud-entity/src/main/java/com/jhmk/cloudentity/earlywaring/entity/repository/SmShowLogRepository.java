@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,16 +20,19 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
     List<SmShowLog> findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(String doctorId, String patientId, String visitId);
 
     @Modifying
+    @Transactional
     @Query("update SmShowLog l set l.ruleStatus = ?1 where l.id = ?2")
     int update(int ruleStatus, int id);
 
 
     @Modifying
+    @Transactional
     @Query("update SmShowLog l set l.ruleStatus = ?1  ,l.smHospitalLogId=?2 ,l.date=?3  where l.id = ?4")
     int updateSmHospitalById(int ruleStatus, int smHospitalLogId, String date, int id);
 
 
     @Modifying
+    @Transactional
     @Query("update SmShowLog l set l.ruleStatus = ?1 where l.id = ?2")
     int updateNameById(String name, int id);
 

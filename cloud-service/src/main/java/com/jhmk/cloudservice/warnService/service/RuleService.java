@@ -314,13 +314,13 @@ public class RuleService {
      * @param mes
      */
     public void add2LogTable(String resultData, Rule mes) {
+        String doctor_id = mes.getDoctor_id();
+        String patient_id = mes.getPatient_id();
+        String visit_id = mes.getVisit_id();
         JSONObject jsonObject = JSONObject.parseObject(resultData);
         if (!symbol.equals(jsonObject.getString(resultSym))) {
             Object result = jsonObject.get(resultSym);
             SmHospitalLog smHospitalLog = hosptailLogService.addLog(mes);
-            String doctor_id = mes.getDoctor_id();
-            String patient_id = mes.getPatient_id();
-            String visit_id = mes.getVisit_id();
             if (ObjectUtils.anyNotNull(result)) {
                 //todo 预警等级需要返回
                 JSONArray ja = (JSONArray) result;
@@ -382,7 +382,6 @@ public class RuleService {
                             int tempId = log.getId();
                             if (logTime != null) {
                                 smShowLogRepService.updateSmHospitalById(0, id, logTime, tempId);
-                                log.setDate(logTime);
                             } else {
                                 String date = DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS);
                                 smShowLogRepService.updateSmHospitalById(0, id, date, tempId);
@@ -416,6 +415,12 @@ public class RuleService {
                     log.setRuleStatus(3);
                     smShowLogRepService.save(log);
                 }
+            }
+        } else {
+            List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+            for (SmShowLog log : existLog) {
+                log.setRuleStatus(3);
+                smShowLogRepService.save(log);
             }
         }
 
