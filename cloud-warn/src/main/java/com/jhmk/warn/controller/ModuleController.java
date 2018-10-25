@@ -106,6 +106,7 @@ public class ModuleController extends BaseEntityController<SmModule> {
         //获取当前角色
         AtResponse<List> atResponse = new AtResponse();
         String currentRole = getCurrentRole();
+        //获取当前用户
         String userId = getUserId();
         System.out.println(userId);
         List<SmModule> modules = roleModuleService.queryComponetByRole(currentRole);

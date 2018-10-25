@@ -349,10 +349,7 @@ public class RuleService {
                         //获取触发的规则id
                         smHospitalLog.setRuleId(rule_id);
 //                        List<LogMapping> notSaveLogMapping = getNotSaveLogMapping(mes, resultData);
-
                         JSONArray diseaseMessageMap = object.getJSONArray("diseaseMessageMap");
-
-
                         List<LogMapping> notSaveLogMapping = getNotSaveLogMapping(mes, diseaseMessageMap);
                         Collections.sort(notSaveLogMapping, CompareUtil.createComparator(-1, "logTime"));
                         String logTime = notSaveLogMapping.get(0).getLogTime();
@@ -404,7 +401,11 @@ public class RuleService {
                             newLog.setDoctorId(doctor_id);
                             newLog.setRuleStatus(0);
                             newLog.setType("ruleMatch");
-                            newLog.setHintContent(hintContent);
+                            if (StringUtils.isNotBlank(signContent)) {
+                                newLog.setHintContent(signContent);
+                            } else {
+                                newLog.setHintContent(hintContent);
+                            }
                             smShowLogRepService.save(newLog);
                         }
                     }

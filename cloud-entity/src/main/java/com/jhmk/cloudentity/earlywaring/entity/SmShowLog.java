@@ -116,7 +116,7 @@ public class SmShowLog {
     }
 
     @Basic
-    @Column(name = "item_name", nullable = true, length = 20)
+    @Column(name = "item_name", nullable = true, length = 80)
     public String getItemName() {
         return itemName;
     }
