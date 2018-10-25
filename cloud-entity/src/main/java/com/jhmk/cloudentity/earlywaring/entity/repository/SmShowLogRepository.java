@@ -22,6 +22,16 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
     @Query("update SmShowLog l set l.ruleStatus = ?1 where l.id = ?2")
     int update(int ruleStatus, int id);
 
+
+    @Modifying
+    @Query("update SmShowLog l set l.ruleStatus = ?1  ,l.smHospitalLogId=?2 ,l.date=?3  where l.id = ?4")
+    int updateSmHospitalById(int ruleStatus, int smHospitalLogId, String date, int id);
+
+
+    @Modifying
+    @Query("update SmShowLog l set l.ruleStatus = ?1 where l.id = ?2")
+    int updateNameById(String name, int id);
+
     SmShowLog findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(String doctorId, String patientId, String itemName, String type, String stat, String visitId);
 
     /**
@@ -37,4 +47,6 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
 
     @Query("select  s from SmShowLog s where s.doctorId=?1 and s.patientId=?2 and s.visitId=?3 and s.type<>'rulematch' and s.ruleStatus=0")
     List<SmShowLog> findExistLog(String doctorId, String patientId, String visitId);
+
+
 }

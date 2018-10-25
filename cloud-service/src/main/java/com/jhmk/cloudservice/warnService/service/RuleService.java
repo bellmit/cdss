@@ -377,16 +377,16 @@ public class RuleService {
                         }
 
                         SmShowLog log = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(doctor_id, patient_id, rule_id, visit_id);
-                        //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有处罚此规则，前台自动变灰
+                        //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有触发此规则，前台自动变灰
                         if (log != null && 3 == log.getRuleStatus()) {
-                            log.setRuleStatus(0);
-                            log.setSmHospitalLogId(id);
+                            int tempId = log.getId();
                             if (logTime != null) {
+                                smShowLogRepService.updateSmHospitalById(0, id, logTime, tempId);
                                 log.setDate(logTime);
                             } else {
-                                log.setDate(DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
+                                String date = DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS);
+                                smShowLogRepService.updateSmHospitalById(0, id, date, tempId);
                             }
-                            smShowLogRepService.save(log);
                         } else {
                             SmShowLog newLog = new SmShowLog();
                             newLog.setPatientId(patient_id);
