@@ -690,6 +690,16 @@ public class RuleService {
                         }
                     }
                 }
+                //如果现病史为空 则主诉里第一句话是主诉 剩下的是现病史
+                if (StringUtils.isEmpty(ryjlMap.get("history_of_present_illness"))) {
+                    String chief_complaint = ryjlMap.get("chief_complaint");
+                    if (StringUtils.isNotBlank(chief_complaint)) {
+                        String zhusu = chief_complaint.substring(0, chief_complaint.indexOf("。"));
+                        String xianbingshi = chief_complaint.substring(chief_complaint.indexOf("。") + 1);
+                        ryjlMap.put("chief_complaint", zhusu);
+                        ryjlMap.put("history_of_present_illness", xianbingshi);
+                    }
+                }
                 endparamMap.put("ruyuanjilu", ryjlMap);
             } else if ("jianyanbaogao".equals(key)) {
                 String jybg = String.valueOf(paramMap.get("jianyanbaogao"));

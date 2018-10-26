@@ -142,7 +142,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
      */
     @PostMapping("/ruleMatchByDoctorAdvice")
     @ResponseBody
-    public void ruleMatchByDoctorAdvice(HttpServletResponse response, @RequestBody String map) throws ExecutionException, InterruptedException {
+    public void ruleMatchByDoctorAdvice(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         JSONObject jsonObject = JSONObject.parseObject(map);
         if (Objects.nonNull(jsonObject)) {

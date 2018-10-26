@@ -11,12 +11,9 @@ import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepServ
 import com.jhmk.cloudentity.earlywaring.entity.rule.AnalyzeBean;
 import com.jhmk.cloudentity.earlywaring.entity.rule.FormatRule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
+import com.jhmk.cloudservice.warnService.service.*;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.warnService.webservice.CdrService;
-import com.jhmk.cloudservice.warnService.service.HosptailLogService;
-import com.jhmk.cloudservice.warnService.service.ResolveRuleService;
-import com.jhmk.cloudservice.warnService.service.RuleService;
-import com.jhmk.cloudservice.warnService.service.UserModelService;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.config.UrlConfig;
 import com.jhmk.cloudutil.model.AtResponse;
@@ -46,6 +43,8 @@ import java.util.concurrent.*;
 @RequestMapping("/warn/rule")
 public class RuleController extends BaseEntityController<Object> {
 
+    @Autowired
+    RuleMatchService ruleMatchService;
     @Autowired
     RestTemplate restTemplate;
     @Autowired
@@ -343,9 +342,19 @@ public class RuleController extends BaseEntityController<Object> {
      * @throws ExecutionException
      * @throws InterruptedException
      */
+    @PostMapping("/analyzeData2Exe")
+    public void analyzeData2Exe(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse();
+        List<SmShowLog> logList = null;
+        Map<String, String> paramMap = (Map) JSON.parse(map);
+        //解析规则 一诉五史 检验报告等
+        String s = ruleService.anaRule(paramMap);
+        String s2 = ruleService.stringTransform(s);
+    }
 
-    @PostMapping("/ruleMatch")
-    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
+
+    @PostMapping("/ruleMatch1")
+    public void ruleMatch1(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         List<SmShowLog> logList = null;
         Map<String, String> paramMap = (Map) JSON.parse(map);
@@ -373,6 +382,23 @@ public class RuleController extends BaseEntityController<Object> {
         resp.setData(logList);
         wirte(response, resp);
         ruleService.saveRule2Database(rule);
+    }
+
+    @PostMapping("/ruleMatch")
+    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse();
+        Map<String, String> paramMap = (Map) JSON.parse(map);
+        //页面来源 入院记录： 0 :保存病历 1：下诊断 2：打开病例 3：新建病例 6：下医嘱 7：病案首页 8：其他
+        String pageSource = paramMap.get("pageSource");//页面来源
+        logger.info("页面来源：{}", pageSource);
+        if ("test".equals(pageSource)) {
+            resp = ruleMatchService.ruleMatch(map);
+        } else if ("6".equals(pageSource)) {//医嘱 为6 其他做下诊断处理
+            resp = ruleMatchService.ruleMatchByDoctorAdvice(map);
+        } else {
+            resp = ruleMatchService.ruleMatchByDiagnose(map);
+        }
+        wirte(response, resp);
     }
 
 
