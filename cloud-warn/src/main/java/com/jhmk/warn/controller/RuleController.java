@@ -363,6 +363,7 @@ public class RuleController extends BaseEntityController<Object> {
         String s2 = ruleService.stringTransform(s);
         JSONObject parse = JSONObject.parseObject(s2);
         Rule rule = Rule.fill(parse);
+        logger.info("最开始实体类为{}",JSONObject.toJSONString(rule));
         System.out.println(JSONObject.toJSONString(rule));
         String data = "";
         try {

@@ -817,10 +817,11 @@ public class RuleService {
 
                         SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
                         if (isExist != null && 3 == isExist.getRuleStatus()) {
-                            isExist.setRuleStatus(0);
-                            String data = next.getString("data");
-                            isExist.setDate(data);
-                            smShowLogRepService.save(isExist);
+                            logger.info("=======================确实有相同的，看看保存还是更新{}",JSONObject.toJSONString(isExist));
+                            String date = next.getString("data");
+                            SmShowLog save = smShowLogRepService.save(isExist);
+                            smShowLogRepService.updateSmHospitalStatusAndDateById(0, date, isExist.getId());
+                            logger.info("=======================更新还是存了？{}", JSONObject.toJSONString(save));
                             continue;
                         }
                         SmShowLog smShowLog = new SmShowLog();
@@ -830,8 +831,6 @@ public class RuleService {
                         String data = next.getString("data");
                         smShowLog.setDate(data);
                         String significance = next.getString("significance");
-
-
                         if (StringUtils.isNotBlank(itemName) || StringUtils.isNotBlank(significance) || !"{}".equals(significance.trim())) {
 
                             smShowLog.setSignificance(significance);
@@ -1023,11 +1022,13 @@ public class RuleService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveRule2Database(Rule rule) {
+        logger.info("当前rule实体类为：{}",JSONObject.toJSONString(rule));
         basicInfoService.saveAndFlush(rule);
         zhenduanService.saveAndFlush(rule);
         ruyuanjiluService.saveAndFlush(rule);
-        yizhuService.saveAndFlush(rule);
-        bingchengjiluService.saveAndFlush(rule);
+//        yizhuService.saveAndFlush(rule);
+//        bingchengjiluService.saveAndFlush(rule);
+
     }
 
     /**

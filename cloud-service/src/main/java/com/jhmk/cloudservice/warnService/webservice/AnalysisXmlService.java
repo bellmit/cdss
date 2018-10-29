@@ -551,16 +551,21 @@ public class AnalysisXmlService {
                         frequencyName = element.element("FREQUENCY_NAME").getText();
                     }
                     //编码
-                    String frequencyCode = element.element("FREQUENCY_CODE").getText();
+                    String frequencyCode = null;
+                    if (Objects.nonNull(element.element("FREQUENCY_CODE"))) {
+                        frequencyCode = element.element("FREQUENCY_CODE").getText();
+                    }
                     //单位 mg
 //                    String dosageUnit = element.element("DOSAGE_UNIT").getText();
 //                    String orderClassName = element.element("ORDER_CLASS_NAME").getText();
                     //用药方式
 //                    String pharmacyWayName = element.element("PHARMACY_WAY_NAME").getText();
-                    String orderBeginTime = element.element("ORDER_BEGIN_TIME").getText();
+                    String orderBeginTime = null;
+                    if (Objects.nonNull(element.element("ORDER_BEGIN_TIME"))) {
+                        orderBeginTime = element.element("ORDER_BEGIN_TIME").getText();
+                    }
                     Element dosage_value = element.element("DOSAGE_VALUE");
                     if (dosage_value != null) {
-
                         String dosageValue = element.element("DOSAGE_VALUE").getText();
                         yizhu.setDrug_amount_value(dosageValue);
 

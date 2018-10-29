@@ -1,6 +1,7 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "rule_yizhu", schema = "jhmk_waring")
-public class Yizhu {
+public class Yizhu implements Serializable{
     private int id;
     private String patient_id;
     private String visit_id;
