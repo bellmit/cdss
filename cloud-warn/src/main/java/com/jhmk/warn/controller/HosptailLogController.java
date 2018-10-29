@@ -154,12 +154,17 @@ public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
      */
     @PostMapping("/getDepts")
     @ResponseBody
-    public void getDepts(HttpServletResponse response) {
+    public void getDepts(HttpServletResponse response, @RequestBody(required = false) String map) {
         AtResponse resp = new AtResponse<>();
-        //获取总科室（心内科 ）
-//        List<DeptRel> distinctByDeptCode = deptRelRepService.findDistinctByDeptCode();
-        // 获取单科室 如心内科1 心内科2 (日志表中有数量的)
-        List<String> distinctByDeptCode = smHospitalLogRepService.getCountByDistinctDeptCode();
+        List<String> distinctByDeptCode = null;
+        if (StringUtils.isNotBlank(map)) {
+            JSONObject jsonObject = JSONObject.parseObject(map);
+            Date startDate = jsonObject.getDate("startDate");
+            Date endDate = jsonObject.getDate("endDate");
+            distinctByDeptCode = smHospitalLogRepService.getCountByDistinctDeptCodeAndDate(startDate, endDate);
+        } else {
+            distinctByDeptCode = smHospitalLogRepService.getCountByDistinctDeptCode();
+        }
         resp.setData(distinctByDeptCode);
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
