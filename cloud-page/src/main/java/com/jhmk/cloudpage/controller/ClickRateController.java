@@ -46,8 +46,6 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 
     @PostMapping("/add")
     public void add(HttpServletResponse response, @RequestBody ClickRate clickRate) {
-
-        String doctorId = clickRate.getDoctorId();
         clickRate.setCreateTime(new java.sql.Date(System.currentTimeMillis()));
         ClickRateService.addDate2Map(clickRate);
         AtResponse resp = new AtResponse();

@@ -1,5 +1,6 @@
 package com.jhmk.cloudpage.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
 import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
@@ -8,6 +9,7 @@ import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepServ
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudutil.util.DateFormatUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,6 @@ public class SchedulerTask {
                 clickRate.setDoctorId(doctorId);
                 clickRate.setType(type);
                 clickRate.setCreateTime(createDate);
-
                 SmUsers one = smUsersRepService.findOne(doctorId);
                 //科室code码
                 if (one != null) {
@@ -64,13 +65,24 @@ public class SchedulerTask {
                     clickRate.setDeptCode(deptCode);
                     SmDepts firstByDeptCode = smDeptsRepService.findFirstByDeptCode(deptCode);
                     String deptName = firstByDeptCode.getDeptName();
+                    logger.info("部门名称：{}", deptName);
                     clickRate.setDeptName(deptName);
                 }
                 ClickRate old = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, createDate, type);
                 if (old != null) {
+                    if (StringUtils.isEmpty(old.getDeptName())) {
+                        String deptCode = one.getUserDept();
+                        old.setDeptCode(deptCode);
+                        SmDepts firstByDeptCode = smDeptsRepService.findFirstByDeptCode(deptCode);
+                        String deptName = firstByDeptCode.getDeptName();
+                        logger.info("部门名称：{}", deptName);
+                        old.setDeptName(deptName);
+                    }
                     old.setCount(old.getCount() + value);
+                    logger.info("保存点击事件：{}", JSONObject.toJSONString(clickRate));
                     clickRateRepService.save(old);
                 } else {
+                    logger.info("保存点击事件：{}", JSONObject.toJSONString(clickRate));
                     clickRateRepService.save(clickRate);
                 }
             } else {

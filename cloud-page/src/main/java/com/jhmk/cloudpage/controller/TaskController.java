@@ -1,6 +1,10 @@
 package com.jhmk.cloudpage.controller;
 
 import com.jhmk.cloudentity.base.BaseController;
+import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
+import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.SchedulerTask;
 import org.slf4j.Logger;
@@ -20,6 +24,10 @@ public class TaskController extends BaseController {
     Logger logger = LoggerFactory.getLogger(ClickRateController.class);
 
     @Autowired
+    SmUsersRepService smUsersRepService;
+    @Autowired
+    SmDeptsRepService smDeptsRepService;
+    @Autowired
     SchedulerTask schedulerTask;
 
     @PostMapping("/addClickCount2DateTable")
@@ -29,4 +37,15 @@ public class TaskController extends BaseController {
         logger.info("记录点击事件完成");
     }
 
+    @PostMapping("/test")
+    public void contextLoads() {
+        SmUsers one = smUsersRepService.findOne("10401");
+        //科室code码
+        if (one != null) {
+            String deptCode = one.getUserDept();
+            SmDepts firstByDeptCode = smDeptsRepService.findFirstByDeptCode(deptCode);
+            String deptName = firstByDeptCode.getDeptName();
+            System.out.println(deptName);
+        }
+    }
 }
