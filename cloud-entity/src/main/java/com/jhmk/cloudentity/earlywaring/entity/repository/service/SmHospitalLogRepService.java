@@ -119,6 +119,11 @@ public class SmHospitalLogRepService extends BaseRepService<SmHospitalLog, Integ
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public List<String> getCountByDistinctDeptCodeAndDate(Date startTime, Date endTime) {
+        return repository.getCountByDistinctDeptCodeAndDate(startTime, endTime);
+    }
+
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public long getDistinctDoctorIdCount() {
         return repository.getDistinctDoctorIdCount();
     }
