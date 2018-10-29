@@ -25,13 +25,19 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
     int update(int ruleStatus, int id);
 
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("update SmShowLog l set l.ruleStatus = ?1  ,l.smHospitalLogId=?2 ,l.date=?3  where l.id = ?4")
     int updateSmHospitalById(int ruleStatus, int smHospitalLogId, String date, int id);
 
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update SmShowLog l set l.ruleStatus = ?1  ,l.date=?2  where l.id = ?3")
+    int updateSmHospitalStatusAndDateById(int ruleStatus, String date, int id);
+
+
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("update SmShowLog l set l.ruleStatus = ?1 where l.id = ?2")
     int updateNameById(String name, int id);

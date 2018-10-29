@@ -1,6 +1,7 @@
 package com.jhmk.cloudservice.warnService.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhunRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,12 @@ public class YizhuService {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
         List<Yizhu> allByPatientIdAndVisitId = yizhunRepService.findLessThanVisit_id(patient_id, visit_id);
-
-
         if (allByPatientIdAndVisitId != null&&allByPatientIdAndVisitId.size()>0) {
             yizhunRepService.delete(allByPatientIdAndVisitId);
         }
         List<Yizhu> yizhu = rule.getYizhu();
         if (yizhu != null && yizhu.size() > 0) {
+            System.out.println("医嘱的patient_id==========================="+ JSONObject.toJSONString(yizhu));
             yizhunRepService.save(yizhu);
         }
     }
