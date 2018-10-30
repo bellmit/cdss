@@ -12,8 +12,6 @@ import java.util.List;
 public interface SmHospitalLogRepository extends PagingAndSortingRepository<SmHospitalLog, Integer>, JpaSpecificationExecutor<SmHospitalLog> {
 
 
-
-
     @Query("select distinct (d.doctorId)from SmHospitalLog d ")
     long getDistinctDoctorIdCount();
 
@@ -61,13 +59,15 @@ public interface SmHospitalLogRepository extends PagingAndSortingRepository<SmHo
     @Query("select distinct (d.deptCode)from SmHospitalLog d where d.deptCode<>null")
     List<String> getCountByDistinctDeptCode();
 
+    @Query("select distinct (d.deptCode)from SmHospitalLog d where d.deptCode<>null and  d.createTime>=?1 and d.createTime<=?2")
+    List<String> getCountByDistinctDeptCodeAndDate(Date startTime, Date endTime);
+
 
     @Query("select distinct (d.doctorId),d.doctorName from SmHospitalLog d ")
     List<SmHospitalLog> getCountByDistinctDoctorId();
 
 
     List<SmHospitalLog> findAllByOrderByCreateTimeDesc(Specification specification);
-
 
 
 }
