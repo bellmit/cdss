@@ -67,17 +67,25 @@ public class CdrService {
 //        String xml="<?xml version=\"1.0\" encoding=\"UTF-8\"?><MSG><HOSPITAL_OID>1.2.156.112636.1.2.46</HOSPITAL_OID><PATIENT_ID>001652668700</PATIENT_ID><VISIT_ID>1</VISIT_ID><WS_CODE>JHHDRWS005</WS_CODE></MSG>";
         Map<String, String> params = new HashMap<>();
         params.put("oid", BaseConstants.OID);
-        params.put("patient_id", "001652668700");
+        params.put("patient_id", "000571764100");
 //        params.put("patient_id", "000571764100");
-//        params.put("visit_id", "1");
+        params.put("visit_id", "1");
 //        //检验数据
-        params.put("ws_code", "JHHDRWS005");
+//        params.put("ws_code", "JHHDRWS005");
+        //医嘱
+        params.put("ws_code", "JHHDRWS012A");
 //        params.put("ws_code", "JHHDRWS006A");
 //        params.put("ws_code", "JHHDRWS012A");
 ////        params.put("elemName", "REPORT_TIME");
 ////        params.put("value", "2017-08-15 06:40:26");
 ////        params.put("operator", "=");
-        String xml = getXml(params, null);
+        List<Map<String, String>> listConditions = new LinkedList<>();
+        Map<String, String> conditionParams = new HashMap<>();
+        conditionParams.put("elemName", "ORDER_PROPERTIES_NAME");
+        conditionParams.put("value", "长期");
+        conditionParams.put("operator", "=");
+        listConditions.add(conditionParams);
+        String xml = getXml(params, listConditions);
         System.out.println(xml);
         HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
         HdrQueryDataWsImpl hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();

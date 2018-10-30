@@ -1,20 +1,27 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * @author ziyu.zhou
- * @date 2018/7/30 11:46
+ * @date 2018/10/30 18:06
  */
 
 @Entity
-@Table(name = "rule_yizhu", schema = "jhmk_waring")
-public class Yizhu {
+@Table(name = "rule_yizhu", schema = "jhmk_waring", catalog = "")
+public class Yizhu implements Serializable{
     private int id;
     private String patient_id;
     private String visit_id;
+    private String inp_no;
+    private String order_no;
+    private String order_class_name;
+    private String order_class_code;
     private String order_item_name;
+    private String order_item_code;
+    private String order_status_name;
     private String order_begin_time;
     private String order_end_time;
     private String frequency_name;
@@ -24,10 +31,13 @@ public class Yizhu {
     private String drug_amount_value;
     private String order_properties_name;
     private String duration_value;
+    private String dosage_value;
+    private String total_dosage_value;
+    private String total_dosage_unit;
+    private String status;
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
@@ -52,8 +62,48 @@ public class Yizhu {
         return visit_id;
     }
 
-    public void setVisit_id(String visit_id) {
-        this.visit_id = visit_id;
+    public void setVisit_id(String visitId) {
+        this.visit_id = visitId;
+    }
+
+    @Basic
+    @Column(name = "inp_no", nullable = true, length = 50)
+    public String getInp_no() {
+        return inp_no;
+    }
+
+    public void setInp_no(String inp_no) {
+        this.inp_no = inp_no;
+    }
+
+    @Basic
+    @Column(name = "order_no", nullable = true, length = 50)
+    public String getOrder_no() {
+        return order_no;
+    }
+
+    public void setOrder_no(String order_no) {
+        this.order_no = order_no;
+    }
+
+    @Basic
+    @Column(name = "order_class_name", nullable = true, length = 50)
+    public String getOrder_class_name() {
+        return order_class_name;
+    }
+
+    public void setOrder_class_name(String order_class_name) {
+        this.order_class_name = order_class_name;
+    }
+
+    @Basic
+    @Column(name = "order_class_code", nullable = true, length = 50)
+    public String getOrder_class_code() {
+        return order_class_code;
+    }
+
+    public void setOrder_class_code(String order_class_code) {
+        this.order_class_code = order_class_code;
     }
 
     @Basic
@@ -64,6 +114,26 @@ public class Yizhu {
 
     public void setOrder_item_name(String order_item_name) {
         this.order_item_name = order_item_name;
+    }
+
+    @Basic
+    @Column(name = "order_item_code", nullable = true, length = 50)
+    public String getOrder_item_code() {
+        return order_item_code;
+    }
+
+    public void setOrder_item_code(String order_item_code) {
+        this.order_item_code = order_item_code;
+    }
+
+    @Basic
+    @Column(name = "order_status_name", nullable = true, length = 50)
+    public String getOrder_status_name() {
+        return order_status_name;
+    }
+
+    public void setOrder_status_name(String order_status_name) {
+        this.order_status_name = order_status_name;
     }
 
     @Basic
@@ -156,19 +226,61 @@ public class Yizhu {
         this.duration_value = duration_value;
     }
 
+    @Basic
+    @Column(name = "dosage_value", nullable = true, length = 50)
+    public String getDosage_value() {
+        return dosage_value;
+    }
+
+    public void setDosage_value(String dosage_value) {
+        this.dosage_value = dosage_value;
+    }
+
+    @Basic
+    @Column(name = "total_dosage_value", nullable = true, length = 50)
+    public String getTotal_dosage_value() {
+        return total_dosage_value;
+    }
+
+    public void setTotal_dosage_value(String total_dosage_value) {
+        this.total_dosage_value = total_dosage_value;
+    }
+
+    @Basic
+    @Column(name = "total_dosage_unit", nullable = true, length = 50)
+    public String getTotal_dosage_unit() {
+        return total_dosage_unit;
+    }
+
+    public void setTotal_dosage_unit(String total_dosage_unit) {
+        this.total_dosage_unit = total_dosage_unit;
+    }
+
+    @Basic
+    @Column(name = "status", nullable = true, length = 50)
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Yizhu yizhu = (Yizhu) o;
         return id == yizhu.id &&
                 Objects.equals(patient_id, yizhu.patient_id) &&
                 Objects.equals(visit_id, yizhu.visit_id) &&
+                Objects.equals(inp_no, yizhu.inp_no) &&
+                Objects.equals(order_no, yizhu.order_no) &&
+                Objects.equals(order_class_name, yizhu.order_class_name) &&
+                Objects.equals(order_class_code, yizhu.order_class_code) &&
                 Objects.equals(order_item_name, yizhu.order_item_name) &&
+                Objects.equals(order_item_code, yizhu.order_item_code) &&
+                Objects.equals(order_status_name, yizhu.order_status_name) &&
                 Objects.equals(order_begin_time, yizhu.order_begin_time) &&
                 Objects.equals(order_end_time, yizhu.order_end_time) &&
                 Objects.equals(frequency_name, yizhu.frequency_name) &&
@@ -177,12 +289,16 @@ public class Yizhu {
                 Objects.equals(specification, yizhu.specification) &&
                 Objects.equals(drug_amount_value, yizhu.drug_amount_value) &&
                 Objects.equals(order_properties_name, yizhu.order_properties_name) &&
-                Objects.equals(duration_value, yizhu.duration_value);
+                Objects.equals(duration_value, yizhu.duration_value) &&
+                Objects.equals(dosage_value, yizhu.dosage_value) &&
+                Objects.equals(total_dosage_value, yizhu.total_dosage_value) &&
+                Objects.equals(total_dosage_unit, yizhu.total_dosage_unit) &&
+                Objects.equals(status, yizhu.status);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, patient_id, visit_id, order_item_name, order_begin_time, order_end_time, frequency_name, frequency_code, dosage_form, specification, drug_amount_value, order_properties_name, duration_value);
+        return Objects.hash(id, patient_id, visit_id, inp_no, order_no, order_class_name, order_class_code, order_item_name, order_item_code, order_status_name, order_begin_time, order_end_time, frequency_name, frequency_code, dosage_form, specification, drug_amount_value, order_properties_name, duration_value, dosage_value, total_dosage_value, total_dosage_unit, status);
     }
 }

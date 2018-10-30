@@ -353,8 +353,8 @@ public class RuleController extends BaseEntityController<Object> {
     }
 
 
-    @PostMapping("/ruleMatch1")
-    public void ruleMatch1(HttpServletResponse response, @RequestBody String map) {
+    @PostMapping("/ruleMatchTest")
+    public void ruleMatchTest(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse();
         List<SmShowLog> logList = null;
         Map<String, String> paramMap = (Map) JSON.parse(map);

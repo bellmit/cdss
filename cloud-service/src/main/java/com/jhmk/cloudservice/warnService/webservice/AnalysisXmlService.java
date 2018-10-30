@@ -1,5 +1,6 @@
 package com.jhmk.cloudservice.warnService.webservice;
 
+import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
 import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
@@ -269,6 +270,36 @@ public class AnalysisXmlService {
         return jybgList;
     }
 
+    public List<Jianyanbaogao> analysisOriginalJianyanbaogao2Jianyanbaogao(List<OriginalJianyanbaogao> originalJianyanbaogaoList) {
+        List<Jianyanbaogao> jybgList = new LinkedList<>();
+        for (OriginalJianyanbaogao originalJianyanbaogao : originalJianyanbaogaoList) {
+            String lab_item_name = originalJianyanbaogao.getLab_item_name();
+            String report_no = originalJianyanbaogao.getReport_no();
+            String report_time = originalJianyanbaogao.getReport_time();
+            String specimen = originalJianyanbaogao.getSpecimen();
+            List<JianyanbaogaoForAuxiliary> labTestItems = originalJianyanbaogao.getLabTestItems();
+            for (JianyanbaogaoForAuxiliary jianyanbaogaoForAuxiliary : labTestItems) {
+                Jianyanbaogao jianyanbaogao=new Jianyanbaogao();
+                jianyanbaogao.setLab_item_name(lab_item_name);
+                jianyanbaogao.setReport_no(report_no);
+                jianyanbaogao.setReport_time(report_time);
+                jianyanbaogao.setSpecimen(specimen);
+                String lab_sub_item_name = jianyanbaogaoForAuxiliary.getName();
+                jianyanbaogao.setLab_sub_item_name(lab_sub_item_name);
+                String lab_qual_result = jianyanbaogaoForAuxiliary.getLab_qual_result();
+                jianyanbaogao.setLab_qual_result(lab_qual_result);
+                String reference_range = jianyanbaogaoForAuxiliary.getReference_range();
+                jianyanbaogao.setReference_range(reference_range);
+                String unit = jianyanbaogaoForAuxiliary.getUnit();
+                jianyanbaogao.setLab_result_value_unit(unit);
+                jybgList.add(jianyanbaogao);
+            }
+        }
+
+
+        return jybgList;
+    }
+
 
     /**
      * 检验报告明细
@@ -529,11 +560,11 @@ public class AnalysisXmlService {
 
                     Element element = items.get(i);
                     Element order_end_time = element.element("ORDER_END_TIME");
-                    if (Objects.nonNull(order_end_time)){
+                    if (Objects.nonNull(order_end_time)) {
 
                         String text = order_end_time.getText();
                         Date date = DateFormatUtil.parseDate(text, DateFormatUtil.DATETIME_PATTERN_SS);
-                        if (date.before(new Date())){
+                        if (date.before(new Date())) {
                             continue;
                         }
 

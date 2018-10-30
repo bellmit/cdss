@@ -12,6 +12,8 @@ public class Jianyanbaogao {
     private String lab_result_value;//检验定量结果值
     private String report_time;//检验结果产生时间
     private String report_no;
+    private String reference_range;//参考区间
+    private String lab_result_value_unit;//参考单位
     private String lab_sub_item_name;//检验细项
     private String result_status_code;//结果编码，和参考范围比较的定性结果，H、L等
     private String result_status_name;//结果描述，和参考范围比较的定性结果，偏高、偏低等
@@ -86,5 +88,21 @@ public class Jianyanbaogao {
 
     public void setResult_status_name(String result_status_name) {
         this.result_status_name = result_status_name;
+    }
+
+    public String getReference_range() {
+        return reference_range;
+    }
+
+    public void setReference_range(String reference_range) {
+        this.reference_range = reference_range;
+    }
+
+    public String getLab_result_value_unit() {
+        return lab_result_value_unit;
+    }
+
+    public void setLab_result_value_unit(String lab_result_value_unit) {
+        this.lab_result_value_unit = lab_result_value_unit;
     }
 }

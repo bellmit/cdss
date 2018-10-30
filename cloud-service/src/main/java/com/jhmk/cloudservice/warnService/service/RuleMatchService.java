@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Ruyuanjilu;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import com.jhmk.cloudutil.util.MapUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,8 @@ public class RuleMatchService {
 
     private static final Logger logger = LoggerFactory.getLogger(RuleMatchService.class);
 
+    @Autowired
+    YizhuService yizhuService;
     @Autowired
     RuleService ruleService;
 
@@ -62,15 +66,18 @@ public class RuleMatchService {
     }
 
     public AtResponse ruleMatchByDoctorAdvice(String map) {
+
         AtResponse resp = new AtResponse();
         JSONObject jsonObject = JSONObject.parseObject(map);
+        List<Yizhu> yizhus = yizhuService.analyzeJson2Yizhu(jsonObject);
         if (Objects.nonNull(jsonObject)) {
 
             String patient_id = jsonObject.getString("patient_id");
             String visit_id = jsonObject.getString("visit_id");
-            Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
+            Rule rule = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
             //获取 拼接检验检查报告
             Rule ruleBean = ruleService.getbaogao(rule);
+            ruleBean.setYizhu(yizhus);
             String data = "";
             try {
                 //规则匹配
@@ -81,7 +88,7 @@ public class RuleMatchService {
             if (StringUtils.isNotBlank(data)) {
                 ruleService.add2LogTable(data, ruleBean);
             }
-            List<SmShowLog> logList = ruleService.add2ShowLog(rule, data, map);
+            List<SmShowLog> logList = ruleService.add2ShowLog(ruleBean, data, map);
             resp.setResponseCode(ResponseCode.OK);
             resp.setData(logList);
         } else {

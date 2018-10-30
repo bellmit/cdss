@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class YizhunRepService extends BaseRepService<Yizhu, Integer> {
+public class YizhuRepService extends BaseRepService<Yizhu, Integer> {
     @Autowired
     YizhuRepository repository;
 

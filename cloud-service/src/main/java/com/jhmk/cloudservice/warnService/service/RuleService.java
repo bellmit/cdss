@@ -82,7 +82,7 @@ public class RuleService {
     @Autowired
     RuyuanjiluService ruyuanjiluService;
     @Autowired
-    YizhunRepService yizhunRepService;
+    YizhuRepService yizhuRepService;
     @Autowired
     DocumentMappingRepService documentMappingRepService;
     @Autowired
@@ -923,11 +923,12 @@ public class RuleService {
         params.put("ws_code", "JHHDRWS006B");
         String jybgzbMX = cdrService.getDataByCDR(params, listConditions);
 
+        //获取检验报告原始数据
         List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
         List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
         rule.setOriginalJianyanbaogaos(originalJianyanbaogaos);
-        System.out.println("检查报告：" + rule.getJianchabaogao());
-        System.out.println("检验报告：" + rule.getJianyanbaogao());
+        List<Jianyanbaogao> jianyanbaogaos = analysisXmlService.analysisOriginalJianyanbaogao2Jianyanbaogao(originalJianyanbaogaos);
+        rule.setJianyanbaogao(jianyanbaogaos);
         return rule;
     }
 
@@ -1038,36 +1039,118 @@ public class RuleService {
     public Rule getRuleFromDatabase(String patient_id, String visit_id) {
         Rule rule = new Rule();
         BasicInfo basicInfo = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-        rule.setPatient_id(patient_id);
-        rule.setVisit_id(visit_id);
-        rule.setDept_code(basicInfo.getDept_name());
-        rule.setDoctor_id(basicInfo.getDoctor_id());
-        rule.setPageSource(basicInfo.getPageSource());
-        rule.setWarnSource(basicInfo.getWarnSource());
-        rule.setDoctor_name(basicInfo.getDept_name());
+        if (basicInfo != null) {
+            rule.setPatient_id(patient_id);
+            rule.setVisit_id(visit_id);
+            rule.setDept_code(basicInfo.getDept_name());
+            rule.setDoctor_id(basicInfo.getDoctor_id());
+            rule.setPageSource(basicInfo.getPageSource());
+            rule.setWarnSource(basicInfo.getWarnSource());
+            rule.setDoctor_name(basicInfo.getDept_name());
+        }
+
         Binganshouye binganshouye = binganshouyeRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
         if (binganshouye != null) {
             rule.setBinganshouye(binganshouye);
         }
         List<Binglizhenduan> binglizhenduanList = binglizhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
-        if (binglizhenduanList != null) {
+        if (binglizhenduanList != null && binglizhenduanList.size() > 0) {
             rule.setBinglizhenduan(binglizhenduanList);
         }
         List<Shouyezhenduan> shouyezhenduanList = shouyezhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
         if (shouyezhenduanList != null && shouyezhenduanList.size() > 0) {
             rule.setShouyezhenduan(shouyezhenduanList);
         }
-        List<Yizhu> yizhuList = yizhunRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
-        if (yizhuList != null) {
+        List<Yizhu> yizhuList = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
+        if (yizhuList != null && yizhuList.size() > 0) {
             rule.setYizhu(yizhuList);
         }
         Bingchengjilu bingchengjilu = bingchengjiluRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
         if (bingchengjilu != null) {
-
             rule.setBingchengjilu(bingchengjilu);
         }
         return rule;
     }
+
+    /**
+     * 下医嘱时获取数据库诊断和一诉五史
+     *
+     * @param patient_id
+     * @param visit_id
+     * @return
+     */
+    public Rule getDiagnoseFromDatabase(String patient_id, String visit_id) {
+        Rule rule = new Rule();
+        BasicInfo basicInfo = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+        if (basicInfo != null) {
+            rule.setPatient_id(patient_id);
+            rule.setVisit_id(visit_id);
+            rule.setDept_code(basicInfo.getDept_name());
+            rule.setDoctor_id(basicInfo.getDoctor_id());
+            rule.setPageSource(basicInfo.getPageSource());
+            rule.setWarnSource(basicInfo.getWarnSource());
+            rule.setDoctor_name(basicInfo.getDept_name());
+        }
+
+        Binganshouye binganshouye = binganshouyeRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+        if (binganshouye != null) {
+            rule.setBinganshouye(binganshouye);
+        }
+        List<Binglizhenduan> binglizhenduanList = binglizhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
+        if (binglizhenduanList != null && binglizhenduanList.size() > 0) {
+            rule.setBinglizhenduan(binglizhenduanList);
+        }
+        List<Shouyezhenduan> shouyezhenduanList = shouyezhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
+        if (shouyezhenduanList != null && shouyezhenduanList.size() > 0) {
+            rule.setShouyezhenduan(shouyezhenduanList);
+        }
+        Bingchengjilu bingchengjilu = bingchengjiluRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+        if (bingchengjilu != null) {
+            rule.setBingchengjilu(bingchengjilu);
+        }
+        return rule;
+    }
+    /**
+     * 下诊断时获取数据库诊断和一诉五史
+     * @param patient_id
+     * @param visit_id
+     * @return
+     */
+//    public Rule getDoctorAdviceFromDatabase(String patient_id, String visit_id) {
+//        Rule rule = new Rule();
+//        BasicInfo basicInfo = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+//        if (basicInfo != null) {
+//            rule.setPatient_id(patient_id);
+//            rule.setVisit_id(visit_id);
+//            rule.setDept_code(basicInfo.getDept_name());
+//            rule.setDoctor_id(basicInfo.getDoctor_id());
+//            rule.setPageSource(basicInfo.getPageSource());
+//            rule.setWarnSource(basicInfo.getWarnSource());
+//            rule.setDoctor_name(basicInfo.getDept_name());
+//        }
+//
+//        Binganshouye binganshouye = binganshouyeRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+//        if (binganshouye != null) {
+//            rule.setBinganshouye(binganshouye);
+//        }
+//        List<Binglizhenduan> binglizhenduanList = binglizhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
+//        if (binglizhenduanList != null&&binglizhenduanList.size()>0) {
+//            rule.setBinglizhenduan(binglizhenduanList);
+//        }
+//        List<Shouyezhenduan> shouyezhenduanList = shouyezhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
+//        if (shouyezhenduanList != null && shouyezhenduanList.size() > 0) {
+//            rule.setShouyezhenduan(shouyezhenduanList);
+//        }
+//        List<Yizhu> yizhuList = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
+//        if (yizhuList != null&&yizhuList.size()>0) {
+//            rule.setYizhu(yizhuList);
+//        }
+//        Bingchengjilu bingchengjilu = bingchengjiluRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+//        if (bingchengjilu != null) {
+//            rule.setBingchengjilu(bingchengjilu);
+//        }
+//        return rule;
+//    }
 
     /**
      * 根据cdss返回数据获取规则条件字段
