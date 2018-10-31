@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "url")
 public class UrlConfig {
     private String cdssurl;
+    private String pageurl;
+
 
 
 
@@ -19,4 +21,11 @@ public class UrlConfig {
         this.cdssurl = cdssurl;
     }
 
+    public String getPageurl() {
+        return pageurl;
+    }
+
+    public void setPageurl(String pageurl) {
+        this.pageurl = pageurl;
+    }
 }

@@ -84,13 +84,11 @@ public class CdssPageController extends BaseController {
      */
     @PostMapping("/getTreatPlan")
     public void getTreatPlan(HttpServletResponse response, @RequestBody(required = false) String map) {
-        AtResponse resp = new AtResponse();
         JSONObject jsonObject = JSONObject.parseObject(map);
         String idList = jsonObject.getString("idList");
         List<String> list = Arrays.asList(idList.split(","));
         String treatPlan = cdssPageService.getTreatPlan(list);
         wirte(response, treatPlan);
     }
-
 
 }

@@ -10,18 +10,16 @@ package com.jhmk.cloudutil.config;
  */
 public class CdssPageConstants {
 
-    private static final String HEADERURL = "http://192.168.132.7:8010/med";
 
     /**
      * 获取药品变化趋势
      */
-    public static final String GETPLANSTAT = HEADERURL + "/disease/getPlanStat.json";
+    public static final String GETPLANSTAT = "/med/disease/getPlanStat.json";
 
     /**
      * 诊疗计划
      */
-//    public static final String TREATPLAN = "http://192.168.8.23:8098/med/advanced/query/treatPlan.json";
-    public static final String TREATPLAN = "http://192.168.132.13:8800/med/advanced/query/treatPlan.json";
+    public static final String TREATPLAN = "/med/advanced/query/treatPlan.json";
 
 
 }

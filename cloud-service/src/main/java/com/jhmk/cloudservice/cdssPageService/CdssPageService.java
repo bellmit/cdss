@@ -2,6 +2,7 @@ package com.jhmk.cloudservice.cdssPageService;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.page.bean.DrugTendency;
 import com.jhmk.cloudutil.config.CdssPageConstants;
+import com.jhmk.cloudutil.config.UrlConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import java.util.*;
 public class CdssPageService {
     Logger logger = LoggerFactory.getLogger(CdssPageService.class);
     @Autowired
+    UrlConfig urlConfig;
+    @Autowired
     RestTemplate restTemplate;
     @Autowired
     CdssPageService cdssPageService;
@@ -40,7 +43,7 @@ public class CdssPageService {
         JSONObject jsonObject = null;
         Object s = JSONObject.parseObject(map);
         try {
-            String result = restTemplate.postForObject(CdssPageConstants.GETPLANSTAT, s, String.class);
+            String result = restTemplate.postForObject(urlConfig.getCdssurl()+CdssPageConstants.GETPLANSTAT, s, String.class);
             String tempStr1 = result.replaceAll("\\\\", "");
             String tempStr2 = tempStr1.substring(1, tempStr1.length() - 1);
             jsonObject = JSONObject.parseObject(tempStr2);
@@ -317,10 +320,8 @@ public class CdssPageService {
 //        map.add("keywords", "{\"page\":\"0\",\"size\":\"1\",\"expressions\":[[{\"field\":\"fieldId\",\"exp\":\"等于\",\"values\":[" + substring + "]}]]}");
         map.add("keywords", "");
         map.add("map", "{\"page\":\"0\",\"size\":\"1\",\"expressions\":[[{\"field\":\"fieldId\",\"exp\":\"等于\",\"values\":[" + substring + "]}]]}");
-        System.out.println(map.get("map").toString());
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-
-        ResponseEntity<String> response = restTemplate.postForEntity(CdssPageConstants.TREATPLAN, request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(urlConfig.getPageurl()+CdssPageConstants.TREATPLAN, request, String.class);
         return response.getBody();
     }
 
