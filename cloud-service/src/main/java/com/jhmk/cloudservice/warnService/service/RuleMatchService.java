@@ -3,6 +3,8 @@ package com.jhmk.cloudservice.warnService.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhuRepService;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Bingchengjilu;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Ruyuanjilu;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
@@ -33,8 +35,15 @@ public class RuleMatchService {
     @Autowired
     YizhuService yizhuService;
     @Autowired
+    YizhuRepService yizhuRepService;
+    @Autowired
     RuleService ruleService;
 
+    /**
+     * 下诊断规则匹配
+     * @param map
+     * @return
+     */
     public AtResponse ruleMatchByDiagnose(String map) {
         AtResponse resp = new AtResponse();
         Map<String, String> parse = (Map) JSONObject.parse(map);
@@ -42,10 +51,16 @@ public class RuleMatchService {
         //解析一诉五史
         JSONObject jsonObject = JSONObject.parseObject(s);
         Rule rule = Rule.fill(jsonObject);
+        String patient_id = rule.getPatient_id();
+        String visit_id = rule.getVisit_id();
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
-        //获取数据中心医嘱
-        List<Yizhu> yizhu = ruleService.getYizhu(rule);
+    //从数据库获取 如果数据可没有 从数据中心获取
+        List<Yizhu> yizhu = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
+        if (yizhu == null || yizhu.size() == 0) {
+            //获取数据中心医嘱
+            yizhu = ruleService.getYizhu(rule);
+        }
         rule.setYizhu(yizhu);
         String data = "";
         try {
