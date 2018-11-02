@@ -22,16 +22,18 @@ public class BasicInfoService {
 
     /**
      * 添加、覆盖规则基本信息 如果存在 就执行先删除 在添加操作
+     *
      * @param rule
      */
     @Transactional
     public void saveAndFlush(Rule rule) {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
-        List<BasicInfo> lessThanVisit_id = basicInfoRepService.findLessThanVisit_id(patient_id, visit_id);
-        if (lessThanVisit_id .size()>0) {
-            basicInfoRepService.delete(lessThanVisit_id);
-        }
+//        List<BasicInfo> lessThanVisit_id = basicInfoRepService.findLessThanVisit_id(patient_id, visit_id);
+//        if (lessThanVisit_id.size() > 0) {
+//            basicInfoRepService.delete(lessThanVisit_id);
+//        }
+        basicInfoRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
         String pageSource = rule.getPageSource();
         String warnSource = rule.getWarnSource();
         String doctor_id = rule.getDoctor_id();

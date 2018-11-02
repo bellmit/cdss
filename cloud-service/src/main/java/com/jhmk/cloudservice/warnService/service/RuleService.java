@@ -1012,13 +1012,20 @@ public class RuleService {
      *
      * @param rule
      */
-    @Transactional(rollbackFor = Exception.class)
+//    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void saveRule2Database(Rule rule) {
+        try {
+
         logger.info("当前rule实体类为：{}", JSONObject.toJSONString(rule));
         basicInfoService.saveAndFlush(rule);
         binganshouyeService.saveAndFlush(rule);
         zhenduanService.saveAndFlush(rule);
         ruyuanjiluService.saveAndFlush(rule);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info(e.getMessage());
+        }
 //        yizhuService.saveAndFlush(rule);
 //        bingchengjiluService.saveAndFlush(rule);
 

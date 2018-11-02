@@ -24,12 +24,14 @@ public class RuyuanjiluService {
     public void saveAndFlush(Rule rule) {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
-        List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findLessThanVisit_id(patient_id, visit_id);
+//        List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findLessThanVisit_id(patient_id, visit_id);
 
 
-        if (allByPatientIdAndVisitId != null&&allByPatientIdAndVisitId.size()>0) {
-            ruyuanjiluRepService.delete(allByPatientIdAndVisitId);
-        }
+//        if (allByPatientIdAndVisitId != null&&allByPatientIdAndVisitId.size()>0) {
+//            ruyuanjiluRepService.delete(allByPatientIdAndVisitId);
+//        }
+        ruyuanjiluRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
+
         Ruyuanjilu ruyuanjilu = rule.getRuyuanjilu();
         if (ruyuanjilu != null ) {
             ruyuanjiluRepService.save(ruyuanjilu);
