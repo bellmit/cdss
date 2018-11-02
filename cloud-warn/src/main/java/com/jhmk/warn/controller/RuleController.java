@@ -395,9 +395,6 @@ public class RuleController extends BaseEntityController<Object> {
         if (StringUtils.isEmpty(pageSource) || "test".equals(pageSource)) {
             resp = ruleMatchService.ruleMatch(map);
         } else if ("6".equals(pageSource)) {//医嘱 为6 其他做下诊断处理
-            logger.info("===========================================");
-            logger.info("===========================================");
-            logger.info("===========================================");
             resp = ruleMatchService.ruleMatchByDoctorAdvice(map);
         } else {
             logger.info("规则匹配接收到的初始数据为：{}",map);

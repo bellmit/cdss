@@ -30,12 +30,9 @@ public class YizhuService {
     public void saveAndFlush(Rule rule) {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
-        List<Yizhu> allByPatientIdAndVisitId = yizhuRepService.findLessThanVisit_id(patient_id, visit_id);
-        if (allByPatientIdAndVisitId != null && allByPatientIdAndVisitId.size() > 0) {
-            yizhuRepService.delete(allByPatientIdAndVisitId);
-        }
         List<Yizhu> yizhu = rule.getYizhu();
         if (yizhu != null && yizhu.size() > 0) {
+            yizhuRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             try {
                 logger.debug("医嘱数据为：{}", JSONObject.toJSONString(yizhu));
                 for (Yizhu yizhu1:yizhu) {
@@ -51,8 +48,6 @@ public class YizhuService {
 
     public List<Yizhu> analyzeJson2Yizhu(JSONObject jo) {
         List<Yizhu> beanList = new ArrayList<>();
-        logger.info("解析医嘱为=====================：{}", JSONObject.toJSONString(jo));
-        logger.info("解析医嘱为=====================：{}", JSONObject.toJSONString(jo));
         String patient_id = jo.getString("patient_id");
         String visit_id = jo.getString("visit_id");
         List<Map<String, String>> yizhus = (List<Map<String, String>>) jo.get("yizhu");
@@ -62,9 +57,6 @@ public class YizhuService {
             Yizhu bean = MapUtil.map2Bean(m, Yizhu.class);
             beanList.add(bean);
         }
-        logger.info("解析医嘱结果为=====================：{}", JSONObject.toJSONString(beanList));
-        logger.info("解析医嘱结果为=====================：{}", JSONObject.toJSONString(beanList));
-
         return beanList;
     }
 }

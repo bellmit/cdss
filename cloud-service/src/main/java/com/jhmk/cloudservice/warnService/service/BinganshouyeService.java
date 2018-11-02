@@ -31,14 +31,11 @@ public class BinganshouyeService {
     public void saveAndFlush(Rule rule) {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
-//        List<Binganshouye> lessThanVisit_id = binganshouyeRepService.findLessThanVisit_id(patient_id, visit_id);
-//        if (lessThanVisit_id.size() > 0) {
-//            binganshouyeRepService.delete(lessThanVisit_id);
-//        }
-        binganshouyeRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
-
         Binganshouye binganshouye = rule.getBinganshouye();
-        binganshouyeRepService.save(binganshouye);
+        Binganshouye byPatient_idAndVisit_id = binganshouyeRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+        if (byPatient_idAndVisit_id==null){
+            binganshouyeRepService.save(binganshouye);
+        }
     }
 
 }

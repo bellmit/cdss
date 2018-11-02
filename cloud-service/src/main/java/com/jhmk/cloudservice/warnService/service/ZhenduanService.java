@@ -32,28 +32,15 @@ public class ZhenduanService {
     public void saveAndFlush(Rule rule) {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
-//        List<Binglizhenduan> binglizhenduanList = binglizhenduanRepService.findLessThanVisit_id(patient_id, visit_id);
-//        if (binglizhenduanList != null) {
-//            binglizhenduanRepService.delete(binglizhenduanList);
-//        }
-        binglizhenduanRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
-        shouyezhenduanRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
-
         List<Binglizhenduan> binglizhenduan = rule.getBinglizhenduan();
-        logger.info("保存病历诊断为=========================================");
-        logger.info("保存病历诊断为=========================================");
-        logger.info("保存病历诊断为=========================================");
         logger.info("保存病历诊断为:{}", JSONObject.toJSONString(binglizhenduan));
         if (binglizhenduan != null) {
+            binglizhenduanRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             binglizhenduanRepService.save(binglizhenduan);
         }
-//        List<Shouyezhenduan> shouyezhenduanList = shouyezhenduanRepService.findLessThanVisit_id(patient_id, visit_id);
-//        if (shouyezhenduanList != null) {
-//            shouyezhenduanRepService.delete(shouyezhenduanList);
-//        }
-
         List<Shouyezhenduan> shouyezhenduan = rule.getShouyezhenduan();
         if (shouyezhenduan != null) {
+            shouyezhenduanRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             shouyezhenduanRepService.save(shouyezhenduan);
         }
     }

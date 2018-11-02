@@ -46,30 +46,22 @@ public class RuleMatchService {
      * @return
      */
     public AtResponse ruleMatchByDiagnose(String map) {
-        logger.info("===============原始诊断诊断====================");
-        logger.info("===============原始诊断诊断====================");
-        logger.info("===============原始诊断诊断====================");
-        logger.info("===============原始诊断诊断=============================================，{}", map);
         AtResponse resp = new AtResponse();
         Map<String, String> parse = (Map) JSONObject.parse(map);
         String s = ruleService.anaRule(parse);
         //解析一诉五史
         JSONObject jsonObject = JSONObject.parseObject(s);
         Rule rule = Rule.fill(jsonObject);
-        logger.info("===============诊断====================");
-        logger.info("===============诊断====================");
-        logger.info("===============诊断====================");
-        logger.info("===============诊断====================，{}", JSONObject.toJSONString(rule.getBinglizhenduan()));
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
         //获取 拼接检验检查报告
-//        rule = ruleService.getbaogao(rule);
+        rule = ruleService.getbaogao(rule);
         //从数据库获取 如果数据可没有 从数据中心获取
         List<Yizhu> yizhu = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
-//        if (yizhu == null || yizhu.size() == 0) {
+        if (yizhu == null || yizhu.size() == 0) {
 //            //获取数据中心医嘱
-//            yizhu = ruleService.getYizhu(rule);
-//        }
+            yizhu = ruleService.getYizhu(rule);
+        }
         rule.setYizhu(yizhu);
         String data = "";
         try {
