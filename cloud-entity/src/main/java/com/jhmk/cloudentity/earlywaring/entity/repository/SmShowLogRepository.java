@@ -58,5 +58,15 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
     @Query("select  s from SmShowLog s where s.doctorId=?1 and s.patientId=?2 and s.visitId=?3 and s.type<>'rulematch' and s.ruleStatus=0")
     List<SmShowLog> findExistLog(String doctorId, String patientId, String visitId);
 
+    /**
+     * 修改状态
+     * @param doctorId
+     * @param patientId
+     * @param visitId
+     */
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update SmShowLog l set l.ruleStatus = 3 where l.doctorId=?1 and l.patientId=?2 and l.visitId=?3 and l.type='rulematch' ")
+    int  updateRuleMatchLogStatus(String doctorId, String patientId, String visitId);
 
 }

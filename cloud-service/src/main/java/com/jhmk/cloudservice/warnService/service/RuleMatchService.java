@@ -41,6 +41,7 @@ public class RuleMatchService {
 
     /**
      * 下诊断规则匹配
+     *
      * @param map
      * @return
      */
@@ -51,11 +52,15 @@ public class RuleMatchService {
         //解析一诉五史
         JSONObject jsonObject = JSONObject.parseObject(s);
         Rule rule = Rule.fill(jsonObject);
+        logger.info("===============诊断====================");
+        logger.info("===============诊断====================");
+        logger.info("===============诊断====================");
+        logger.info("===============诊断====================，{}", JSONObject.toJSONString(rule.getBinglizhenduan()));
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
-    //从数据库获取 如果数据可没有 从数据中心获取
+        //从数据库获取 如果数据可没有 从数据中心获取
         List<Yizhu> yizhu = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
         if (yizhu == null || yizhu.size() == 0) {
             //获取数据中心医嘱
@@ -81,12 +86,10 @@ public class RuleMatchService {
     }
 
     public AtResponse ruleMatchByDoctorAdvice(String map) {
-
         AtResponse resp = new AtResponse();
         JSONObject jsonObject = JSONObject.parseObject(map);
         List<Yizhu> yizhus = yizhuService.analyzeJson2Yizhu(jsonObject);
         if (Objects.nonNull(jsonObject)) {
-
             String patient_id = jsonObject.getString("patient_id");
             String visit_id = jsonObject.getString("visit_id");
             Rule rule = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
@@ -106,6 +109,7 @@ public class RuleMatchService {
             List<SmShowLog> logList = ruleService.add2ShowLog(ruleBean, data, map);
             resp.setResponseCode(ResponseCode.OK);
             resp.setData(logList);
+            yizhuService.saveAndFlush(rule);
         } else {
             resp.setResponseCode(ResponseCode.INERERROR);
             logger.info("医嘱规则匹配传递信息为{}" + map);

@@ -74,6 +74,8 @@ public class RuleService {
     @Autowired
     LogMappingRepService logMappingRepService;
     @Autowired
+    BinganshouyeService binganshouyeService;
+    @Autowired
     BasicInfoService basicInfoService;
     @Autowired
     ZhenduanService zhenduanService;
@@ -325,6 +327,7 @@ public class RuleService {
                 //todo 预警等级需要返回
                 JSONArray ja = (JSONArray) result;
                 if (ja.size() > 0) {
+                    smShowLogRepService.updateRuleMatchLogStatus(doctor_id, patient_id, visit_id);
                     Iterator<Object> iterator = ja.iterator();
                     while (iterator.hasNext()) {
                         Object next = iterator.next();
@@ -369,12 +372,6 @@ public class RuleService {
                             logger.info("入日志库失败:" + save.toString());
                         }
 
-                        List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
-                        //todo 可优化 写sql语句 一次完成
-                        for (SmShowLog log : existLog) {
-                            log.setRuleStatus(3);
-                            smShowLogRepService.save(log);
-                        }
 
                         SmShowLog log = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(doctor_id, patient_id, rule_id, visit_id);
                         //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有触发此规则，前台自动变灰
@@ -439,10 +436,8 @@ public class RuleService {
         String doctor_id = data.getDoctor_id();
         String patient_id = data.getPatient_id();
         String visit_id = data.getVisit_id();
-//        addHintRule2ShowLogTable(data, fromData);
         getTipList2ShowLog(data, map);
         List<SmShowLog> byDoctorIdAndPatientId = smShowLogRepService.findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(doctor_id, patient_id, visit_id);
-        logger.info("提醒数量为：" + byDoctorIdAndPatientId.size());
         return byDoctorIdAndPatientId;
     }
 
@@ -814,14 +809,10 @@ public class RuleService {
                         String itemName = next.getString("itemName");
                         String type = next.getString("type");
                         String stat = next.getString("stat");
-
                         SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
                         if (isExist != null && 3 == isExist.getRuleStatus()) {
-                            logger.info("=======================确实有相同的，看看保存还是更新{}",JSONObject.toJSONString(isExist));
                             String date = next.getString("data");
-                            SmShowLog save = smShowLogRepService.save(isExist);
                             smShowLogRepService.updateSmHospitalStatusAndDateById(0, date, isExist.getId());
-                            logger.info("=======================更新还是存了？{}", JSONObject.toJSONString(save));
                             continue;
                         }
                         SmShowLog smShowLog = new SmShowLog();
@@ -1023,8 +1014,9 @@ public class RuleService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveRule2Database(Rule rule) {
-        logger.info("当前rule实体类为：{}",JSONObject.toJSONString(rule));
+        logger.info("当前rule实体类为：{}", JSONObject.toJSONString(rule));
         basicInfoService.saveAndFlush(rule);
+        binganshouyeService.saveAndFlush(rule);
         zhenduanService.saveAndFlush(rule);
         ruyuanjiluService.saveAndFlush(rule);
 //        yizhuService.saveAndFlush(rule);

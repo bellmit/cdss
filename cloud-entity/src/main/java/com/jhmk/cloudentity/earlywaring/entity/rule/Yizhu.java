@@ -37,6 +37,7 @@ public class Yizhu implements Serializable{
     private String status;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

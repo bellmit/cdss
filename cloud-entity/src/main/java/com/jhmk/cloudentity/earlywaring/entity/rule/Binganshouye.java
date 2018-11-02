@@ -21,7 +21,9 @@ public class Binganshouye {
     private String pat_info_occupation_name;
     private String pat_info_pregnancy_status;
     private String pat_visit_dept_admission_to_name;
+    private String pat_visit_dept_admission_to_code;
     private String pat_visit_dept_discharge_from_name;
+    private String pat_visit_dept_discharge_from_code;
     private String drug_allergy_name;
 
     @Id
@@ -138,6 +140,23 @@ public class Binganshouye {
 
     public void setPat_visit_dept_discharge_from_name(String pat_visit_dept_discharge_from_name) {
         this.pat_visit_dept_discharge_from_name = pat_visit_dept_discharge_from_name;
+    }
+    @Column(name = "getPat_visit_dept_admission_to_code", nullable = true, length = 20)
+    public String getPat_visit_dept_admission_to_code() {
+        return pat_visit_dept_admission_to_code;
+    }
+
+    public void setPat_visit_dept_admission_to_code(String pat_visit_dept_admission_to_code) {
+        this.pat_visit_dept_admission_to_code = pat_visit_dept_admission_to_code;
+    }
+
+    @Column(name = "getPat_visit_dept_discharge_from_code", nullable = true, length = 20)
+    public String getPat_visit_dept_discharge_from_code() {
+        return pat_visit_dept_discharge_from_code;
+    }
+
+    public void setPat_visit_dept_discharge_from_code(String pat_visit_dept_discharge_from_code) {
+        this.pat_visit_dept_discharge_from_code = pat_visit_dept_discharge_from_code;
     }
 
     @Override

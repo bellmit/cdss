@@ -1,11 +1,14 @@
 package com.jhmk.cloudservice.warnService.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.BinglizhenduanRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.ShouyezhenduanRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Binglizhenduan;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Shouyezhenduan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,8 @@ import java.util.List;
  */
 @Service
 public class ZhenduanService {
+    private static final Logger logger = LoggerFactory.getLogger(ZhenduanService.class);
+
     @Autowired
     BinglizhenduanRepService binglizhenduanRepService;
     @Autowired
@@ -32,6 +37,10 @@ public class ZhenduanService {
             binglizhenduanRepService.delete(binglizhenduanList);
         }
         List<Binglizhenduan> binglizhenduan = rule.getBinglizhenduan();
+        logger.info("保存病历诊断为=========================================");
+        logger.info("保存病历诊断为=========================================");
+        logger.info("保存病历诊断为=========================================");
+        logger.info("保存病历诊断为:{}", JSONObject.toJSONString(binglizhenduan));
         if (binglizhenduan != null) {
             binglizhenduanRepService.save(binglizhenduan);
         }

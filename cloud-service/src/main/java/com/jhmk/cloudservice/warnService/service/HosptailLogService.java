@@ -9,6 +9,7 @@ import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmHospitalLogRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Binganshouye;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Binglizhenduan;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Shouyezhenduan;
@@ -512,7 +513,12 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
 //                smHospitalLog.setDoctorId(byUserName.get(0).getUserId());
 //            }
 //        }
-        smHospitalLog.setDeptCode(rule.getDept_code());
+        Binganshouye binganshouye = rule.getBinganshouye();
+        if (binganshouye!=null){
+            smHospitalLog.setDeptCode(binganshouye.getPat_visit_dept_admission_to_name());
+        }else {
+            smHospitalLog.setDeptCode("测试部门");
+        }
         //病人id
         smHospitalLog.setPatientId(rule.getPatient_id());
         smHospitalLog.setVisitId(rule.getVisit_id());
