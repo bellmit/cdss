@@ -37,6 +37,11 @@ public class RuyuanjiluRepService extends BaseRepService<Ruyuanjilu, Integer> {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteByPatient_idAndVisit_id(String pasit_id,String v_id) {
+        repository.deleteByPatient_idAndVisit_id(pasit_id,v_id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delete(Ruyuanjilu Ruyuanjilu) {
         repository.delete(Ruyuanjilu);
     }
@@ -75,4 +80,5 @@ public class RuyuanjiluRepService extends BaseRepService<Ruyuanjilu, Integer> {
     public List<Ruyuanjilu> findLessThanVisit_id(String patient_id, String visit_id) {
         return repository.findLessThanVisit_id(patient_id,visit_id);
     }
+
 }

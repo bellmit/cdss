@@ -76,4 +76,9 @@ public class ShouyezhenduanRepService extends BaseRepService<Shouyezhenduan, Int
     public List<Shouyezhenduan> findLessThanVisit_id(String patient_id, String visit_id) {
         return repository.findLessThanVisit_id(patient_id,visit_id);
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteByPatient_idAndVisit_id(String pasit_id,String v_id) {
+        repository.deleteByPatient_idAndVisit_id(pasit_id,v_id);
+    }
 }
