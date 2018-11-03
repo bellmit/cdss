@@ -481,4 +481,15 @@ public class DateFormatUtil {
         return result;
     }
 
+    /**
+     * 日期1》日期2 返回true
+     * @param s1
+     * @param s2
+     * @return
+     */
+    public static boolean isAfterDate(String s1, String s2) {
+        Date date1 = DateFormatUtil.parseDate(s1, DateFormatUtil.DATETIME_PATTERN_SS);
+        Date date2 = DateFormatUtil.parseDate(s2, DateFormatUtil.DATETIME_PATTERN_SS);
+        return date1.after(date2);
+    }
 }

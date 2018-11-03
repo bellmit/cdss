@@ -47,37 +47,40 @@ public class RuleMatchService {
      */
     public AtResponse ruleMatchByDiagnose(String map) {
         AtResponse resp = new AtResponse();
-        Map<String, String> parse = (Map) JSONObject.parse(map);
-        String s = ruleService.anaRule(parse);
-        //解析一诉五史
-        JSONObject jsonObject = JSONObject.parseObject(s);
-        Rule rule = Rule.fill(jsonObject);
-        String patient_id = rule.getPatient_id();
-        String visit_id = rule.getVisit_id();
-        //获取 拼接检验检查报告
-        rule = ruleService.getbaogao(rule);
-        //从数据库获取 如果数据可没有 从数据中心获取
-        List<Yizhu> yizhu = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
-        if (yizhu == null || yizhu.size() == 0) {
-//            //获取数据中心医嘱
-            yizhu = ruleService.getYizhu(rule);
-        }
-        rule.setYizhu(yizhu);
-        String data = "";
         try {
+            Map<String, String> parse = (Map) JSONObject.parse(map);
+            String s = ruleService.anaRule(parse);
+            //解析一诉五史
+            JSONObject jsonObject = JSONObject.parseObject(s);
+            Rule rule = Rule.fill(jsonObject);
+            String patient_id = rule.getPatient_id();
+            String visit_id = rule.getVisit_id();
+            //获取 拼接检验检查报告
+            rule = ruleService.getbaogao(rule);
+            //从数据库获取 如果数据可没有 从数据中心获取
+            List<Yizhu> yizhu = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
+            if (yizhu == null || yizhu.size() == 0) {
+//            //获取数据中心医嘱
+                yizhu = ruleService.getYizhu(rule);
+            }
+            rule.setYizhu(yizhu);
+            String data = "";
             //规则匹配
             data = ruleService.ruleMatchGetResp(rule);
+            if (StringUtils.isNotBlank(data)) {
+                ruleService.add2LogTable(data, rule);
+            }
+            List<SmShowLog> logList = ruleService.add2ShowLog(rule, data, map);
+            resp.setData(logList);
+            resp.setResponseCode(ResponseCode.OK);
+            //一诉五史信息入库
+            ruleService.saveRule2Database(rule);
+        } catch (ClassCastException e) {
+            logger.info("类型转换失败，{}，原始数据为：{}", e.getMessage(), map);
         } catch (Exception e) {
             logger.info("规则匹配失败:{}" + e.getMessage());
         }
-        if (StringUtils.isNotBlank(data)) {
-            ruleService.add2LogTable(data, rule);
-        }
-        List<SmShowLog> logList = ruleService.add2ShowLog(rule, data, map);
-        resp.setData(logList);
-        resp.setResponseCode(ResponseCode.OK);
-        //一诉五史信息入库
-        ruleService.saveRule2Database(rule);
+
         return resp;
     }
 

@@ -23,6 +23,7 @@ public class ClickRate {
     private String deptName;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

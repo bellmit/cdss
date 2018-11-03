@@ -397,7 +397,7 @@ public class RuleController extends BaseEntityController<Object> {
         } else if ("6".equals(pageSource)) {//医嘱 为6 其他做下诊断处理
             resp = ruleMatchService.ruleMatchByDoctorAdvice(map);
         } else {
-            logger.info("规则匹配接收到的初始数据为：{}",map);
+//            logger.info("规则匹配接收到的初始数据为：{}",map);
             resp = ruleMatchService.ruleMatchByDiagnose(map);
         }
         wirte(response, resp);

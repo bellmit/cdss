@@ -29,12 +29,12 @@ public class BasicInfoService {
     public void saveAndFlush(Rule rule) {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
+        String doctor_id = rule.getDoctor_id();
         BasicInfo byPatient_idAndVisit_id = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-        if (byPatient_idAndVisit_id == null || byPatient_idAndVisit_id.getDoctor_id()==null) {
+        if (byPatient_idAndVisit_id == null || (byPatient_idAndVisit_id.getDoctor_id()==null&&doctor_id!=null)) {
             basicInfoRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             String pageSource = rule.getPageSource();
             String warnSource = rule.getWarnSource();
-            String doctor_id = rule.getDoctor_id();
             String doctor_name = rule.getDoctor_name();
             String dept_code = rule.getDept_code();
             //基本信息

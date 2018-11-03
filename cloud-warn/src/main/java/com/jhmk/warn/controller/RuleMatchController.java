@@ -174,39 +174,39 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         }
     }
 
-    @PostMapping("/getJianyanbaogaoStr")
-    @ResponseBody
-    public void getJianyanbaogaoStr(HttpServletResponse response, @RequestBody String map) {
-        JSONObject jsonObject = JSONObject.parseObject(map);
-        if (Objects.nonNull(jsonObject)) {
-
-            String patient_id = jsonObject.getString("patient_id");
-            String visit_id = jsonObject.getString("visit_id");
-            Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
-            //获取 拼接检验检查报告
-            List<Jianyanbaogao> jianchabaogaoStr = ruleService.getJianyanbaogaoStr(rule);
-            wirte(response, jianchabaogaoStr);
-        } else {
-            logger.info("医嘱规则匹配传递信息为{}" + map);
-        }
-    }
-
-
-    @PostMapping("/getJianchabaogaoStr")
-    @ResponseBody
-    public void getJianchabaogaoStr(HttpServletResponse response, @RequestBody String map) {
-        JSONObject jsonObject = JSONObject.parseObject(map);
-        if (Objects.nonNull(jsonObject)) {
-            String patient_id = jsonObject.getString("patient_id");
-            String visit_id = jsonObject.getString("visit_id");
-            Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
-            //获取 拼接检验检查报告
-            List<Jianchabaogao> jianchabaogaoStr = ruleService.getJianchabaogaoStr(rule);
-            wirte(response, jianchabaogaoStr);
-        } else {
-            logger.info("医嘱规则匹配传递信息为{}" + map);
-        }
-    }
+//    @PostMapping("/getJianyanbaogaoStr")
+//    @ResponseBody
+//    public void getJianyanbaogaoStr(HttpServletResponse response, @RequestBody String map) {
+//        JSONObject jsonObject = JSONObject.parseObject(map);
+//        if (Objects.nonNull(jsonObject)) {
+//
+//            String patient_id = jsonObject.getString("patient_id");
+//            String visit_id = jsonObject.getString("visit_id");
+//            Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
+//            //获取 拼接检验检查报告
+//            List<Jianyanbaogao> jianchabaogaoStr = ruleService.getJianyanbaogaoStr(rule);
+//            wirte(response, jianchabaogaoStr);
+//        } else {
+//            logger.info("医嘱规则匹配传递信息为{}" + map);
+//        }
+//    }
+//
+//
+//    @PostMapping("/getJianchabaogaoStr")
+//    @ResponseBody
+//    public void getJianchabaogaoStr(HttpServletResponse response, @RequestBody String map) {
+//        JSONObject jsonObject = JSONObject.parseObject(map);
+//        if (Objects.nonNull(jsonObject)) {
+//            String patient_id = jsonObject.getString("patient_id");
+//            String visit_id = jsonObject.getString("visit_id");
+//            Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
+//            //获取 拼接检验检查报告
+//            List<Jianchabaogao> jianchabaogaoStr = ruleService.getJianchabaogaoStr(rule);
+//            wirte(response, jianchabaogaoStr);
+//        } else {
+//            logger.info("医嘱规则匹配传递信息为{}" + map);
+//        }
+//    }
 
 
 }
