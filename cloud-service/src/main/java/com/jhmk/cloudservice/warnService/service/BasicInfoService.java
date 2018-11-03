@@ -30,7 +30,7 @@ public class BasicInfoService {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
         BasicInfo byPatient_idAndVisit_id = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-        if (byPatient_idAndVisit_id == null || (byPatient_idAndVisit_id.getVisit_id() != null && byPatient_idAndVisit_id.getPatient_id() != null && byPatient_idAndVisit_id.getPageSource() != null)) {
+        if (byPatient_idAndVisit_id == null || byPatient_idAndVisit_id.getDoctor_id()==null) {
             basicInfoRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             String pageSource = rule.getPageSource();
             String warnSource = rule.getWarnSource();
