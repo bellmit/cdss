@@ -146,7 +146,6 @@ public class RuleMatchService {
         }
         logList = ruleService.add2ShowLog(rule, data, map);
         resp.setData(logList);
-        ruleService.saveRule2Database(rule);
         return resp;
     }
 

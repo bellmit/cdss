@@ -794,7 +794,7 @@ public class RuleService {
         String patient_id = fill.getPatient_id();
         String visit_id = fill.getVisit_id();
         if (StringUtils.isNotBlank(doctor_id) && StringUtils.isNotBlank(patient_id)) {
-            smShowLogRepService.updateRuleMatchLogStatus(doctor_id, patient_id, visit_id);
+            smShowLogRepService.updateJwsLogStatus(doctor_id, patient_id, visit_id);
             Object o = JSONObject.parse(map);
             String result = "";
             try {

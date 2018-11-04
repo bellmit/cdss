@@ -60,6 +60,7 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
 
     /**
      * 修改状态
+     *
      * @param doctorId
      * @param patientId
      * @param visitId
@@ -67,6 +68,18 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("update SmShowLog l set l.ruleStatus = 3 where l.doctorId=?1 and l.patientId=?2 and l.visitId=?3 and l.type='rulematch' ")
-    int  updateRuleMatchLogStatus(String doctorId, String patientId, String visitId);
+    int updateRuleMatchLogStatus(String doctorId, String patientId, String visitId);
+
+    /**
+     * 修改既往史状态
+     *
+     * @param doctorId
+     * @param patientId
+     * @param visitId
+     */
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update SmShowLog l set l.ruleStatus = 3 where l.doctorId=?1 and l.patientId=?2 and l.visitId=?3 and l.type<>'rulematch' ")
+    int updateJwsLogStatus(String doctorId, String patientId, String visitId);
 
 }
