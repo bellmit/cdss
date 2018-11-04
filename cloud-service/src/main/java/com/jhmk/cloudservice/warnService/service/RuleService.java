@@ -719,8 +719,11 @@ public class RuleService {
                             if (sbobj.getString("unit") != null) {
                                 jcbg.put("lab_result_value_unit", sbobj.getString("unit"));
                             }
-                            if (sbobj.getString("lab_result_value") != null) {
+                            if (StringUtils.isNotBlank(sbobj.getString("lab_result_value"))) {
                                 jcbg.put("lab_result_value", sbobj.getString("lab_result_value"));
+                            }
+                            if (StringUtils.isNotBlank(sbobj.getString("lab_result"))) {
+                                jcbg.put("lab_result_value", sbobj.getString("lab_result"));
                             }
                             if (sbobj.getString("lab_result") != null) {
                                 jcbg.put("lab_result_value", sbobj.getString("lab_result"));
@@ -1109,7 +1112,6 @@ public class RuleService {
     @Transactional
     public void saveRule2Database(Rule rule) {
         try {
-
             logger.info("当前rule实体类为：{}", JSONObject.toJSONString(rule));
             basicInfoService.saveAndFlush(rule);
             binganshouyeService.saveAndFlush(rule);

@@ -1,12 +1,18 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
+import com.jhmk.cloudutil.util.DateFormatUtil;
+import org.apache.poi.ss.formula.functions.T;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * @author ziyu.zhou
  * @date 2018/7/31 10:35
  */
 
 public class Jianyanbaogao {
-    private String lab_item_name ;//检验项名称
+    private String lab_item_name;//检验项名称
     private String specimen;
     private String lab_qual_result;//定性结果
     private String lab_result_value;//检验定量结果值
@@ -104,5 +110,11 @@ public class Jianyanbaogao {
 
     public void setLab_result_value_unit(String lab_result_value_unit) {
         this.lab_result_value_unit = lab_result_value_unit;
+    }
+
+
+
+    public String getIwantData() {
+        return this.lab_item_name + this.lab_sub_item_name;
     }
 }
