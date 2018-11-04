@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.jhmk.cloudentity.base.BaseRepService;
 import com.jhmk.cloudentity.earlywaring.entity.LogBean;
+import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
 import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
@@ -18,6 +19,7 @@ import com.jhmk.cloudutil.model.WebPage;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.ObjectUtils;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
@@ -267,7 +269,6 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
                 map.put(format, map.get(format) + 1);
             }
         }
-
         List<LogBean> beanList = new LinkedList<>();
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             LogBean logBean = new LogBean();
@@ -335,6 +336,7 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
 
         return all;
     }
+
     public List<SmHospitalLog> getDataByConditionBySort(Date start, Date end, Map param, Integer pageNo, Integer pageSize) {
         int page = 0;
         if (pageNo != null) {
@@ -502,6 +504,7 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
         return smHospitalLog;
 
     }
+
     public SmHospitalLog addLog(Rule rule) {
         SmHospitalLog smHospitalLog = new SmHospitalLog();
         smHospitalLog.setDoctorId(rule.getDoctor_id());
@@ -514,9 +517,23 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
 //            }
 //        }
         Binganshouye binganshouye = rule.getBinganshouye();
-        if (binganshouye!=null){
-            smHospitalLog.setDeptCode(binganshouye.getPat_visit_dept_admission_to_name());
-        }else {
+        if (binganshouye != null) {
+            String deptName = "";
+            String pat_visit_dept_admission_to_name = binganshouye.getPat_visit_dept_admission_to_name();
+            if (StringUtil.isInteger(pat_visit_dept_admission_to_name)) {
+                SmDepts firstByDeptCode = smDeptRepService.findFirstByDeptCode(pat_visit_dept_admission_to_name);
+                if (firstByDeptCode != null) {
+                    deptName = firstByDeptCode.getDeptName();
+                    smHospitalLog.setDeptCode(deptName);
+                } else {
+                    smHospitalLog.setDeptCode(pat_visit_dept_admission_to_name);
+                }
+            } else {
+                smHospitalLog.setDeptCode(pat_visit_dept_admission_to_name);
+
+            }
+
+        } else {
             smHospitalLog.setDeptCode("测试部门");
         }
         //病人id

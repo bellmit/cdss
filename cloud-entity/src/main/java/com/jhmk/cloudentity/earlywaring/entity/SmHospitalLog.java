@@ -27,6 +27,7 @@ public class SmHospitalLog {
     private String identification;
     private String warnSource;
     private Date createTime;
+    private Date nowTime;
     private String hintContent;
     private String ruleSource;
     private String signContent;
@@ -173,6 +174,15 @@ public class SmHospitalLog {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @Column(name = "now_time", nullable = true)
+    public Date getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(Date nowTime) {
+        this.nowTime = nowTime;
     }
 
     @Basic

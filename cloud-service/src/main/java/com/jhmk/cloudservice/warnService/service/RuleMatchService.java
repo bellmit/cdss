@@ -3,6 +3,8 @@ package com.jhmk.cloudservice.warnService.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
+import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhuRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Bingchengjilu;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
@@ -32,6 +34,8 @@ public class RuleMatchService {
 
     private static final Logger logger = LoggerFactory.getLogger(RuleMatchService.class);
 
+    @Autowired
+    SmUsersRepService smUsersRepService;
     @Autowired
     YizhuService yizhuService;
     @Autowired
@@ -141,9 +145,45 @@ public class RuleMatchService {
             //todo  删除触发规则保存到sm_show_log表中，改为从sm_hospital表获取数据
         }
         logList = ruleService.add2ShowLog(rule, data, map);
-        logger.info("提示信息结果为：{}", JSONObject.toJSONString(logList));
         resp.setData(logList);
         ruleService.saveRule2Database(rule);
+        return resp;
+    }
+
+    public AtResponse ruleMatchTest(String map) {
+        AtResponse resp = new AtResponse();
+        List<SmShowLog> logList = null;
+        Map<String, String> paramMap = (Map) JSON.parse(map);
+        //解析规则 一诉五史 检验报告等
+//        String s = ruleService.anaRule(paramMap);
+        String s2 = ruleService.stringTransform(JSONObject.toJSONString(paramMap));
+        JSONObject parse = JSONObject.parseObject(s2);
+        Rule rule = Rule.fill(parse);
+        System.out.println(JSONObject.toJSONString(rule));
+        String data = "";
+        try {
+            //规则匹配
+            data = ruleService.ruleMatchGetResp(rule);
+            logger.info("规则匹配返回结果为：{}", data);
+        } catch (Exception e) {
+            logger.info("规则匹配失败:{},请求数据为：{}", e.getMessage(), map);
+        }
+        if (StringUtils.isNotBlank(data)) {
+            String doctor_name = rule.getDoctor_name();
+            if (StringUtils.isNotBlank(doctor_name)) {
+
+                List<SmUsers> byUserName = smUsersRepService.findByUserName(doctor_name);
+                if (byUserName != null && byUserName.size() > 0) {
+                    rule.setDoctor_id(byUserName.get(0).getUserId());
+                }
+            }
+            //获取保存信息 返回前台显示
+            ruleService.add2LogTable(data, rule);
+            //todo  删除触发规则保存到sm_show_log表中，改为从sm_hospital表获取数据
+        }
+        logList = ruleService.add2ShowLog(rule, data, map);
+        logger.info("提示信息结果为：{}", JSONObject.toJSONString(logList));
+        resp.setData(logList);
         return resp;
     }
 

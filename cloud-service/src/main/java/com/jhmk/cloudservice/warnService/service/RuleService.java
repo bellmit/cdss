@@ -343,6 +343,7 @@ public class RuleService {
                         smHospitalLog.setRuleSource(object.getString("ruleSource"));
                         smHospitalLog.setClassification(object.getString("classification"));
                         smHospitalLog.setIdentification(object.getString("identification"));
+                        smHospitalLog.setNowTime(new Date());
                         String ruleCondition = object.getString("ruleCondition");
                         if (StringUtils.isNotBlank(ruleCondition)) {
                             String condition = disposeRuleCondition(ruleCondition);

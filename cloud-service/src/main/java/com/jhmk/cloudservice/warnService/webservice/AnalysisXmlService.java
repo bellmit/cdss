@@ -293,6 +293,7 @@ public class AnalysisXmlService {
                 jianyanbaogao.setReference_range(reference_range);
                 String unit = jianyanbaogaoForAuxiliary.getUnit();
                 jianyanbaogao.setLab_result_value_unit(unit);
+                jianyanbaogao.setLab_result_value(jianyanbaogaoForAuxiliary.getLab_result());
                 jybgList.add(jianyanbaogao);
             }
         }
