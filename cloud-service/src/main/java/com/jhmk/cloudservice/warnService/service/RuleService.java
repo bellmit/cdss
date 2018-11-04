@@ -790,18 +790,12 @@ public class RuleService {
         String patient_id = fill.getPatient_id();
         String visit_id = fill.getVisit_id();
         if (StringUtils.isNotBlank(doctor_id) && StringUtils.isNotBlank(patient_id)) {
+            smShowLogRepService.updateRuleMatchLogStatus(doctor_id, patient_id, visit_id);
             Object o = JSONObject.parse(map);
             String result = "";
             try {
                 result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getTipList, o, String.class);
                 if (StringUtils.isNotBlank(result) && !symbol.equals(result)) {
-
-                    List<SmShowLog> existLog = smShowLogRepService.findExistLog(doctor_id, patient_id, visit_id);
-                    for (SmShowLog log : existLog) {
-                        log.setRuleStatus(3);
-                        smShowLogRepService.save(log);
-                    }
-
                     JSONArray array = JSONArray.parseArray(result);
                     Iterator<Object> iterator = array.iterator();
                     while (iterator.hasNext()) {
