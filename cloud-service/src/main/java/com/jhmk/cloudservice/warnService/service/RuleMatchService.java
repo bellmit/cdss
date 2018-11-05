@@ -70,6 +70,7 @@ public class RuleMatchService {
             rule.setYizhu(yizhu);
             String data = "";
             //规则匹配
+            logger.info("下诊断规则匹配json串：{}",JSONObject.toJSONString(rule));
             data = ruleService.ruleMatchGetResp(rule);
             if (StringUtils.isNotBlank(data)) {
                 ruleService.add2LogTable(data, rule);
@@ -102,6 +103,7 @@ public class RuleMatchService {
             String data = "";
             try {
                 //规则匹配
+                logger.info("下医嘱规则匹配json串：{}",JSONObject.toJSONString(ruleBean));
                 data = ruleService.ruleMatchGetResp(ruleBean);
             } catch (Exception e) {
                 logger.info("规则匹配失败:{}" + e.getMessage());
@@ -134,6 +136,7 @@ public class RuleMatchService {
         String data = "";
         try {
             //规则匹配
+            logger.info("测试规则匹配json串：{}",JSONObject.toJSONString(rule));
             data = ruleService.ruleMatchGetResp(rule);
             logger.info("规则匹配返回结果为：{}", data);
         } catch (Exception e) {

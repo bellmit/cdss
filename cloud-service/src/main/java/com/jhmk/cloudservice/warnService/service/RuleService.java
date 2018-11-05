@@ -319,6 +319,12 @@ public class RuleService {
         String doctor_id = mes.getDoctor_id();
         String patient_id = mes.getPatient_id();
         String visit_id = mes.getVisit_id();
+        if (StringUtils.isEmpty(doctor_id)) {
+            BasicInfo basicInfo = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
+            if (basicInfo!=null){
+                doctor_id=basicInfo.getDoctor_id();
+            }
+        }
         JSONObject jsonObject = JSONObject.parseObject(resultData);
         if (!symbol.equals(jsonObject.getString(resultSym))) {
             Object result = jsonObject.get(resultSym);

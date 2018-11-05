@@ -84,7 +84,7 @@ public class ClickRate {
     }
 
     @Basic
-    @Column(name = "dept_code", nullable = false, length = 32)
+    @Column(name = "dept_code", nullable = true, length = 32)
     public String getDeptCode() {
         return deptCode;
     }
