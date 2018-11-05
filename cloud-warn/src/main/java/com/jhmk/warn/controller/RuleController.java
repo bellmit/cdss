@@ -90,11 +90,11 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/addrule")
     @ResponseBody
     public void addrule(HttpServletResponse response, @RequestBody String map) {
+        String s = ruleService.stringTransform(map);
         //获取原始规则条件
-        Map<String, Object> param = (Map) JSONObject.parse(map);
+        Map<String, Object> param = (Map) JSONObject.parse(s);
         Object condition = param.get("ruleCondition");
         //转换条件格式
-//        String ruleCondition = userModelService.analyzeOldRule(condition);
         String ruleCondition = userModelService.getOldRule(condition);
         param.put("ruleCondition", ruleCondition);
         String isStandard = (String) param.get("isStandard");
