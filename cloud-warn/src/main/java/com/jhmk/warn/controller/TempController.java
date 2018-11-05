@@ -97,4 +97,16 @@ public class TempController extends BaseController {
             logger.info("医嘱规则匹配传递信息为{}" + map);
         }
     }
+
+
+    @PostMapping("/getTestData")
+    @ResponseBody
+    public void getTestData(HttpServletResponse response, @RequestBody String map) {
+        JSONObject jsonObject = JSONObject.parseObject(map);
+        if (Objects.nonNull(jsonObject)) {
+            wirte(response, map);
+        } else {
+            logger.info("医嘱规则匹配传递信息为{}" + map);
+        }
+    }
 }
