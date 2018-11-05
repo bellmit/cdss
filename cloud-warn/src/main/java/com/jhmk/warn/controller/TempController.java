@@ -9,9 +9,9 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudservice.warnService.service.RuleService;
-import com.jhmk.cloudutil.model.AtResponse;
-import com.jhmk.cloudutil.model.ResponseCode;
-import com.netflix.discovery.converters.Auto;
+import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
+import com.jhmk.cloudservice.warnService.webservice.CdrService;
+import com.jhmk.cloudutil.config.BaseConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 数据中心接口测试
@@ -37,6 +35,10 @@ import java.util.Objects;
 public class TempController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(CmsController.class);
 
+    @Autowired
+    AnalysisXmlService analysisXmlService;
+    @Autowired
+    CdrService cdrService;
     @Autowired
     RuleService ruleService;
 
@@ -66,21 +68,51 @@ public class TempController extends BaseController {
     @ResponseBody
     public void getJianyanbaogaoStr(HttpServletResponse response, @RequestBody String map) {
         JSONObject jsonObject = JSONObject.parseObject(map);
-        AtResponse resp = new AtResponse();
         if (Objects.nonNull(jsonObject)) {
             String patient_id = jsonObject.getString("patient_id");
             String visit_id = jsonObject.getString("visit_id");
             Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
             //获取 拼接检验检查报告
             List<Jianyanbaogao> jianchabaogaoStr = ruleService.getJianyanbaogaoStr(rule);
-            resp.setData(jianchabaogaoStr);
-            resp.setResponseCode(ResponseCode.OK);
-            wirte(response, resp);
+            wirte(response, jianchabaogaoStr);
         } else {
             logger.info("医嘱规则匹配传递信息为{}" + map);
         }
     }
 
+    @PostMapping("/getYizhuStr")
+    @ResponseBody
+    public void getYizhuStr(HttpServletResponse response, @RequestBody String map) {
+        JSONObject jsonObject = JSONObject.parseObject(map);
+        if (Objects.nonNull(jsonObject)) {
+            String patient_id = jsonObject.getString("patient_id");
+            String visit_id = jsonObject.getString("visit_id");
+            //基础map 放相同数据
+            Map<String, String> baseParams = new HashMap<>();
+            baseParams.put("oid", BaseConstants.OID);
+            baseParams.put("patient_id", patient_id);
+            baseParams.put("visit_id", visit_id);
+            Map<String, String> params = new HashMap<>();
+            //获取医嘱
+            params.put("ws_code", BaseConstants.JHHDRWS012A);
+            params.putAll(baseParams);
+
+            //获取医嘱类型为长期医嘱的 并且ORDER_END_TIME 为null的 表示没有结束
+            List<Map<String, String>> listConditions = new LinkedList<>();
+            Map<String, String> conditionParams = new HashMap<>();
+            conditionParams.put("elemName", "ORDER_PROPERTIES_NAME");
+            conditionParams.put("value", "长期");
+            conditionParams.put("operator", "=");
+            listConditions.add(conditionParams);
+
+            //获取入出转xml
+            String yizhuData = cdrService.getDataByCDR(params, listConditions);
+            //获取入院时间 出院时间
+            List<Yizhu> maps = analysisXmlService.analysisXml2Yizhu(yizhuData);
+            wirte(response, maps);
+
+        }
+    }
 
     @PostMapping("/getJianchabaogaoStr")
     @ResponseBody

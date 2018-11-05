@@ -58,4 +58,5 @@ public class OriginalJianyanbaogao {
     public void setLabTestItems(List<JianyanbaogaoForAuxiliary> labTestItems) {
         this.labTestItems = labTestItems;
     }
+
 }

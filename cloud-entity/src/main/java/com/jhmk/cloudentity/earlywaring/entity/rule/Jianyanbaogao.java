@@ -114,7 +114,8 @@ public class Jianyanbaogao {
 
 
 
+    //做排序用 删除重复项
     public String getIwantData() {
-        return this.lab_item_name + this.lab_sub_item_name;
+        return this.specimen + this.lab_sub_item_name;
     }
 }

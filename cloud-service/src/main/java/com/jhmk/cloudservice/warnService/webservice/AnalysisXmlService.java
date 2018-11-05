@@ -268,7 +268,14 @@ public class AnalysisXmlService {
         } catch (DocumentException e) {
             e.printStackTrace();
         }
-        return jybgList;
+        //删除重复项 一局spec ,保留最大时间
+        Map<String, Optional<OriginalJianyanbaogao>> collect = jybgList.stream().collect(Collectors.groupingBy(OriginalJianyanbaogao::getSpecimen, Collectors.maxBy((o1, o2) -> DateFormatUtil.parseDate(o1.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS).compareTo(DateFormatUtil.parseDate(o2.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS)))));
+        List<OriginalJianyanbaogao> resultList = new ArrayList<>();
+        for (Map.Entry<String, Optional<OriginalJianyanbaogao>> entry : collect.entrySet()) {
+            OriginalJianyanbaogao originalJianyanbaogao = entry.getValue().get();
+            resultList.add(originalJianyanbaogao);
+        }
+        return resultList;
     }
 
     public List<Jianyanbaogao> analysisOriginalJianyanbaogao2Jianyanbaogao(List<OriginalJianyanbaogao> originalJianyanbaogaoList) {
@@ -280,7 +287,7 @@ public class AnalysisXmlService {
             String specimen = originalJianyanbaogao.getSpecimen();
             List<JianyanbaogaoForAuxiliary> labTestItems = originalJianyanbaogao.getLabTestItems();
             for (JianyanbaogaoForAuxiliary jianyanbaogaoForAuxiliary : labTestItems) {
-                Jianyanbaogao jianyanbaogao=new Jianyanbaogao();
+                Jianyanbaogao jianyanbaogao = new Jianyanbaogao();
                 jianyanbaogao.setLab_item_name(lab_item_name);
                 jianyanbaogao.setReport_no(report_no);
                 jianyanbaogao.setReport_time(report_time);
