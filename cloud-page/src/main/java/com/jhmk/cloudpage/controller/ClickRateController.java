@@ -15,6 +15,7 @@ import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 
     /**
      * 条件查询
+     *
      * @param response
      * @param params
      */
@@ -100,7 +102,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
                 typeParams.put(type, count);
             }
             if (deptParams.containsKey(deptName)) {
-                deptParams.put(deptName, typeParams.get(deptName) + count);
+                deptParams.put(deptName, deptParams.get(deptName) + count);
             } else {
                 deptParams.put(deptName, count);
             }
@@ -146,9 +148,10 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 //    }
 
 
+
     @PostMapping("/getClickRateByCondition")
-    public void getAllData(HttpServletResponse response, @RequestBody(required = false) String map) {
-        Map<String, Object> resultMap = new HashMap<>();
+    public void getClickRateByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
+        Map<String, Object> result = new HashMap<>();
         List<ClickRate> dataByCondition = null;
         if (StringUtils.isNotBlank(map)) {
             JSONObject jsonObject = JSONObject.parseObject(map);
@@ -164,31 +167,109 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         } else {
             dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
         }
-        Map<String, Integer> deptParams = new HashMap<>();
         Map<String, Integer> typeParams = new HashMap<>();
+        Map<String, Integer> deptParams = new HashMap<>();
         for (ClickRate clickRate : dataByCondition) {
             String type = clickRate.getType();
             String deptName = clickRate.getDeptName();
+
             int count = clickRate.getCount();
-            if (typeParams.containsKey(type)) {
-                typeParams.put(type, typeParams.get(type) + count);
-            } else {
-                typeParams.put(type, count);
+            if (StringUtils.isNotBlank(type)) {
+
+                if (typeParams.containsKey(type)) {
+                    typeParams.put(type, typeParams.get(type) + count);
+                } else {
+                    typeParams.put(type, count);
+                }
             }
-            if (deptParams.containsKey(deptName)) {
-                deptParams.put(deptName, typeParams.get(deptName) + count);
-            } else {
-                deptParams.put(deptName, count);
+            if (StringUtils.isNotBlank(deptName)) {
+                if (deptParams.containsKey(deptName)) {
+                    deptParams.put(deptName, deptParams.get(deptName) + count);
+                } else {
+                    deptParams.put(deptName, count);
+                }
             }
         }
+
+        List<String> distinctDoctorId = clickRateRepService.getDistinctDoctorId();
         Map<String, Integer> map1 = CompareUtil.compareMapValue(typeParams);
         Map<String, Integer> map2 = CompareUtil.compareMapValue(deptParams);
-        resultMap.put("dept", map1);
-        resultMap.put("type", map2);
+        result.put("dept", map1);
+        result.put("type", map2);
+        result.put("count", distinctDoctorId.size());
         AtResponse resp = new AtResponse();
-        resp.setData(resultMap);
+        resp.setData(JSONObject.toJSON(result));
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
+
+//    @PostMapping("/getClickRateByType")
+//    public void getClickRateByType(HttpServletResponse response, @RequestBody(required = false) String map) {
+//        List<ClickRate> dataByCondition = null;
+//        if (StringUtils.isNotBlank(map)) {
+//            JSONObject jsonObject = JSONObject.parseObject(map);
+//            Date startTime = jsonObject.getDate("startTime");
+//            Date endTime = jsonObject.getDate("endTime");
+//            String deptCode = jsonObject.getString("deptCode");
+//            Map<String, Object> param = null;
+//            if (StringUtils.isNotBlank(deptCode)) {
+//                param = new HashMap<>();
+//                param.put("deptCode", deptCode);
+//            }
+//            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+//        } else {
+//            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+//        }
+//        Map<String, Integer> typeParams = new HashMap<>();
+//        for (ClickRate clickRate : dataByCondition) {
+//            String type = clickRate.getType();
+//            int count = clickRate.getCount();
+//            if (typeParams.containsKey(type)) {
+//                typeParams.put(type, typeParams.get(type) + count);
+//            } else {
+//                typeParams.put(type, count);
+//            }
+//
+//        }
+//        Map<String, Integer> map1 = CompareUtil.compareMapValue(typeParams);
+//        AtResponse resp = new AtResponse();
+//        resp.setData(map1);
+//        resp.setResponseCode(ResponseCode.OK);
+//        wirte(response, resp);
+//    }
+//
+//    @PostMapping("/getClickRateByDept")
+//    public void getClickRateByDept(HttpServletResponse response, @RequestBody(required = false) String map) {
+//        List<ClickRate> dataByCondition = null;
+//        if (StringUtils.isNotBlank(map)) {
+//            JSONObject jsonObject = JSONObject.parseObject(map);
+//            Date startTime = jsonObject.getDate("startTime");
+//            Date endTime = jsonObject.getDate("endTime");
+//            String deptCode = jsonObject.getString("deptCode");
+//            Map<String, Object> param = null;
+//            if (StringUtils.isNotBlank(deptCode)) {
+//                param = new HashMap<>();
+//                param.put("deptCode", deptCode);
+//            }
+//            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+//        } else {
+//            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+//        }
+//        Map<String, Integer> deptParams = new HashMap<>();
+//        for (ClickRate clickRate : dataByCondition) {
+//            String deptName = clickRate.getDeptName();
+//            int count = clickRate.getCount();
+//            if (deptParams.containsKey(deptName)) {
+//                deptParams.put(deptName, deptParams.get(deptName) + count);
+//            } else {
+//                deptParams.put(deptName, count);
+//            }
+//        }
+//        Map<String, Integer> map2 = CompareUtil.compareMapValue(deptParams);
+//        AtResponse resp = new AtResponse();
+//        resp.setData(map2);
+//        resp.setResponseCode(ResponseCode.OK);
+//        wirte(response, resp);
+//    }
 
 }
