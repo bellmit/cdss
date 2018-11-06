@@ -196,8 +196,8 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         List<String> distinctDoctorId = clickRateRepService.getDistinctDoctorId();
         Map<String, Integer> map1 = CompareUtil.compareMapValue(typeParams);
         Map<String, Integer> map2 = CompareUtil.compareMapValue(deptParams);
-        result.put("dept", map1);
-        result.put("type", map2);
+        result.put("type", map1);
+        result.put("dept", map2);
         result.put("count", distinctDoctorId.size());
         AtResponse resp = new AtResponse();
         resp.setData(JSONObject.toJSON(result));
