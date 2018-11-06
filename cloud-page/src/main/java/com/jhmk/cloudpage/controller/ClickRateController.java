@@ -68,7 +68,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     @ResponseBody
     public void roleList(HttpServletResponse response, @RequestBody String params) {
         Map<String, Object> parse = (Map) JSON.parse(params);
-        AtResponse<Map<String, Object>> resp = super.listData(parse, clickRateRepService, "createTime");
+        AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
         wirte(response, resp);
     }
 

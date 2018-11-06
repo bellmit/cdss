@@ -4,6 +4,7 @@ package com.jhmk.cloudentity.base;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.model.WebPage;
+import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -231,6 +233,42 @@ public class BaseEntityController<P> extends BaseController {
         return resp;
     }
 
+    public Specification<T> getWhereClause(Date startTime, Date endTime, Map<String, Object> params) {
+        return new Specification<T>() {
+            @Override
+            public Predicate toPredicate(Root<T> root,
+                                         CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                if (startTime != null) {
+                    list.add(cb.greaterThanOrEqualTo(root.get("createTime").as(Date.class), startTime));
+
+                }
+                if (endTime != null) {
+                    list.add(cb.lessThanOrEqualTo(root.get("createTime").as(Date.class), endTime));
+                }
+//                //拼接传入参数
+                if (params != null) {
+                    for (String key : params.keySet()) {
+                        if (WebPage.PAGE_NUM.equals(key)) {
+                            continue;
+                        } else {
+                            Object value = params.get(key);
+                            if (!org.springframework.util.StringUtils.isEmpty(value.toString())) {
+                                list.add(cb.equal(root.get(key), value));
+                            }
+                        }
+                    }
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                list.toArray(p);
+                return cb.and(p);
+
+            }
+        };
+    }
+
 
     public Specification<T> getWhereClause(Map<String, Object> params) {
         return new Specification<T>() {
@@ -244,6 +282,24 @@ public class BaseEntityController<P> extends BaseController {
                     for (String key : params.keySet()) {
                         if (WebPage.PAGE_NUM.equals(key)) {
                             continue;
+                        } else if ("startTime".equals(key)) {
+                            String startTime = params.get("startTime").toString();
+                            Date startDate = null;
+                            if (startTime.length() <= 10) {
+                                startDate = DateFormatUtil.parseDate(startTime, DateFormatUtil.DATE_PATTERN_S);
+                            } else {
+                                startDate = DateFormatUtil.parseDate(startTime, DateFormatUtil.DATETIME_PATTERN_SS);
+                            }
+                            list.add(cb.greaterThanOrEqualTo(root.get("createTime").as(Date.class), startDate));
+                        } else if ("endTime" .equals(key)) {
+                            String endTime = params.get("endTime").toString();
+                            Date endDate = null;
+                            if (endTime.length() <= 10) {
+                                endDate = DateFormatUtil.parseDate(endTime, DateFormatUtil.DATE_PATTERN_S);
+                            } else {
+                                endDate = DateFormatUtil.parseDate(endTime, DateFormatUtil.DATETIME_PATTERN_SS);
+                            }
+                            list.add(cb.lessThanOrEqualTo(root.get("createTime").as(Date.class), endDate));
                         } else {
                             Object value = params.get(key);
                             if (!StringUtils.isEmpty(value.toString())) {
@@ -258,7 +314,9 @@ public class BaseEntityController<P> extends BaseController {
                 return cb.and(p);
 
             }
-        };
+        }
+
+                ;
     }
 
     /**
