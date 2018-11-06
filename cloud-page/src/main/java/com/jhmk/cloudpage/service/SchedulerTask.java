@@ -64,9 +64,13 @@ public class SchedulerTask {
                     String deptCode = one.getUserDept();
                     clickRate.setDeptCode(deptCode);
                     SmDepts firstByDeptCode = smDeptsRepService.findFirstByDeptCode(deptCode);
-                    String deptName = firstByDeptCode.getDeptName();
-                    logger.info("部门名称：{}", deptName);
-                    clickRate.setDeptName(deptName);
+                    if (firstByDeptCode != null) {
+                        String deptName = firstByDeptCode.getDeptName();
+                        logger.info("部门名称：{}", deptName);
+                        clickRate.setDeptName(deptName);
+                    } else {
+                        clickRate.setDeptName("空");
+                    }
                 }
                 ClickRate old = clickRateRepService.findByDoctorIdAndCreateTimeAndType(doctorId, createDate, type);
                 if (old != null) {
