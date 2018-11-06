@@ -158,6 +158,8 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
             Date startTime = jsonObject.getDate("startTime");
             Date endTime = jsonObject.getDate("endTime");
             String deptCode = jsonObject.getString("deptCode");
+            int page = jsonObject.getInteger("page");
+            int pageSize = jsonObject.getInteger("deptCode");
             Map<String, Object> param = null;
             if (StringUtils.isNotBlank(deptCode)) {
                 param = new HashMap<>();
