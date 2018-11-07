@@ -6,6 +6,7 @@ import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
 import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.RegularUtils;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -346,7 +347,13 @@ public class AnalysisXmlService {
                     //检验定量结果值
                     Element lab_result_value = element.element("LAB_RESULT_VALUE");
                     if (Objects.nonNull(lab_result_value)) {
-                        mx.setLab_result(lab_result_value.getText());
+                        //todo  过滤检验定量结果是否是汉字 汉字在放进去
+                        if (StringUtil.isInteger(lab_result_value.getTextTrim())) {
+                            mx.setLab_result(lab_result_value.getText());
+                        }else {
+                            mx.setLab_result("");
+
+                        }
                     }
                     //检验定量结果单位
                     Element lab_result_unit = element.element("LAB_RESULT_UNIT");
