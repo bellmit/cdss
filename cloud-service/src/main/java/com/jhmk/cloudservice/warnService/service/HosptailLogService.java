@@ -509,13 +509,6 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
         SmHospitalLog smHospitalLog = new SmHospitalLog();
         smHospitalLog.setDoctorId(rule.getDoctor_id());
         smHospitalLog.setDoctorName(rule.getDoctor_name());
-//        if (StringUtils.isNotBlank(rule.getDoctor_name())) {
-//
-//            List<SmUsers> byUserName = smUsersRepService.findByUserName(rule.getDoctor_name());
-//            if (byUserName != null && byUserName.size() > 0) {
-//                smHospitalLog.setDoctorId(byUserName.get(0).getUserId());
-//            }
-//        }
         Binganshouye binganshouye = rule.getBinganshouye();
         if (binganshouye != null) {
             String deptName = "";
@@ -543,7 +536,6 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
         List<Binglizhenduan> binglizhenduan = rule.getBinglizhenduan();
         List<Shouyezhenduan> shouyezhenduan = rule.getShouyezhenduan();
         //主诊断
-        String affirmSickness = "";
         //判断首页诊断如果不为空，确认主疾病为首页诊断
         if (Objects.nonNull(binglizhenduan)) {
             Iterator<Binglizhenduan> iterator = binglizhenduan.iterator();
@@ -567,7 +559,6 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
                 {
                     Shouyezhenduan next = iterator.next();
                     if ("1".equals(next.getDiagnosis_num())) {
-                        affirmSickness = next.getDiagnosis_name().trim();
                         Optional.ofNullable(next.getDiagnosis_name()).ifPresent(s -> {
                             smHospitalLog.setDiagnosisName(next.getDiagnosis_name().trim());
                         });

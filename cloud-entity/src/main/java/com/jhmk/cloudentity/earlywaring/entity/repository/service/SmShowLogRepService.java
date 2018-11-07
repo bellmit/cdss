@@ -104,12 +104,19 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
     public int updateSmHospitalStatusAndDateById(int ruleStatus, String date, int id) {
         return repository.updateSmHospitalStatusAndDateById(ruleStatus, date, id);
     }
+
     @Transactional(propagation = Propagation.REQUIRED)
-    public int updateRuleMatchLogStatus(String doctorId, String patientId, String visitId){
+    public int updateRuleMatchLogStatus(String doctorId, String patientId, String visitId) {
         return repository.updateRuleMatchLogStatus(doctorId, patientId, visitId);
     }
+
     @Transactional(propagation = Propagation.REQUIRED)
-    public int updateJwsLogStatus(String doctorId, String patientId, String visitId){
+    public int updateShowLogStatus(int newStatus, String doctorId, String patientId, String visitId, String type, int oldStatus) {
+        return repository.updateShowLogStatus(newStatus, doctorId, patientId, visitId, type, oldStatus);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public int updateJwsLogStatus(String doctorId, String patientId, String visitId) {
         return repository.updateJwsLogStatus(doctorId, patientId, visitId);
     }
 

@@ -321,19 +321,20 @@ public class RuleService {
         String visit_id = mes.getVisit_id();
         if (StringUtils.isEmpty(doctor_id)) {
             BasicInfo basicInfo = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-            if (basicInfo!=null){
-                doctor_id=basicInfo.getDoctor_id();
+            if (basicInfo != null) {
+                doctor_id = basicInfo.getDoctor_id();
             }
         }
+        //将提醒状态全部设为3，表示未触发，如果触发，再将状态改为0
+        smShowLogRepService.updateShowLogStatus(3, doctor_id, patient_id, visit_id, "rulematch", 0);
         JSONObject jsonObject = JSONObject.parseObject(resultData);
         if (!symbol.equals(jsonObject.getString(resultSym))) {
             Object result = jsonObject.get(resultSym);
             SmHospitalLog smHospitalLog = hosptailLogService.addLog(mes);
-            if (ObjectUtils.anyNotNull(result)) {
+            if (Objects.nonNull(result)) {
                 //todo 预警等级需要返回
                 JSONArray ja = (JSONArray) result;
                 if (ja.size() > 0) {
-                    smShowLogRepService.updateRuleMatchLogStatus(doctor_id, patient_id, visit_id);
                     Iterator<Object> iterator = ja.iterator();
                     while (iterator.hasNext()) {
                         Object next = iterator.next();
@@ -413,18 +414,6 @@ public class RuleService {
                         }
                     }
                 }
-            } else {
-                List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
-                for (SmShowLog log : existLog) {
-                    log.setRuleStatus(3);
-                    smShowLogRepService.save(log);
-                }
-            }
-        } else {
-            List<SmShowLog> existLog = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
-            for (SmShowLog log : existLog) {
-                log.setRuleStatus(3);
-                smShowLogRepService.save(log);
             }
         }
 
