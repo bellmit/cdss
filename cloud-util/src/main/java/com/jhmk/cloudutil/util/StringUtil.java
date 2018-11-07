@@ -90,5 +90,14 @@ public class StringUtil {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
     }
+    public static boolean isNumber(String str){
+        String reg = "^[0-9]+(.[0-9]+)?$";
+        return str.matches(reg);
+    }
+
+    public static void main(String[] args) {
+        boolean integer = isNumber("1110.22");
+        System.out.println(integer);
+    }
 }
 
