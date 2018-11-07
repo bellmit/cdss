@@ -9,7 +9,7 @@ public class WebPage {
 	public static final String WEB_PAGE = "webPage";
 	public static final String PAGE_NUM="pageNum";
 	
-	private static int DEFAULT_PAGE_SIZE = 20	;
+	private static int DEFAULT_PAGE_SIZE = 200	;
 	
 	private int pageNo = 1;
 	private int pageSize = DEFAULT_PAGE_SIZE;
