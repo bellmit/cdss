@@ -32,6 +32,11 @@ public class TaskController extends BaseController {
 
     @PostMapping("/addClickCount2DateTable")
     public void addClickCount2DateTable() {
+        schedulerTask.addClickCount2DateTable();
+        logger.info("记录点击事件完成");
+    }
+    @PostMapping("/addClickRate2DataTable")
+    public void addClickRate2DataTable() {
 
         schedulerTask.addClickCount2DateTable();
         logger.info("记录点击事件完成");
