@@ -76,18 +76,18 @@ public class BaseController {
         return deptName;
     }
 
-    public static void wirte(HttpServletResponse response, Object obj) {
-        response.setCharacterEncoding("utf-8");
-        try {
-            PrintWriter writer = response.getWriter();
-            writer.print(JSON.toJSON(obj));
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void wirte(HttpServletResponse response, Object obj) {
+//        response.setCharacterEncoding("utf-8");
+//        try {
+//            PrintWriter writer = response.getWriter();
+//            writer.print(JSON.toJSON(obj));
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    public void wirte(HttpServletResponse response, String obj) {
+    public void wirte(HttpServletResponse response, Object obj) {
         response.setCharacterEncoding("utf-8");
         try {
             PrintWriter writer = response.getWriter();
@@ -95,20 +95,7 @@ public class BaseController {
             if (StringUtils.isNotBlank(currentRoleRange)) {
                 response.setHeader(BaseConstants.CURRENT_ROLE_RANGE, currentRoleRange);
             }
-            writer.print(obj);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void wirte(HttpServletRequest httpServletRequest, HttpServletResponse response, String obj) {
-        response.setCharacterEncoding("utf-8");
-        try {
-            PrintWriter writer = response.getWriter();
-            String currentRoleRange = getCurrentRoleRange();
-            response.setHeader(BaseConstants.CURRENT_ROLE_RANGE, currentRoleRange);
-            writer.print(obj);
+            writer.print(JSON.toJSON(obj));
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
