@@ -3,6 +3,7 @@ package com.jhmk.cloudentity.base;
 import com.alibaba.fastjson.JSON;
 import com.jhmk.cloudutil.config.BaseConstants;
 import javafx.application.Application;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -85,10 +86,28 @@ public class BaseController {
             e.printStackTrace();
         }
     }
-    public static void wirte(HttpServletResponse response, String obj) {
+
+    public void wirte(HttpServletResponse response, String obj) {
         response.setCharacterEncoding("utf-8");
         try {
             PrintWriter writer = response.getWriter();
+            String currentRoleRange = getCurrentRoleRange();
+            if (StringUtils.isNotBlank(currentRoleRange)) {
+                response.setHeader(BaseConstants.CURRENT_ROLE_RANGE, currentRoleRange);
+            }
+            writer.print(obj);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void wirte(HttpServletRequest httpServletRequest, HttpServletResponse response, String obj) {
+        response.setCharacterEncoding("utf-8");
+        try {
+            PrintWriter writer = response.getWriter();
+            String currentRoleRange = getCurrentRoleRange();
+            response.setHeader(BaseConstants.CURRENT_ROLE_RANGE, currentRoleRange);
             writer.print(obj);
             writer.close();
         } catch (IOException e) {
