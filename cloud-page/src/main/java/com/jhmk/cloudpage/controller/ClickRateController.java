@@ -58,6 +58,16 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     }
 
 
+    @PostMapping("/add")
+    public void addList(HttpServletResponse response, @RequestBody ClickRate clickRate) {
+        clickRate.setCreateTime(new Date());
+        ClickRateService.addDate2List(clickRate);
+        AtResponse resp = new AtResponse();
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+
     /**
      * 条件查询
      *

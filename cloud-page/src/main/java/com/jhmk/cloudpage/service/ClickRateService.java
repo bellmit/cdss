@@ -23,9 +23,11 @@ public class ClickRateService {
     //分隔符
     private static final String SPLITSYMPOL = "&&&";
     public static Map<String, Integer> clickRateMap;
+    public static LinkedList<ClickRate> clickRateList;
 
     /**
      * 初始化一个map
+     *
      * @return
      */
 
@@ -34,19 +36,24 @@ public class ClickRateService {
         return clickRateMap;
     }
 
+    public static LinkedList<ClickRate> initList() {
+        clickRateList = new LinkedList<>();
+        return clickRateList;
+    }
+
     /**
      * 将数据保存到map中
      *
      * @param clickRate
      */
     public static void addDate2Map(ClickRate clickRate) {
-        if (clickRateMap==null){
+        if (clickRateMap == null) {
             initMaps();
         }
         // 封装用户统计的request，并且用hash算法分布到不同的队列当中
         String doctorId = clickRate.getDoctorId();
         String type = clickRate.getType();
-        Date createTime = clickRate.getCreateTime();
+        java.util.Date createTime = clickRate.getCreateTime();
         String key = doctorId + SPLITSYMPOL + type + SPLITSYMPOL + createTime;
         if (clickRateMap.containsKey(key)) {
             Integer integer = clickRateMap.get(key);
@@ -54,6 +61,15 @@ public class ClickRateService {
         } else {
             clickRateMap.put(key, 1);
         }
+        System.out.println("添加点击事件成功");
+    }
+
+    public static void addDate2List(ClickRate clickRate) {
+        if (clickRateList == null) {
+            initList();
+        }
+        // 封装用户统计的request，并且用hash算法分布到不同的队列当中
+        clickRateList.add(clickRate);
         System.out.println("添加点击事件成功");
     }
 
