@@ -3,6 +3,7 @@ package com.jhmk.cloudentity.base;
 import com.alibaba.fastjson.JSON;
 import com.jhmk.cloudutil.config.BaseConstants;
 import javafx.application.Application;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -75,21 +76,26 @@ public class BaseController {
         return deptName;
     }
 
-    public static void wirte(HttpServletResponse response, Object obj) {
+//    public static void wirte(HttpServletResponse response, Object obj) {
+//        response.setCharacterEncoding("utf-8");
+//        try {
+//            PrintWriter writer = response.getWriter();
+//            writer.print(JSON.toJSON(obj));
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void wirte(HttpServletResponse response, Object obj) {
         response.setCharacterEncoding("utf-8");
         try {
             PrintWriter writer = response.getWriter();
+            String currentRoleRange = getCurrentRoleRange();
+            if (StringUtils.isNotBlank(currentRoleRange)) {
+                response.setHeader(BaseConstants.CURRENT_ROLE_RANGE, currentRoleRange);
+            }
             writer.print(JSON.toJSON(obj));
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void wirte(HttpServletResponse response, String obj) {
-        response.setCharacterEncoding("utf-8");
-        try {
-            PrintWriter writer = response.getWriter();
-            writer.print(obj);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

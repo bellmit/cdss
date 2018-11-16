@@ -44,6 +44,8 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
 
     SmShowLog findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(String doctorId, String patientId, String itemName, String type, String stat, String visitId);
 
+    List<SmShowLog> findAllByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitIdOrderByDateDesc(String doctorId, String patientId, String itemName, String type, String stat, String visitId);
+
     /**
      * 查询推荐检查 此次状态为0的logs数据
      *

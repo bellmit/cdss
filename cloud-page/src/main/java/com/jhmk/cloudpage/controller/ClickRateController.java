@@ -58,6 +58,16 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     }
 
 
+    @PostMapping("/add")
+    public void addList(HttpServletResponse response, @RequestBody ClickRate clickRate) {
+        clickRate.setCreateTime(new Date());
+        ClickRateService.addDate2List(clickRate);
+        AtResponse resp = new AtResponse();
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+
     /**
      * 条件查询
      *
@@ -158,8 +168,6 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
             Date startTime = jsonObject.getDate("startTime");
             Date endTime = jsonObject.getDate("endTime");
             String deptCode = jsonObject.getString("deptCode");
-            int page = jsonObject.getInteger("page");
-            int pageSize = jsonObject.getInteger("deptCode");
             Map<String, Object> param = null;
             if (StringUtils.isNotBlank(deptCode)) {
                 param = new HashMap<>();
@@ -204,6 +212,26 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
+
+
+    /**
+     * 查询科室数量和user数量（总）
+     * @param response
+     */
+    @PostMapping("/getClickRateAllCount")
+    public void getClickRateCount(HttpServletResponse response) {
+        Map<String, Object> result = new HashMap<>();
+        List<String> distinctDoctorId1 = clickRateRepService.getDistinctDoctorId();
+        List<String> distinctByDeptCode = clickRateRepService.getDistinctByDeptCode();
+        result.put("dept",distinctByDeptCode.size());
+        result.put("id",distinctDoctorId1.size());
+        AtResponse resp = new AtResponse();
+        resp.setData(result);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+
 
 //    @PostMapping("/getClickRateByType")
 //    public void getClickRateByType(HttpServletResponse response, @RequestBody(required = false) String map) {

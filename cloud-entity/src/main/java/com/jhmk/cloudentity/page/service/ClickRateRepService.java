@@ -95,6 +95,11 @@ public class ClickRateRepService extends BaseRepService<ClickRate, Integer> {
         return repository.getDistinctDoctorId();
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public List<String> getDistinctByDeptCode() {
+        return repository.getDistinctByDeptCode();
+    }
+
     public List<ClickRate> getDataByCondition(Date start, Date end, Map param) {
         Specification sf = getWhereClause(start, end, param);
         List<ClickRate> all = this.findAll(sf);
