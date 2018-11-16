@@ -90,6 +90,8 @@ public class RuleService {
     @Autowired
     ResolveRuleService resolveRuleService;
     @Autowired
+    JianchabaogaoService jianchabaogaoService;
+    @Autowired
     YizhuService yizhuService;
 
 
@@ -437,6 +439,15 @@ public class RuleService {
         return byDoctorIdAndPatientId;
     }
 
+    public List<SmShowLog> add2ShowLog(Rule data, String map) {
+        String doctor_id = data.getDoctor_id();
+        String patient_id = data.getPatient_id();
+        String visit_id = data.getVisit_id();
+        getTipList2ShowLog(data, map);
+        List<SmShowLog> byDoctorIdAndPatientId = smShowLogRepService.findByDoctorIdAndPatientIdAndVisitIdOrderByDateDesc(doctor_id, patient_id, visit_id);
+        return byDoctorIdAndPatientId;
+    }
+
 
     /**
      * 将触发规则的数据添加到showlog表中
@@ -630,19 +641,6 @@ public class RuleService {
         return time;
     }
 
-    /**
-     * 将英文()括号改为中文（）
-     *
-     * @param data
-     * @return
-     */
-    public String stringTransform(String data) {
-        String s2 = null;
-        if (StringUtils.isNotBlank(data)) {
-            s2 = data.replaceAll("\\(", "（").replaceAll("\\)", "）");
-        }
-        return s2;
-    }
 
     /**
      * 解析规则 一诉五史 key value型转为  键值对：
@@ -872,7 +870,7 @@ public class RuleService {
         /**
          *检查数据
          */
-        List<Jianchabaogao> jianchabaogaoList = getJianchabaogaoFromCdr(rule, hospitalDateMap);
+        List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogaoFromCdr(rule);
         rule.setJianchabaogao(jianchabaogaoList);
 
         List<Map<String, String>> listConditions = new LinkedList<>();
@@ -915,156 +913,7 @@ public class RuleService {
         return rule;
     }
 
-    /**
-     * 获取检验报告 str  供其他测试服务器使用
-     *
-     * @param rule
-     * @return
-     */
-    public List<Jianyanbaogao> getJianyanbaogaoStr(Rule rule) {
-        //检验数据
-//        paramMap.put()
-        //解析规则 一诉五史 检验报告等
 
-        //基础map 放相同数据
-        Map<String, String> baseParams = new HashMap<>();
-        baseParams.put("oid", BaseConstants.OID);
-        baseParams.put("patient_id", rule.getPatient_id());
-        baseParams.put("visit_id", rule.getVisit_id());
-        Map<String, String> params = new HashMap<>();
-        params.put("ws_code", BaseConstants.JHHDRWS004A);
-        params.putAll(baseParams);
-        //获取入出转xml
-        String hospitalDate = cdrService.getDataByCDR(params, null);
-        //获取入院时间 出院时间
-        Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
-        //入院时间
-        String admission_time = hospitalDateMap.get("admission_time");
-        //出院时间
-        String discharge_time = hospitalDateMap.get("discharge_time");
-
-        /**
-         * 根据入院出院时间  获取时间段内的检验检查报告
-         */
-        /**
-         *检查数据
-         */
-        List<Map<String, String>> listConditions = new LinkedList<>();
-        if (StringUtils.isNotBlank(admission_time)) {
-            Map<String, String> conditionParams = new HashMap<>();
-            conditionParams.put("elemName", "REPORT_TIME");
-            conditionParams.put("value", admission_time);
-//            conditionParams.put("operator", ">=");
-            conditionParams.put("operator", "&gt;=");
-            listConditions.add(conditionParams);
-            rule.setAdmission_time(admission_time);
-        }
-        if (StringUtils.isNotBlank(discharge_time)) {
-            Map<String, String> conditionParams = new HashMap<>();
-            conditionParams.put("elemName", "REPORT_TIME");
-            conditionParams.put("value", discharge_time);
-            conditionParams.put("operator", "&lt;=");
-            listConditions.add(conditionParams);
-            rule.setDischarge_time(discharge_time);
-
-        }
-
-        //检验数据
-//        params.put("ws_code", BaseConstants.JHHDRWS004A);
-
-//        params.put("ws_code", "JHHDRWS006B");
-        //检验数据（主表）
-        params.put("ws_code", "JHHDRWS006A");
-        String jianyanzhubiao = cdrService.getDataByCDR(params, listConditions);
-        //检验数据明细
-        params.put("ws_code", "JHHDRWS006B");
-        String jybgzbMX = cdrService.getDataByCDR(params, listConditions);
-        //获取检验报告原始数据
-        List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
-        List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
-        rule.setOriginalJianyanbaogaos(originalJianyanbaogaos);
-        List<Jianyanbaogao> jianyanbaogaos = analysisXmlService.analysisOriginalJianyanbaogao2Jianyanbaogao(originalJianyanbaogaos);
-        rule.setJianyanbaogao(jianyanbaogaos);
-        return jianyanbaogaos;
-    }
-
-    public List<Jianchabaogao> getJianchabaogaoStr(Rule rule) {
-        //检验数据
-//        paramMap.put()
-        //解析规则 一诉五史 检验报告等
-
-        //基础map 放相同数据
-        Map<String, String> baseParams = new HashMap<>();
-        baseParams.put("oid", BaseConstants.OID);
-        baseParams.put("patient_id", rule.getPatient_id());
-        baseParams.put("visit_id", rule.getVisit_id());
-        Map<String, String> params = new HashMap<>();
-        params.put("ws_code", BaseConstants.JHHDRWS004A);
-        params.putAll(baseParams);
-        //获取入出转xml
-        String hospitalDate = cdrService.getDataByCDR(params, null);
-        //获取入院时间 出院时间
-        Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
-        /**
-         *检查数据
-         */
-        List<Jianchabaogao> jianchabaogaoList = getJianchabaogaoFromCdr(rule, hospitalDateMap);
-        return jianchabaogaoList;
-
-
-    }
-
-    /**
-     * 从数据中心获取检查数据
-     */
-    public List<Jianchabaogao> getJianchabaogaoFromCdr(Rule rule, Map<String, String> hospitalDateMap) {
-        //基础map 放相同数据
-        Map<String, String> baseParams = new HashMap<>();
-        baseParams.put("oid", BaseConstants.OID);
-        baseParams.put("patient_id", rule.getPatient_id());
-        Map<String, String> params = new HashMap<>();
-        params.putAll(baseParams);
-
-        //入院时间
-        String admission_time = hospitalDateMap.get("admission_time");
-        //出院时间
-        String discharge_time = hospitalDateMap.get("discharge_time");
-
-        /**
-         * 根据入院出院时间  获取时间段内的检验检查报告
-         */
-        List<Map<String, String>> listConditions = new LinkedList<>();
-        if (StringUtils.isNotBlank(admission_time)) {
-            Map<String, String> conditionParams = new HashMap<>();
-            conditionParams.put("elemName", "REPORT_TIME");
-            conditionParams.put("value", admission_time);
-//            conditionParams.put("operator", ">=");
-            conditionParams.put("operator", "&gt;=");
-            listConditions.add(conditionParams);
-            rule.setAdmission_time(admission_time);
-        }
-        if (StringUtils.isNotBlank(discharge_time)) {
-            Map<String, String> conditionParams = new HashMap<>();
-            conditionParams.put("elemName", "REPORT_TIME");
-            conditionParams.put("value", discharge_time);
-            conditionParams.put("operator", "&lt;=");
-            listConditions.add(conditionParams);
-            rule.setDischarge_time(discharge_time);
-
-        }
-        /**
-         *检查数据
-         */
-        params.put("ws_code", "JHHDRWS005");
-        String jianchaXML = cdrService.getDataByCDR(params, listConditions);
-        List<Map<String, String>> jianchabaogao = analysisXmlService.analysisXml2Jianchabaogao(jianchaXML);
-        List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
-        for (Map<String, String> map : jianchabaogao) {
-            Jianchabaogao jiancha = MapUtil.map2Bean(map, Jianchabaogao.class);
-            jianchabaogaoList.add(jiancha);
-        }
-        return jianchabaogaoList;
-    }
 
     /**
      * 获取医嘱
@@ -1072,40 +921,12 @@ public class RuleService {
      * @param rule
      * @return
      */
-    public List<Yizhu> getYizhu(Rule rule) {
-
-        //基础map 放相同数据
-        Map<String, String> baseParams = new HashMap<>();
-        baseParams.put("oid", BaseConstants.OID);
-        baseParams.put("patient_id", rule.getPatient_id());
-        baseParams.put("visit_id", rule.getVisit_id());
-        Map<String, String> params = new HashMap<>();
-        //获取医嘱
-        params.put("ws_code", BaseConstants.JHHDRWS012A);
-        params.putAll(baseParams);
-
-        //获取医嘱类型为长期医嘱的 并且ORDER_END_TIME 为null的 表示没有结束
-        List<Map<String, String>> listConditions = new LinkedList<>();
-        Map<String, String> conditionParams = new HashMap<>();
-        conditionParams.put("elemName", "ORDER_PROPERTIES_NAME");
-        conditionParams.put("value", "长期");
-        conditionParams.put("operator", "=");
-        listConditions.add(conditionParams);
-
-        //获取入出转xml
-        String yizhuData = cdrService.getDataByCDR(params, listConditions);
-        //获取入院时间 出院时间
-        List<Yizhu> maps = analysisXmlService.analysisXml2Yizhu(yizhuData);
-        return maps;
-    }
-
     /**
      * 添加 更新数据库
      *
      * @param rule
      */
-//    @Transactional(rollbackFor = Exception.class)
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void saveRule2Database(Rule rule) {
         try {
             logger.info("当前rule实体类为：{}", JSONObject.toJSONString(rule));
@@ -1183,6 +1004,9 @@ public class RuleService {
             rule.setPageSource(basicInfo.getPageSource());
             rule.setWarnSource(basicInfo.getWarnSource());
             rule.setDoctor_name(basicInfo.getDept_name());
+        }else{
+            rule.setPatient_id(patient_id);
+            rule.setVisit_id(visit_id);
         }
 
         Binganshouye binganshouye = binganshouyeRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
@@ -1203,65 +1027,6 @@ public class RuleService {
         }
         return rule;
     }
-    /**
-     * 下诊断时获取数据库诊断和一诉五史
-     * @param patient_id
-     * @param visit_id
-     * @return
-     */
-//    public Rule getDoctorAdviceFromDatabase(String patient_id, String visit_id) {
-//        Rule rule = new Rule();
-//        BasicInfo basicInfo = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-//        if (basicInfo != null) {
-//            rule.setPatient_id(patient_id);
-//            rule.setVisit_id(visit_id);
-//            rule.setDept_code(basicInfo.getDept_name());
-//            rule.setDoctor_id(basicInfo.getDoctor_id());
-//            rule.setPageSource(basicInfo.getPageSource());
-//            rule.setWarnSource(basicInfo.getWarnSource());
-//            rule.setDoctor_name(basicInfo.getDept_name());
-//        }
-//
-//        Binganshouye binganshouye = binganshouyeRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-//        if (binganshouye != null) {
-//            rule.setBinganshouye(binganshouye);
-//        }
-//        List<Binglizhenduan> binglizhenduanList = binglizhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
-//        if (binglizhenduanList != null&&binglizhenduanList.size()>0) {
-//            rule.setBinglizhenduan(binglizhenduanList);
-//        }
-//        List<Shouyezhenduan> shouyezhenduanList = shouyezhenduanRepService.findAllByPatient_idAndVisit_id(patient_id, visit_id);
-//        if (shouyezhenduanList != null && shouyezhenduanList.size() > 0) {
-//            rule.setShouyezhenduan(shouyezhenduanList);
-//        }
-//        List<Yizhu> yizhuList = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
-//        if (yizhuList != null&&yizhuList.size()>0) {
-//            rule.setYizhu(yizhuList);
-//        }
-//        Bingchengjilu bingchengjilu = bingchengjiluRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-//        if (bingchengjilu != null) {
-//            rule.setBingchengjilu(bingchengjilu);
-//        }
-//        return rule;
-//    }
-
-    /**
-     * 根据cdss返回数据获取规则条件字段
-     *
-     * @param str
-     * @return
-     */
-    public String getRuleConditionByData(String str) {
-        JSONObject jsonObject = JSONObject.parseObject(str);
-        Object result = jsonObject.get("result");
-        String ruleCondition = "";
-        if (Objects.nonNull(result)) {
-            Map<String, String> parse = (Map) JSONObject.parse(result.toString());
-            ruleCondition = parse.get("ruleCondition");
-        }
-        return ruleCondition;
-    }
-
 
     /**
      * 根据id获取cdss规则实体类
