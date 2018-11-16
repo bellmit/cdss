@@ -5,6 +5,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,6 +99,20 @@ public class StringUtil {
     public static void main(String[] args) {
         boolean integer = isNumber("1110.22");
         System.out.println(integer);
+    }
+
+    /**
+     * 将英文()括号改为中文（）
+     *
+     * @param data
+     * @return
+     */
+    public static String stringTransform(String data) {
+        String s2 = null;
+        if (StringUtils.isNotBlank(data)) {
+            s2 = data.replaceAll("\\(", "（").replaceAll("\\)", "）");
+        }
+        return s2;
     }
 }
 

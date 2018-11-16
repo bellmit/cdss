@@ -10,9 +10,11 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudservice.warnService.service.RuleService;
+import com.jhmk.cloudservice.warnService.service.YizhuService;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,8 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
 
 
     @Autowired
+    YizhuService yizhuService;
+    @Autowired
     RuleService ruleService;
     @Autowired
     AnalysisXmlService analysisXmlService;
@@ -71,7 +75,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         Map<String, String> paramMap = (Map) JSON.parse(map);
         //解析规则 一诉五史 检验报告等
         String s = ruleService.anaRule(paramMap);
-        String s2 = ruleService.stringTransform(s);
+        String s2 = StringUtil.stringTransform(s);
         JSONObject parse = JSONObject.parseObject(s2);
         Rule rule = Rule.fill(parse);
         System.out.println(JSONObject.toJSONString(rule));
@@ -115,7 +119,7 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
         //获取数据中心医嘱
-        List<Yizhu> yizhu = ruleService.getYizhu(rule);
+        List<Yizhu> yizhu = yizhuService.getYizhuFromCdr(rule);
         rule.setYizhu(yizhu);
         String data = "";
         try {
@@ -173,40 +177,4 @@ public class RuleMatchController extends BaseEntityController<UserModel> {
             logger.info("医嘱规则匹配传递信息为{}" + map);
         }
     }
-
-//    @PostMapping("/getJianyanbaogaoStr")
-//    @ResponseBody
-//    public void getJianyanbaogaoStr(HttpServletResponse response, @RequestBody String map) {
-//        JSONObject jsonObject = JSONObject.parseObject(map);
-//        if (Objects.nonNull(jsonObject)) {
-//
-//            String patient_id = jsonObject.getString("patient_id");
-//            String visit_id = jsonObject.getString("visit_id");
-//            Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
-//            //获取 拼接检验检查报告
-//            List<Jianyanbaogao> jianchabaogaoStr = ruleService.getJianyanbaogaoStr(rule);
-//            wirte(response, jianchabaogaoStr);
-//        } else {
-//            logger.info("医嘱规则匹配传递信息为{}" + map);
-//        }
-//    }
-//
-//
-//    @PostMapping("/getJianchabaogaoStr")
-//    @ResponseBody
-//    public void getJianchabaogaoStr(HttpServletResponse response, @RequestBody String map) {
-//        JSONObject jsonObject = JSONObject.parseObject(map);
-//        if (Objects.nonNull(jsonObject)) {
-//            String patient_id = jsonObject.getString("patient_id");
-//            String visit_id = jsonObject.getString("visit_id");
-//            Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
-//            //获取 拼接检验检查报告
-//            List<Jianchabaogao> jianchabaogaoStr = ruleService.getJianchabaogaoStr(rule);
-//            wirte(response, jianchabaogaoStr);
-//        } else {
-//            logger.info("医嘱规则匹配传递信息为{}" + map);
-//        }
-//    }
-
-
 }

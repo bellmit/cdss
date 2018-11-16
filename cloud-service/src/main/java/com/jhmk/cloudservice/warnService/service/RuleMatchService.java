@@ -6,13 +6,11 @@ import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhuRepService;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Bingchengjilu;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Ruyuanjilu;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
+import com.jhmk.cloudentity.earlywaring.entity.rule.*;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.MapUtil;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +34,10 @@ public class RuleMatchService {
 
     @Autowired
     SmUsersRepService smUsersRepService;
+    @Autowired
+    JianchabaogaoService jianchabaogaoService;
+    @Autowired
+    JianyanbaogaoService jianyanbaogaoService;
     @Autowired
     YizhuService yizhuService;
     @Autowired
@@ -65,12 +67,13 @@ public class RuleMatchService {
             List<Yizhu> yizhu = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
             if (yizhu == null || yizhu.size() == 0) {
 //            //获取数据中心医嘱
-                yizhu = ruleService.getYizhu(rule);
+                yizhu = yizhuService.getYizhuFromCdr(rule);
+
             }
             rule.setYizhu(yizhu);
             String data = "";
             //规则匹配
-            logger.info("下诊断规则匹配json串：{}",JSONObject.toJSONString(rule));
+            logger.info("下诊断规则匹配json串：{}", JSONObject.toJSONString(rule));
             data = ruleService.ruleMatchGetResp(rule);
             if (StringUtils.isNotBlank(data)) {
                 ruleService.add2LogTable(data, rule);
@@ -96,14 +99,21 @@ public class RuleMatchService {
         if (Objects.nonNull(jsonObject)) {
             String patient_id = jsonObject.getString("patient_id");
             String visit_id = jsonObject.getString("visit_id");
-            Rule rule = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
+            String doctor_id = jsonObject.getString("doctor_id");
+            Rule ruleBean = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
+            ruleBean.setDoctor_id(doctor_id);
             //获取 拼接检验检查报告
-            Rule ruleBean = ruleService.getbaogao(rule);
+//            Rule ruleBean = ruleService.getbaogao(rule);
+            //获取 拼接检验检查报告
+            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
+            ruleBean.setJianyanbaogao(jianyanbaogaoList);
+            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogaoBypatientIdAndVisitId(patient_id, visit_id);
+            ruleBean.setJianchabaogao(jianchabaogaoList);
             ruleBean.setYizhu(yizhus);
             String data = "";
             try {
                 //规则匹配
-                logger.info("下医嘱规则匹配json串：{}",JSONObject.toJSONString(ruleBean));
+                logger.info("下医嘱规则匹配json串：{}", JSONObject.toJSONString(ruleBean));
                 data = ruleService.ruleMatchGetResp(ruleBean);
             } catch (Exception e) {
                 logger.info("规则匹配失败:{}" + e.getMessage());
@@ -114,7 +124,7 @@ public class RuleMatchService {
             List<SmShowLog> logList = ruleService.add2ShowLog(ruleBean, data, map);
             resp.setResponseCode(ResponseCode.OK);
             resp.setData(logList);
-            yizhuService.saveAndFlush(rule);
+            yizhuService.saveAndFlush(ruleBean);
         } else {
             resp.setResponseCode(ResponseCode.INERERROR);
             logger.info("医嘱规则匹配传递信息为{}" + map);
@@ -129,14 +139,14 @@ public class RuleMatchService {
         Map<String, String> paramMap = (Map) JSON.parse(map);
         //解析规则 一诉五史 检验报告等
         String s = ruleService.anaRule(paramMap);
-        String s2 = ruleService.stringTransform(s);
+        String s2 = StringUtil.stringTransform(s);
         JSONObject parse = JSONObject.parseObject(s2);
         Rule rule = Rule.fill(parse);
         System.out.println(JSONObject.toJSONString(rule));
         String data = "";
         try {
             //规则匹配
-            logger.info("测试规则匹配json串：{}",JSONObject.toJSONString(rule));
+            logger.info("测试规则匹配json串：{}", JSONObject.toJSONString(rule));
             data = ruleService.ruleMatchGetResp(rule);
             logger.info("规则匹配返回结果为：{}", data);
         } catch (Exception e) {
@@ -158,7 +168,7 @@ public class RuleMatchService {
         Map<String, String> paramMap = (Map) JSON.parse(map);
         //解析规则 一诉五史 检验报告等
 //        String s = ruleService.anaRule(paramMap);
-        String s2 = ruleService.stringTransform(JSONObject.toJSONString(paramMap));
+        String s2 = StringUtil.stringTransform(JSONObject.toJSONString(paramMap));
         JSONObject parse = JSONObject.parseObject(s2);
         Rule rule = Rule.fill(parse);
         System.out.println(JSONObject.toJSONString(rule));
@@ -189,5 +199,22 @@ public class RuleMatchService {
         return resp;
     }
 
+    /**
+     * 规则匹配
+     *
+     * @param rule
+     * @return 匹配规则返回结果数据
+     */
+    public String matchRule(Rule rule) {
+        System.out.println(JSONObject.toJSONString(rule));
+        String data = "";
+        try {
+            data = ruleService.ruleMatchGetResp(rule);
+            logger.info("规则匹配返回结果为：{}", data);
+        } catch (Exception e) {
+            logger.info("规则匹配失败:{},请求数据为：{}", e.getMessage(), JSONObject.toJSONString(rule));
+        }
+        return data;
+    }
 
 }
