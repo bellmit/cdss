@@ -10,7 +10,10 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
 import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
+import com.jhmk.cloudservice.warnService.service.JianchabaogaoService;
+import com.jhmk.cloudservice.warnService.service.JianyanbaogaoService;
 import com.jhmk.cloudservice.warnService.service.RuleService;
+import com.jhmk.cloudservice.warnService.service.YizhuService;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
@@ -43,6 +46,12 @@ public class TempController extends BaseController {
     @Autowired
     CdrService cdrService;
     @Autowired
+    YizhuService yizhuService;
+    @Autowired
+    JianchabaogaoService jianchabaogaoService;
+    @Autowired
+    JianyanbaogaoService jianyanbaogaoService;
+    @Autowired
     RuleService ruleService;
 
     @PostMapping("/getCdrData")
@@ -57,7 +66,8 @@ public class TempController extends BaseController {
         Rule rule = Rule.fill(jsonObject);
         //获取 拼接检验检查报告
         rule = ruleService.getbaogao(rule);
-        List<Yizhu> yizhu = ruleService.getYizhu(rule);
+        List<Yizhu> yizhu = yizhuService.getYizhuFromCdr(rule);
+
         result.put("jianyanbaogao", rule.getOriginalJianyanbaogaos());
         List<Jianchabaogao> jianchabaogao = rule.getJianchabaogao();
         if (jianchabaogao != null) {
@@ -83,7 +93,7 @@ public class TempController extends BaseController {
             Map<String, String> baseParams = new HashMap<>();
             baseParams.put("oid", BaseConstants.OID);
             baseParams.put("patient_id", patient_id);
-            baseParams.put("visit_id",visit_id);
+            baseParams.put("visit_id", visit_id);
             Map<String, String> params = new HashMap<>();
             params.put("ws_code", BaseConstants.JHHDRWS004A);
             params.putAll(baseParams);
@@ -180,7 +190,7 @@ public class TempController extends BaseController {
             String visit_id = jsonObject.getString("visit_id");
             Rule rule = ruleService.getRuleFromDatabase(patient_id, visit_id);
             //获取 拼接检验检查报告
-            List<Jianchabaogao> jianchabaogaoStr = ruleService.getJianchabaogaoStr(rule);
+            List<Jianchabaogao> jianchabaogaoStr = jianchabaogaoService.getJianchabaogaoFromCdr(rule);
             wirte(response, jianchabaogaoStr);
         } else {
             logger.info("医嘱规则匹配传递信息为{}" + map);
