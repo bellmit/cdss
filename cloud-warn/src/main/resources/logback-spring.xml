@@ -54,7 +54,7 @@
 	
 	<logger name="org.springframework.web.servlet" level="info"/>
 	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="warn"/>
-	<logger name="jhmk" level="debug"/>
+	<logger name="jhmk" level="info"/>
 	
 
 </configuration>
