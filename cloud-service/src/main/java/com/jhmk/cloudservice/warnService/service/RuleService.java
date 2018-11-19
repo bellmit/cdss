@@ -1083,13 +1083,13 @@ public class RuleService {
         try {
             forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.addrule, o, String.class);
         } catch (Exception e) {
-            logger.debug("添加子规则失败,原因为：{},返回结果{}", e.getMessage(), forObject);
+            logger.info("添加子规则失败,原因为：{},返回结果{}", e.getMessage(), forObject);
         } finally {
             JSONObject jsonObject = JSONObject.parseObject(forObject);
             String code = jsonObject.getString("code");
             if (BaseConstants.OK.equals(code)) {
             } else {
-                logger.debug("添加子规则失败,条件为{},返回结果{}", condition, forObject);
+                logger.info("添加子规则失败,条件为{},返回结果{}", condition, forObject);
             }
         }
 
