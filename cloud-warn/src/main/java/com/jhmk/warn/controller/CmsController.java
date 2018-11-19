@@ -41,6 +41,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
 
     /**
      * 登录功能
+     *
      * @param httpServletRequest
      * @param response
      * @param map
@@ -49,8 +50,8 @@ public class CmsController extends BaseEntityController<SmUsers> {
     @RequestMapping(value = "/warn/login", method = RequestMethod.POST)
     @ResponseBody
     public void loginPost(HttpServletRequest httpServletRequest, HttpServletResponse response, @RequestBody String map) {
+        logger.info("登录信息：{}", map);
         Map<String, String> param = (Map) JSONObject.parse(map);
-
         AtResponse<Map<String, Object>> resp = new AtResponse<>(System.currentTimeMillis());
         Map<String, Object> data = new HashMap<>();
         if (param.get("username") == null || "".equals(param.get("username")) || "".equals(param.get("password"))) {
@@ -111,11 +112,13 @@ public class CmsController extends BaseEntityController<SmUsers> {
             wirte(response, resp);
 
         }
+        logger.info("登录结果信息：{}", JSONObject.toJSONString(resp));
 
     }
 
     /**
      * 注销功能
+     *
      * @param request
      * @param response
      */
@@ -129,7 +132,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
 //            request.removeAttribute(BaseConstants.FT_DEPT_NAME);
         request.removeAttribute(BaseConstants.TOKEN);
 
-        logger.debug(getUserId() + " logout.");
+        logger.info(getUserId() + " logout.");
         AtResponse resp = new AtResponse(System.currentTimeMillis());
         resp.setMessage(BaseConstants.SUCCESS);
         resp.setResponseCode(ResponseCode.OK);

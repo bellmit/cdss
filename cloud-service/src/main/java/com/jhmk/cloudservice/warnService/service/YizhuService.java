@@ -34,14 +34,14 @@ public class YizhuService {
         if (yizhu != null && yizhu.size() > 0) {
             yizhuRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             try {
-                logger.debug("医嘱数据为：{}", JSONObject.toJSONString(yizhu));
+                logger.info("医嘱数据为：{}", JSONObject.toJSONString(yizhu));
                 for (Yizhu yizhu1:yizhu) {
                     yizhu1.setPatient_id(patient_id);
                     yizhu1.setVisit_id(visit_id);
                     yizhuRepService.save(yizhu1);
                 }
             } catch (Exception e) {
-                logger.debug("医嘱数据为：{}", JSONObject.toJSONString(yizhu));
+                logger.info("医嘱数据为：{}", JSONObject.toJSONString(yizhu));
             }
         }
     }

@@ -105,7 +105,7 @@ public class UsersController extends BaseEntityController<SmUsers> {
                 resp.setResponseCode(ResponseCode.OK);
                 resp.setMessage("用户添加成功");
             } else {
-                logger.debug("用户添加失败：" + save.toString());
+                logger.info("用户添加失败：" + save.toString());
                 resp.setResponseCode(ResponseCode.INERERROR);
                 resp.setMessage("用户添加失败");
             }

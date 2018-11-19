@@ -129,7 +129,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
 //            request.removeAttribute(BaseConstants.FT_DEPT_NAME);
         request.removeAttribute(BaseConstants.TOKEN);
 
-        logger.debug(getUserId() + " logout.");
+        logger.info(getUserId() + " logout.");
         AtResponse resp = new AtResponse(System.currentTimeMillis());
         resp.setMessage(BaseConstants.SUCCESS);
         resp.setResponseCode(ResponseCode.OK);

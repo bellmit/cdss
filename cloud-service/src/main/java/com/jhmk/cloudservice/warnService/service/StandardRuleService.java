@@ -351,7 +351,7 @@ public class StandardRuleService {
 
             result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.findallchildrules, obj, String.class);
         } catch (Exception e) {
-            logger.debug("调用" + BaseConstants.findallchildrules + "接口失败：{}", e.getMessage());
+            logger.info("调用" + BaseConstants.findallchildrules + "接口失败：{}", e.getMessage());
         } finally {
             if (StringUtils.isNotBlank(result)) {
                 JSONObject jsonObject = JSONObject.parseObject(result);
@@ -386,10 +386,10 @@ public class StandardRuleService {
                     JSONObject jsonObject = JSONObject.parseObject(result);
                     String code = jsonObject.getString("code");
                     if (!BaseConstants.OK.equals(code)) {
-                        logger.debug("删除子规则失败失败，子规则id为{}，条件为{}", id, s);
+                        logger.info("删除子规则失败失败，子规则id为{}，条件为{}", id, s);
                     }
                 } catch (Exception e) {
-                    logger.debug("删除标准规则子规则调用{}失败，错误原因{}，错误信息{}", BaseConstants.deleterule, e.getCause(), e.getMessage());
+                    logger.info("删除标准规则子规则调用{}失败，错误原因{}，错误信息{}", BaseConstants.deleterule, e.getCause(), e.getMessage());
                 }
             }
 

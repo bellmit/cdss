@@ -42,7 +42,7 @@ public class CommonService {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.debug("获取药品同义词表失败，错误原因{}",e.getCause());
+            logger.info("获取药品同义词表失败，错误原因{}",e.getCause());
         }
         return list;
 

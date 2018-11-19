@@ -137,7 +137,7 @@ public class RuleController extends BaseEntityController<Object> {
             List<List<AnalyzeBean>> oldRuleConditionList = resolveRuleService.getOldRuleConditionList(ruleCondition);
             formatRule.setOldRuleConditionList(oldRuleConditionList);
         } catch (Exception e) {
-            logger.debug("获取规则信息失败：{}", e.getMessage());
+            logger.info("获取规则信息失败：{}", e.getMessage());
         } finally {
             wirte(response, formatRule);
         }
@@ -467,7 +467,7 @@ public class RuleController extends BaseEntityController<Object> {
             String s = ruleService.disposeRuleCondition(ruleCondition);
             restList = ruleService.restoreRule(s);
         } catch (Exception e) {
-            logger.debug("获取规则信息失败：{}", e.getMessage());
+            logger.info("获取规则信息失败：{}", e.getMessage());
         } finally {
             wirte(response, restList);
         }
