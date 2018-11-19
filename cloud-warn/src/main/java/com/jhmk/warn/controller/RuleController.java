@@ -435,6 +435,8 @@ public class RuleController extends BaseEntityController<Object> {
             logger.info("规则匹配数据为：{}", JSONObject.toJSONString(rule));
         } else if ("6".equals(pageSource)) {//医嘱 为6 其他做下诊断处理
             List<Yizhu> yizhus = yizhuService.analyzeJson2Yizhu(jsonObject);
+            List<Yizhu> allByPatientIdAndVisitId = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
+            yizhus.addAll(allByPatientIdAndVisitId);
             Rule temprule = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
             BeanUtils.copyProperties(temprule, rule);
             rule.setYizhu(yizhus);

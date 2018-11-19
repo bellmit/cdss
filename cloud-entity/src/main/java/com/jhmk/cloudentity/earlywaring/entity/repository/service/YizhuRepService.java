@@ -71,14 +71,26 @@ public class YizhuRepService extends BaseRepService<Yizhu, Integer> {
     public List<Yizhu> findAllByPatientIdAndVisitId(String patient_id, String visit_id) {
         return repository.findAllByPatientIdAndVisitId(patient_id, visit_id);
     }
+
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<Yizhu> findLessThanVisit_id(String patient_id, String visit_id) {
-        return repository.findLessThanVisit_id(patient_id,visit_id);
+        return repository.findLessThanVisit_id(patient_id, visit_id);
     }
 
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void deleteByPatient_idAndVisit_id(String pasit_id,String v_id) {
-        repository.deleteByPatient_idAndVisit_id(pasit_id,v_id);
+    public void deleteByPatient_idAndVisit_id(String pasit_id, String v_id) {
+        repository.deleteByPatient_idAndVisit_id(pasit_id, v_id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteByOrder_no(String orderNo) {
+        repository.deleteByOrder_no(orderNo);
+    }
+
+
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public List<Yizhu> findAllByOrder_no(String orderNo) {
+        return repository.findAllByOrder_no(orderNo);
     }
 }

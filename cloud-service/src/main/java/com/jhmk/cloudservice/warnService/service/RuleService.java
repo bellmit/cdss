@@ -800,15 +800,7 @@ public class RuleService {
                         String itemName = next.getString("itemName");
                         String type = next.getString("type");
                         String stat = next.getString("stat");
-                        //todo  有问题 查询的第一个触发的，全部保存下来了
-//                        SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
                         List<SmShowLog> logList = smShowLogRepService.findAllByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitIdOrderByDateDesc(doctor_id, patient_id, itemName, type, stat, visit_id);
-//                        SmShowLog isExist = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctor_id, patient_id, itemName, type, stat, visit_id);
-//                        if (isExist != null && 3 == isExist.getRuleStatus()) {
-//                            String date = next.getString("data");
-//                            smShowLogRepService.updateSmHospitalStatusAndDateById(0, date, isExist.getId());
-//                            continue;
-//                        }
                         if (logList != null && logList.size() > 0 && 3 == logList.get(0).getRuleStatus()) {
                             String date = next.getString("data");
                             smShowLogRepService.updateSmHospitalStatusAndDateById(0, date, logList.get(0).getId());

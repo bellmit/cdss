@@ -1,5 +1,8 @@
 package com.jhmk.cloudutil.util;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudutil.config.BaseConstants;
+
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -13,10 +16,15 @@ import java.util.Optional;
 
 public class DbConnectionUtil {
 
+//    private final static String driver = "oracle.jdbc.driver.OracleDriver";
+//    private final static String url = "jdbc:oracle:thin:@172.16.254.102:1521/ORCL";
+//    private final static String account = "lcjczc";
+//    private final static String password = "gam_cdss";
+
     private final static String driver = "oracle.jdbc.driver.OracleDriver";
-    private final static String url = "jdbc:oracle:thin:@172.16.254.102:1521/ORCL";
-    private final static String account = "lcjczc";
-    private final static String password = "gam_cdss";
+    private final static String url = "jdbc:oracle:thin:@172.16.254.6:1521/ORCL";
+    private final static String account = "emr_analysis";
+    private final static String password = "gam_jiahe";
 
 
     public static Connection openConnectionDB() {
@@ -75,28 +83,18 @@ public class DbConnectionUtil {
         try {
             conn = DbConnectionUtil.openConnectionDB();
 
-            cstmt = conn.prepareCall(" select * from v_cdss_exam_report");
+            cstmt = conn.prepareCall(" select * from CIOTEST.Emr_jiahe where caseid='082839' and admincount='12'and FRAMEWORKCODE='1'");
 //            cstmt = conn.prepareCall("SELECT * FROM    select * from v_cdss_exam_report WHERE patient_id=? and visit_id=?");
 //            cstmt.setString(1, "723993");
 //            cstmt.setString(2, "1");
             rs = cstmt.executeQuery();// 执行
 //            List<Company> companyList = new ArrayList<Company>();
             while (rs.next()) {
-//                Jianchabaogao jianchabaogao = new Jianchabaogao();
-                String exam_item_name = new String(rs.getString("exam_item_name").getBytes("iso-8859-1"), "GBK");
-//                jianchabaogao.setExam_item_name(exam_item_name);
-                String exam_time = new String(rs.getString("exam_time").getBytes("iso-8859-1"), "GBK");
-//                jianchabaogao.setExam_time(exam_time);
+                String sharetxtcase = rs.getString("SHARETXTCASE");
+                System.out.println(sharetxtcase);
+                System.out.println(JSONObject.toJSONString(sharetxtcase));
 
-//                Optional.ofNullable(rs.getString("exam_time")).ifPresent(s-> new String(rs.getString("exam_time").getBytes("iso-8859-1"), "GBK"));
-//                Optional.ofNullable(next.get("diagnosis_name")).ifPresent(s -> {
-//                    smHospitalLog.setDiagnosisName(next.get("diagnosis_name").trim());
-//                });
-                String exam_diag = new String(rs.getString("exam_diag").getBytes("iso-8859-1"), "GBK");
-//                jianchabaogao.setExam_diag(exam_diag);
-                String exam_feature = new String(rs.getString("exam_feature").getBytes("iso-8859-1"), "GBK");
-//                jianchabaogao.setExam_feature(exam_feature);
-//                jianchabaogaoList.add(jianchabaogao);
+
             }
         } catch (SQLException ex2) {
             ex2.printStackTrace();
