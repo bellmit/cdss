@@ -455,6 +455,13 @@ public class DateFormatUtil {
     }
 
 
+    /**
+     * 获取2个月之间所有的月份
+     *
+     * @param minDate
+     * @param maxDate
+     * @return
+     */
     public static List<String> getMonthBetween(String minDate, String maxDate) {
         ArrayList<String> result = new ArrayList<String>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");//格式化为年月
@@ -481,8 +488,84 @@ public class DateFormatUtil {
         return result;
     }
 
+    public static List<String> getDayBetween(String minDate, String maxDate) {
+        ArrayList<String> result = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//格式化为年月
+
+        Calendar min = Calendar.getInstance();
+        Calendar max = Calendar.getInstance();
+
+        try {
+            min.setTime(sdf.parse(minDate));
+            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);
+            max.setTime(sdf.parse(maxDate));
+            max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        Calendar curr = min;
+        while (curr.before(max)) {
+            result.add(sdf.format(curr.getTime()));
+            curr.add(Calendar.MONTH, 1);
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 获取两个日期之间的所有日期（yyyy-MM-dd）
+     *
+     * @param begin
+     * @param end
+     * @return
+     * @Description TODO
+     * @author XuJD
+     * @date 2017-4-1
+     */
+    public static List<Date> getBetweenDates(Date begin, Date end) {
+        List<Date> result = new ArrayList<Date>();
+        Calendar tempStart = Calendar.getInstance();
+        tempStart.setTime(begin);
+        while (begin.getTime() <= end.getTime()) {
+            result.add(tempStart.getTime());
+            tempStart.add(Calendar.DAY_OF_YEAR, 1);
+            begin = tempStart.getTime();
+        }
+        return result;
+    }
+
+    public static List<String> getBetweenStringDate(Date begin, Date end) {
+        List<String> result = new ArrayList<String>();
+        Calendar tempStart = Calendar.getInstance();
+        tempStart.setTime(begin);
+        while (begin.getTime() <= end.getTime()) {
+            result.add(DateFormatUtil.format(tempStart.getTime(), DateFormatUtil.DATE_PATTERN_S));
+            tempStart.add(Calendar.DAY_OF_YEAR, 1);
+            begin = tempStart.getTime();
+        }
+        return result;
+    }
+
+    public static List<String> getBetweenByStringDate(String begin, String end) {
+        List<String> result = new ArrayList<String>();
+        Calendar tempStart = Calendar.getInstance();
+        Date beginDate = DateFormatUtil.parseDateBySdf(begin, DateFormatUtil.DATE_PATTERN_S);
+        Date endDate = DateFormatUtil.parseDateBySdf(end, DateFormatUtil.DATE_PATTERN_S);
+        tempStart.setTime(beginDate);
+        while (beginDate.getTime() <= endDate.getTime()) {
+            result.add(DateFormatUtil.format(tempStart.getTime(), DateFormatUtil.DATE_PATTERN_S));
+            tempStart.add(Calendar.DAY_OF_YEAR, 1);
+            beginDate = tempStart.getTime();
+        }
+        return result;
+    }
+
     /**
      * 日期1》日期2 返回true
+     *
      * @param s1
      * @param s2
      * @return

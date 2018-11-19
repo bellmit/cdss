@@ -2,7 +2,6 @@ package com.jhmk.cloudpage.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.base.BaseEntityController;
 import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
@@ -15,12 +14,10 @@ import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
-import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -58,7 +54,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     }
 
 
-    @PostMapping("/add")
+    @PostMapping("/addList")
     public void addList(HttpServletResponse response, @RequestBody ClickRate clickRate) {
         clickRate.setCreateTime(new Date());
         ClickRateService.addDate2List(clickRate);
@@ -158,7 +154,6 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 //    }
 
 
-
     @PostMapping("/getClickRateByCondition")
     public void getClickRateByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
         Map<String, Object> result = new HashMap<>();
@@ -216,6 +211,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 
     /**
      * 查询科室数量和user数量（总）
+     *
      * @param response
      */
     @PostMapping("/getClickRateAllCount")
@@ -223,8 +219,8 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         Map<String, Object> result = new HashMap<>();
         List<String> distinctDoctorId1 = clickRateRepService.getDistinctDoctorId();
         List<String> distinctByDeptCode = clickRateRepService.getDistinctByDeptCode();
-        result.put("dept",distinctByDeptCode.size());
-        result.put("id",distinctDoctorId1.size());
+        result.put("dept", distinctByDeptCode.size());
+        result.put("id", distinctDoctorId1.size());
         AtResponse resp = new AtResponse();
         resp.setData(result);
         resp.setResponseCode(ResponseCode.OK);
@@ -232,74 +228,47 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     }
 
 
-
-//    @PostMapping("/getClickRateByType")
-//    public void getClickRateByType(HttpServletResponse response, @RequestBody(required = false) String map) {
-//        List<ClickRate> dataByCondition = null;
-//        if (StringUtils.isNotBlank(map)) {
-//            JSONObject jsonObject = JSONObject.parseObject(map);
-//            Date startTime = jsonObject.getDate("startTime");
-//            Date endTime = jsonObject.getDate("endTime");
-//            String deptCode = jsonObject.getString("deptCode");
-//            Map<String, Object> param = null;
-//            if (StringUtils.isNotBlank(deptCode)) {
-//                param = new HashMap<>();
-//                param.put("deptCode", deptCode);
-//            }
-//            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
-//        } else {
-//            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
-//        }
-//        Map<String, Integer> typeParams = new HashMap<>();
-//        for (ClickRate clickRate : dataByCondition) {
-//            String type = clickRate.getType();
-//            int count = clickRate.getCount();
-//            if (typeParams.containsKey(type)) {
-//                typeParams.put(type, typeParams.get(type) + count);
-//            } else {
-//                typeParams.put(type, count);
-//            }
-//
-//        }
-//        Map<String, Integer> map1 = CompareUtil.compareMapValue(typeParams);
-//        AtResponse resp = new AtResponse();
-//        resp.setData(map1);
-//        resp.setResponseCode(ResponseCode.OK);
-//        wirte(response, resp);
-//    }
-//
-//    @PostMapping("/getClickRateByDept")
-//    public void getClickRateByDept(HttpServletResponse response, @RequestBody(required = false) String map) {
-//        List<ClickRate> dataByCondition = null;
-//        if (StringUtils.isNotBlank(map)) {
-//            JSONObject jsonObject = JSONObject.parseObject(map);
-//            Date startTime = jsonObject.getDate("startTime");
-//            Date endTime = jsonObject.getDate("endTime");
-//            String deptCode = jsonObject.getString("deptCode");
-//            Map<String, Object> param = null;
-//            if (StringUtils.isNotBlank(deptCode)) {
-//                param = new HashMap<>();
-//                param.put("deptCode", deptCode);
-//            }
-//            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
-//        } else {
-//            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
-//        }
-//        Map<String, Integer> deptParams = new HashMap<>();
-//        for (ClickRate clickRate : dataByCondition) {
-//            String deptName = clickRate.getDeptName();
-//            int count = clickRate.getCount();
-//            if (deptParams.containsKey(deptName)) {
-//                deptParams.put(deptName, deptParams.get(deptName) + count);
-//            } else {
-//                deptParams.put(deptName, count);
-//            }
-//        }
-//        Map<String, Integer> map2 = CompareUtil.compareMapValue(deptParams);
-//        AtResponse resp = new AtResponse();
-//        resp.setData(map2);
-//        resp.setResponseCode(ResponseCode.OK);
-//        wirte(response, resp);
-//    }
+    /**
+     * 获取折线图
+     */
+    @PostMapping("/getLineByConditiom")
+    public void getLineByConditiom(HttpServletResponse response, @RequestBody(required = false) String map) {
+        AtResponse resp = new AtResponse();
+        Map<String, Integer> result = new HashMap<>();
+        List<ClickRate> dataByCondition = null;
+        JSONObject jsonObject = JSONObject.parseObject(map);
+        //yyyy-MM-dd 格式
+        Date startTime = jsonObject.getDate("startTime");
+        Date endTime = jsonObject.getDate("endTime");
+        if (StringUtils.isNotBlank(map)) {
+            String deptCode = jsonObject.getString("deptCode");
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, null);
+        }
+        List<String> betweenStringDate = DateFormatUtil.getBetweenStringDate(startTime, endTime);
+        betweenStringDate.forEach(s -> result.put(s, 0));
+        for (ClickRate bean : dataByCondition) {
+            String format = DateFormatUtil.format(bean.getCreateTime(), DateFormatUtil.DATE_PATTERN_S);
+            result.put(format, result.get(format) + bean.getCount());
+        }
+        ArrayList<Map.Entry<String, Integer>> entries = new ArrayList<>(result.entrySet());
+        Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                Date date1 = DateFormatUtil.parseDateBySdf(o1.getKey(), DateFormatUtil.DATE_PATTERN_S);
+                Date date2 = DateFormatUtil.parseDateBySdf(o2.getKey(), DateFormatUtil.DATE_PATTERN_S);
+                return date1.compareTo(date2);
+            }
+        });
+        resp.setData(entries);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
 
 }

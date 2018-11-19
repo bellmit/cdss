@@ -22,7 +22,9 @@ public interface YizhuRepository extends PagingAndSortingRepository<Yizhu, Integ
     void deleteByPatient_idAndVisit_id(String patient_id, String visit_id);
 
     @Modifying
+    @Query("delete from  Yizhu b where b.order_no = ?1")
     void deleteByOrder_no(String orderNo);
 
+    @Query("select b from  Yizhu b where b.order_no = ?1")
     List<Yizhu>findAllByOrder_no(String orderNo);
 }
