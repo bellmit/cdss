@@ -24,6 +24,13 @@ public interface ClickRateRepository extends PagingAndSortingRepository<ClickRat
      * 查询表中 所有医生id
      * @return
      */
+    @Query("select distinct (c.type) from ClickRate c ")
+    List<String> getDistinctType();
+
+    /**
+     * 查询表中 所有医生id
+     * @return
+     */
     @Query("select distinct (c.deptCode) from ClickRate c ")
     List<String> getDistinctByDeptCode();
 

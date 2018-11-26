@@ -96,6 +96,11 @@ public class ClickRateRepService extends BaseRepService<ClickRate, Integer> {
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public List<String> getDistinctType() {
+        return repository.getDistinctType();
+    }
+
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<String> getDistinctByDeptCode() {
         return repository.getDistinctByDeptCode();
     }

@@ -41,6 +41,8 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     @Autowired
     SmUsersRepService smUsersRepService;
     @Autowired
+    ClickRateService clickRateService;
+    @Autowired
     ClickRateRepService clickRateRepService;
 
 
@@ -231,8 +233,8 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     /**
      * 获取折线图
      */
-    @PostMapping("/getLineByConditiom")
-    public void getLineByConditiom(HttpServletResponse response, @RequestBody(required = false) String map) {
+    @PostMapping("/getLineByCondition")
+    public void getLineByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
         AtResponse resp = new AtResponse();
         Map<String, Integer> result = new HashMap<>();
         List<ClickRate> dataByCondition = null;
@@ -270,6 +272,65 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
+
+    /**
+     * 获取柱状图 医嘱点击数量排序
+     */
+    @PostMapping("/getDoctorCountByCondition")
+    public void getDoctorCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
+        AtResponse resp = new AtResponse();
+        String allCount = "总数";//计算总数
+        //第一个key  医生id  第二个map key代表电机类型 value 点击次数
+        Map<String, Map<String, Integer>> resultMap = new HashMap<>();
+        List<ClickRate> dataByCondition = null;
+        JSONObject jsonObject = JSONObject.parseObject(map);
+        //yyyy-MM-dd 格式
+        Date startTime = jsonObject.getDate("startTime");
+        Date endTime = jsonObject.getDate("endTime");
+        if (StringUtils.isNotBlank(map)) {
+            String deptCode = jsonObject.getString("deptCode");
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, null);
+        }
+        for (ClickRate bean : dataByCondition) {
+            String doctorId = bean.getDoctorId();
+            String type = bean.getType();
+            int clickCount = bean.getCount();
+            if (resultMap.containsKey(doctorId)) {
+                Map<String, Integer> childMap = resultMap.get(doctorId);
+                childMap.put(type, childMap.get(type) + clickCount);
+                childMap.put(allCount, childMap.get(allCount) + clickCount);
+                resultMap.put(doctorId, childMap);
+            } else {
+                Map<String, Integer> childMap = clickRateService.initChildMap();
+                childMap.put(type, clickCount);
+                childMap.put(allCount, clickCount);
+                resultMap.put(doctorId, childMap);
+            }
+        }
+        ArrayList<Map.Entry<String, Map<String, Integer>>> entries = new ArrayList<>(resultMap.entrySet());
+        Collections.sort(entries, new Comparator<Map.Entry<String, Map<String, Integer>>>() {
+            @Override
+            public int compare(Map.Entry<String, Map<String, Integer>> o1, Map.Entry<String, Map<String, Integer>> o2) {
+                Map<String, Integer> value = o1.getValue();
+                Integer integer = value.get(allCount);
+                Map<String, Integer> value2 = o2.getValue();
+                Integer integer2 = value2.get(allCount);
+                return integer2.compareTo(integer);
+            }
+        });
+
+        resp.setData(entries);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
 
 
     /**
