@@ -56,8 +56,6 @@ public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
     @Autowired
     SmUsersRepService smUsersRepService;
     @Autowired
-    DeptRelRepService deptRelRepService;
-    @Autowired
     LogMappingRepService logMappingRepService;
     @Autowired
     UrlConfig urlConfig;
