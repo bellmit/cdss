@@ -66,7 +66,7 @@ public class SmShowLog {
     }
 
     @Basic
-    @Column(name = "visit_id", nullable = true, length = 2)
+    @Column(name = "visit_id", nullable = true, length = 11)
     public String getVisitId() {
         return visitId;
     }
