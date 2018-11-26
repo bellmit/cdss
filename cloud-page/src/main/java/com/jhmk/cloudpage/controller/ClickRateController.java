@@ -271,4 +271,64 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         wirte(response, resp);
     }
 
+
+    /**
+     * 横坐标医生 纵坐标科室
+     * @param response
+     * @param map
+     */
+    @PostMapping("/getDoctorAndCountByCondition")
+    public void getDoctorAndCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
+        Map<String, Object> result = new HashMap<>();
+        List<ClickRate> dataByCondition = null;
+        if (StringUtils.isNotBlank(map)) {
+            JSONObject jsonObject = JSONObject.parseObject(map);
+            Date startTime = jsonObject.getDate("startTime");
+            Date endTime = jsonObject.getDate("endTime");
+            String deptCode = jsonObject.getString("deptCode");
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+        }
+        Map<String, Integer> typeParams = new HashMap<>();
+        Map<String, Integer> deptParams = new HashMap<>();
+        for (ClickRate clickRate : dataByCondition) {
+            String type = clickRate.getType();
+            String deptName = clickRate.getDeptName();
+
+            int count = clickRate.getCount();
+            if (StringUtils.isNotBlank(type)) {
+
+                if (typeParams.containsKey(type)) {
+                    typeParams.put(type, typeParams.get(type) + count);
+                } else {
+                    typeParams.put(type, count);
+                }
+            }
+            if (StringUtils.isNotBlank(deptName)) {
+                if (deptParams.containsKey(deptName)) {
+                    deptParams.put(deptName, deptParams.get(deptName) + count);
+                } else {
+                    deptParams.put(deptName, count);
+                }
+            }
+        }
+
+        List<String> distinctDoctorId = clickRateRepService.getDistinctDoctorId();
+        Map<String, Integer> map1 = CompareUtil.compareMapValue(typeParams);
+        Map<String, Integer> map2 = CompareUtil.compareMapValue(deptParams);
+        result.put("type", map1);
+        result.put("dept", map2);
+        result.put("count", distinctDoctorId.size());
+        AtResponse resp = new AtResponse();
+        resp.setData(JSONObject.toJSON(result));
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
 }
