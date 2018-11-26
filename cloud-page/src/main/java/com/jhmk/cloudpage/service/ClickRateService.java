@@ -1,8 +1,11 @@
 package com.jhmk.cloudpage.service;
 
 import com.jhmk.cloudentity.page.bean.ClickRate;
+import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudutil.model.WebPage;
+import com.netflix.discovery.converters.Auto;
 import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author ziyu.zhou
  * @date 2018/8/29 16:47
  */
+@Service
 public class ClickRateService {
+    @Autowired
+    ClickRateRepService clickRateRepService;
 
     //分隔符
     private static final String SPLITSYMPOL = "&&&";
@@ -71,6 +77,16 @@ public class ClickRateService {
         // 封装用户统计的request，并且用hash算法分布到不同的队列当中
         clickRateList.add(clickRate);
         System.out.println("添加点击事件成功");
+    }
+
+    public Map<String, Integer> initChildMap() {
+        Map<String, Integer> initMap = new HashMap<>();
+        List<String> distinctType = clickRateRepService.getDistinctType();
+        for (String type : distinctType) {
+            initMap.put(type, 0);
+
+        }
+        return initMap;
     }
 
 
