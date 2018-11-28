@@ -46,7 +46,7 @@ public class ResolveRuleService {
         JSONObject jObject = JSON.parseObject(ruleStr);
         Object result = jObject.get("result");
         FormatRule cdssRuleBean = null;
-        if (ObjectUtils.anyNotNull(result) && !symbol.equals(result)) {
+        if (Objects.nonNull(result) && !symbol.equals(result)) {
             Map resultMap = (Map) result;
             cdssRuleBean = MapUtil.map2Bean(resultMap, FormatRule.class);
         }
