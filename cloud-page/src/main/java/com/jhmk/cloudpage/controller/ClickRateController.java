@@ -86,7 +86,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     public void roleList(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
         Map<String, Object> parse = (Map) JSON.parse(map);
-        List<ClickRate> resultList = null;
+        List<ClickRate> resultList = new ArrayList<>();
         List<ClickRate> dataByCondition = null;
         int page = 0;
         if (StringUtils.isNotBlank(map)) {
@@ -113,6 +113,9 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 //                1 || data[i].deptName.indexOf('心血管') != -1 || data[i].deptName.indexOf('普外') != -1)
         for (ClickRate clickRate : dataByCondition) {
             String deptName = clickRate.getDeptName();
+            if (StringUtils.isEmpty(deptName)){
+                continue;
+            }
             if (!(deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外"))) {
                 resultList.add(clickRate);
             }
