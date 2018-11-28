@@ -12,6 +12,7 @@ import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import com.jhmk.cloudutil.model.WebPage;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -72,11 +73,54 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
      * @param response
      * @param params
      */
+//    @RequestMapping(value = "/list")
+//    @ResponseBody
+//    public void roleList(HttpServletResponse response, @RequestBody String params) {
+//        Map<String, Object> parse = (Map) JSON.parse(params);
+//    AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
+
+    //        wirte(response, resp);
+//    }
     @RequestMapping(value = "/list")
     @ResponseBody
-    public void roleList(HttpServletResponse response, @RequestBody String params) {
-        Map<String, Object> parse = (Map) JSON.parse(params);
-        AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
+    public void roleList(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        Map<String, Object> parse = (Map) JSON.parse(map);
+        List<ClickRate> resultList = null;
+        List<ClickRate> dataByCondition = null;
+        int page = 0;
+        if (StringUtils.isNotBlank(map)) {
+            JSONObject jsonObject = JSONObject.parseObject(map);
+            Date startTime = jsonObject.getDate("startTime");
+            Date endTime = jsonObject.getDate("endTime");
+            String deptCode = jsonObject.getString("deptCode");
+            String pageNum = jsonObject.getString(WebPage.PAGE_NUM);
+            if (pageNum != null && !"".equals(pageNum.trim())) {
+                // Pageable页面从0开始计
+                page = new Integer(pageNum) - 1;
+            }
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+        }
+//        if (data[i].deptName.indexOf('血液') != -1 || data[i].deptName.indexOf('呼吸') != -1 || data[i].deptN
+//        ame.indexOf('骨科') != -1 || data[i].deptName.indexOf('耳鼻喉') != -
+//                1 || data[i].deptName.indexOf('心血管') != -1 || data[i].deptName.indexOf('普外') != -1)
+        for (ClickRate clickRate : dataByCondition) {
+            String deptName = clickRate.getDeptName();
+            if (!(deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外"))) {
+                resultList.add(clickRate);
+            }
+        }
+        List<ClickRate> clickRates = resultList.subList(page, (page + 1) * 20);
+        parse.put(LIST_DATA, clickRates);
+        resp.setResponseCode(ResponseCode.OK);
+        resp.setData(parse);
         wirte(response, resp);
     }
 
@@ -304,7 +348,6 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         }
         for (ClickRate bean : dataByCondition) {
             String doctorId = bean.getDoctorId();
-
             String type = bean.getType();
             int clickCount = bean.getCount();
             if (resultMap.containsKey(doctorId)) {
