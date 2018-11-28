@@ -70,16 +70,14 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     /**
      * 条件查询
      *
-     * @param response
-//     * @param params
+     * @param response //     * @param params
      */
 //    @RequestMapping(value = "/list")
 //    @ResponseBody
 //    public void roleList(HttpServletResponse response, @RequestBody String params) {
 //        Map<String, Object> parse = (Map) JSON.parse(params);
-//    AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
-
-    //        wirte(response, resp);
+//        AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
+//        wirte(response, resp);
 //    }
     @RequestMapping(value = "/list")
     @ResponseBody
@@ -111,16 +109,26 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 //        if (data[i].deptName.indexOf('血液') != -1 || data[i].deptName.indexOf('呼吸') != -1 || data[i].deptN
 //        ame.indexOf('骨科') != -1 || data[i].deptName.indexOf('耳鼻喉') != -
 //                1 || data[i].deptName.indexOf('心血管') != -1 || data[i].deptName.indexOf('普外') != -1)
+        Collections.sort(dataByCondition,CompareUtil.createComparator(-1,"createTime"));
         for (ClickRate clickRate : dataByCondition) {
             String deptName = clickRate.getDeptName();
-            if (StringUtils.isEmpty(deptName)){
+            if (StringUtils.isEmpty(deptName)) {
                 continue;
             }
             if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
                 resultList.add(clickRate);
             }
         }
-        List<ClickRate> clickRates = resultList.subList(page*20, (page + 1) * 20);
+        WebPage webPage = new WebPage();
+        int currentPage = page + 1;
+        // 当前页
+        webPage.setPageNo(currentPage);
+        // 总页数
+        webPage.setTotalPageNum(resultList.size() % 20 == 0 ? resultList.size() / 20 : resultList.size() / 20 + 1);
+        // 总记录数
+        webPage.setTotalCount(resultList.size());
+        List<ClickRate> clickRates = resultList.subList(page * 20, (page + 1) * 20);
+        parse.put(WebPage.WEB_PAGE, webPage);
         parse.put(LIST_DATA, clickRates);
         resp.setResponseCode(ResponseCode.OK);
         resp.setData(parse);
