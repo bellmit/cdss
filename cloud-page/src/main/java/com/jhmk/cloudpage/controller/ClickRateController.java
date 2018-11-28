@@ -273,11 +273,15 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         wirte(response, resp);
     }
 
+
     /**
-     * 获取柱状图 医嘱点击数量排序
+     * 横坐标医生 纵坐标科室
+     *
+     * @param response
+     * @param map
      */
-    @PostMapping("/getDoctorCountByCondition")
-    public void getDoctorCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
+    @PostMapping("/getDoctorAndCountByCondition")
+    public void getDoctorAndCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
         AtResponse resp = new AtResponse();
         String allCount = "总数";//计算总数
         //第一个key  医生id  第二个map key代表电机类型 value 点击次数
@@ -300,6 +304,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         }
         for (ClickRate bean : dataByCondition) {
             String doctorId = bean.getDoctorId();
+
             String type = bean.getType();
             int clickCount = bean.getCount();
             if (resultMap.containsKey(doctorId)) {
@@ -332,14 +337,11 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     }
 
 
-
     /**
-     * 横坐标医生 纵坐标科室
-     * @param response
-     * @param map
+     * 获取柱状图 医嘱点击数量排序
      */
-    @PostMapping("/getDoctorAndCountByCondition")
-    public void getDoctorAndCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
+    @PostMapping("/getDoctorCountByCondition")
+    public void getDoctorCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
         Map<String, Object> result = new HashMap<>();
         List<ClickRate> dataByCondition = null;
         if (StringUtils.isNotBlank(map)) {
