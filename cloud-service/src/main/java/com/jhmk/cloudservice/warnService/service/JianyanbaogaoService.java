@@ -3,6 +3,7 @@ package com.jhmk.cloudservice.warnService.service;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
+import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +12,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ziyu.zhou
@@ -29,7 +29,7 @@ public class JianyanbaogaoService {
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbConnectionUtil.openConnectionDB();
+            conn = DbConnectionUtil.openGamConnectionDBForBaogao();
 
 //            cstmt = conn.prepareCall(" select * from v_cdss_exam_report");
             cstmt = conn.prepareCall("select * from v_cdss_lab_report WHERE patient_id=? and visit_id=?");
@@ -112,7 +112,15 @@ public class JianyanbaogaoService {
         } finally {
             DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
-        return jianyanbaogaoList;
+
+        //检验报告获取最近时间的
+        Map<String, Optional<Jianyanbaogao>> collect = jianyanbaogaoList.stream().collect(Collectors.groupingBy(Jianyanbaogao::getIwantData, Collectors.maxBy((o1, o2) -> DateFormatUtil.parseDateBySdf(o1.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS).compareTo(DateFormatUtil.parseDateBySdf(o2.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS)))));
+        List<Jianyanbaogao> resultList = new ArrayList<>();
+        for (Map.Entry<String, Optional<Jianyanbaogao>> entry : collect.entrySet()) {
+            Jianyanbaogao student = entry.getValue().get();
+            resultList.add(student);
+        }
+        return resultList;
     }
 
     public static void main(String[] args) {
