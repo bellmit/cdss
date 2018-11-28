@@ -12,6 +12,7 @@ import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import com.jhmk.cloudutil.model.WebPage;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +42,8 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     @Autowired
     SmUsersRepService smUsersRepService;
     @Autowired
+    ClickRateService clickRateService;
+    @Autowired
     ClickRateRepService clickRateRepService;
 
 
@@ -67,14 +70,68 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     /**
      * 条件查询
      *
-     * @param response
-     * @param params
+     * @param response //     * @param params
      */
+//    @RequestMapping(value = "/list")
+//    @ResponseBody
+//    public void roleList(HttpServletResponse response, @RequestBody String params) {
+//        Map<String, Object> parse = (Map) JSON.parse(params);
+//        AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
+//        wirte(response, resp);
+//    }
     @RequestMapping(value = "/list")
     @ResponseBody
-    public void roleList(HttpServletResponse response, @RequestBody String params) {
-        Map<String, Object> parse = (Map) JSON.parse(params);
-        AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
+    public void roleList(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        Map<String, Object> parse = (Map) JSON.parse(map);
+        List<ClickRate> resultList = new ArrayList<>();
+        List<ClickRate> dataByCondition = null;
+        int page = 0;
+        if (StringUtils.isNotBlank(map)) {
+            JSONObject jsonObject = JSONObject.parseObject(map);
+            Date startTime = jsonObject.getDate("startTime");
+            Date endTime = jsonObject.getDate("endTime");
+            String deptCode = jsonObject.getString("deptCode");
+            String pageNum = jsonObject.getString(WebPage.PAGE_NUM);
+            if (pageNum != null && !"".equals(pageNum.trim())) {
+                // Pageable页面从0开始计
+                page = new Integer(pageNum) - 1;
+            }
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+        }
+//        if (data[i].deptName.indexOf('血液') != -1 || data[i].deptName.indexOf('呼吸') != -1 || data[i].deptN
+//        ame.indexOf('骨科') != -1 || data[i].deptName.indexOf('耳鼻喉') != -
+//                1 || data[i].deptName.indexOf('心血管') != -1 || data[i].deptName.indexOf('普外') != -1)
+        Collections.sort(dataByCondition,CompareUtil.createComparator(-1,"createTime"));
+        for (ClickRate clickRate : dataByCondition) {
+            String deptName = clickRate.getDeptName();
+            if (StringUtils.isEmpty(deptName)) {
+                continue;
+            }
+            if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
+                resultList.add(clickRate);
+            }
+        }
+        WebPage webPage = new WebPage();
+        int currentPage = page + 1;
+        // 当前页
+        webPage.setPageNo(currentPage);
+        // 总页数
+        webPage.setTotalPageNum(resultList.size() % 20 == 0 ? resultList.size() / 20 : resultList.size() / 20 + 1);
+        // 总记录数
+        webPage.setTotalCount(resultList.size());
+        List<ClickRate> clickRates = resultList.subList(page * 20, (page + 1) * 20);
+        parse.put(WebPage.WEB_PAGE, webPage);
+        parse.put(LIST_DATA, clickRates);
+        resp.setResponseCode(ResponseCode.OK);
+        resp.setData(parse);
         wirte(response, resp);
     }
 
@@ -231,8 +288,8 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     /**
      * 获取折线图
      */
-    @PostMapping("/getLineByConditiom")
-    public void getLineByConditiom(HttpServletResponse response, @RequestBody(required = false) String map) {
+    @PostMapping("/getLineByCondition")
+    public void getLineByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
         AtResponse resp = new AtResponse();
         Map<String, Integer> result = new HashMap<>();
         List<ClickRate> dataByCondition = null;
@@ -267,6 +324,126 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
             }
         });
         resp.setData(entries);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+
+    /**
+     * 横坐标医生 纵坐标科室
+     *
+     * @param response
+     * @param map
+     */
+    @PostMapping("/getDoctorAndCountByCondition")
+    public void getDoctorAndCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
+        AtResponse resp = new AtResponse();
+        String allCount = "总数";//计算总数
+        //第一个key  医生id  第二个map key代表电机类型 value 点击次数
+        Map<String, Map<String, Integer>> resultMap = new HashMap<>();
+        List<ClickRate> dataByCondition = null;
+        JSONObject jsonObject = JSONObject.parseObject(map);
+        //yyyy-MM-dd 格式
+        Date startTime = jsonObject.getDate("startTime");
+        Date endTime = jsonObject.getDate("endTime");
+        if (StringUtils.isNotBlank(map)) {
+            String deptCode = jsonObject.getString("deptCode");
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, null);
+        }
+        for (ClickRate bean : dataByCondition) {
+            String doctorId = bean.getDoctorId();
+            String type = bean.getType();
+            int clickCount = bean.getCount();
+            if (resultMap.containsKey(doctorId)) {
+                Map<String, Integer> childMap = resultMap.get(doctorId);
+                childMap.put(type, childMap.get(type) + clickCount);
+                childMap.put(allCount, childMap.get(allCount) + clickCount);
+                resultMap.put(doctorId, childMap);
+            } else {
+                Map<String, Integer> childMap = clickRateService.initChildMap();
+                childMap.put(type, clickCount);
+                childMap.put(allCount, clickCount);
+                resultMap.put(doctorId, childMap);
+            }
+        }
+        ArrayList<Map.Entry<String, Map<String, Integer>>> entries = new ArrayList<>(resultMap.entrySet());
+        Collections.sort(entries, new Comparator<Map.Entry<String, Map<String, Integer>>>() {
+            @Override
+            public int compare(Map.Entry<String, Map<String, Integer>> o1, Map.Entry<String, Map<String, Integer>> o2) {
+                Map<String, Integer> value = o1.getValue();
+                Integer integer = value.get(allCount);
+                Map<String, Integer> value2 = o2.getValue();
+                Integer integer2 = value2.get(allCount);
+                return integer2.compareTo(integer);
+            }
+        });
+
+        resp.setData(entries);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+
+    /**
+     * 获取柱状图 医嘱点击数量排序
+     */
+    @PostMapping("/getDoctorCountByCondition")
+    public void getDoctorCountByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
+        Map<String, Object> result = new HashMap<>();
+        List<ClickRate> dataByCondition = null;
+        if (StringUtils.isNotBlank(map)) {
+            JSONObject jsonObject = JSONObject.parseObject(map);
+            Date startTime = jsonObject.getDate("startTime");
+            Date endTime = jsonObject.getDate("endTime");
+            String deptCode = jsonObject.getString("deptCode");
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+        }
+        Map<String, Integer> typeParams = new HashMap<>();
+        Map<String, Integer> deptParams = new HashMap<>();
+        for (ClickRate clickRate : dataByCondition) {
+            String type = clickRate.getType();
+            String deptName = clickRate.getDeptName();
+
+            int count = clickRate.getCount();
+            if (StringUtils.isNotBlank(type)) {
+
+                if (typeParams.containsKey(type)) {
+                    typeParams.put(type, typeParams.get(type) + count);
+                } else {
+                    typeParams.put(type, count);
+                }
+            }
+            if (StringUtils.isNotBlank(deptName)) {
+                if (deptParams.containsKey(deptName)) {
+                    deptParams.put(deptName, deptParams.get(deptName) + count);
+                } else {
+                    deptParams.put(deptName, count);
+                }
+            }
+        }
+
+        List<String> distinctDoctorId = clickRateRepService.getDistinctDoctorId();
+        Map<String, Integer> map1 = CompareUtil.compareMapValue(typeParams);
+        Map<String, Integer> map2 = CompareUtil.compareMapValue(deptParams);
+        result.put("type", map1);
+        result.put("dept", map2);
+        result.put("count", distinctDoctorId.size());
+        AtResponse resp = new AtResponse();
+        resp.setData(JSONObject.toJSON(result));
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
