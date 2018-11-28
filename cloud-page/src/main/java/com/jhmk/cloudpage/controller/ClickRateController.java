@@ -71,7 +71,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
      * 条件查询
      *
      * @param response
-     * @param params
+//     * @param params
      */
 //    @RequestMapping(value = "/list")
 //    @ResponseBody
@@ -116,11 +116,11 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
             if (StringUtils.isEmpty(deptName)){
                 continue;
             }
-            if (!(deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外"))) {
+            if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
                 resultList.add(clickRate);
             }
         }
-        List<ClickRate> clickRates = resultList.subList(page, (page + 1) * 20);
+        List<ClickRate> clickRates = resultList.subList(page*20, (page + 1) * 20);
         parse.put(LIST_DATA, clickRates);
         resp.setResponseCode(ResponseCode.OK);
         resp.setData(parse);
