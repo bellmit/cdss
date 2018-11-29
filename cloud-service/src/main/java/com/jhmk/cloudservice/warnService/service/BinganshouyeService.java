@@ -1,14 +1,10 @@
 package com.jhmk.cloudservice.warnService.service;
 
 
-import com.alibaba.fastjson.JSONObject;
-import com.jhmk.cloudentity.earlywaring.entity.repository.service.BasicInfoRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.BinganshouyeRepService;
-import com.jhmk.cloudentity.earlywaring.entity.rule.BasicInfo;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Binganshouye;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
-import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
