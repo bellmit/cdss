@@ -554,22 +554,23 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
                 }
             }
         } else {
-            Iterator<Shouyezhenduan> iterator = shouyezhenduan.iterator();
-            while (iterator.hasNext()) {
-                {
-                    Shouyezhenduan next = iterator.next();
-                    if ("1".equals(next.getDiagnosis_num())) {
-                        Optional.ofNullable(next.getDiagnosis_name()).ifPresent(s -> {
-                            smHospitalLog.setDiagnosisName(next.getDiagnosis_name().trim());
-                        });
-                        Optional.ofNullable(next.getDiagnosis_time()).ifPresent(s -> {
-                            smHospitalLog.setCreateTime(DateFormatUtil.parseDate(next.getDiagnosis_time(), DateFormatUtil.DATETIME_PATTERN_SS));
-                        });
-                    }
+            if (Objects.nonNull(binglizhenduan)) {
+                Iterator<Shouyezhenduan> iterator = shouyezhenduan.iterator();
+                while (iterator.hasNext()) {
+                    {
+                        Shouyezhenduan next = iterator.next();
+                        if ("1".equals(next.getDiagnosis_num())) {
+                            Optional.ofNullable(next.getDiagnosis_name()).ifPresent(s -> {
+                                smHospitalLog.setDiagnosisName(next.getDiagnosis_name().trim());
+                            });
+                            Optional.ofNullable(next.getDiagnosis_time()).ifPresent(s -> {
+                                smHospitalLog.setCreateTime(DateFormatUtil.parseDate(next.getDiagnosis_time(), DateFormatUtil.DATETIME_PATTERN_SS));
+                            });
+                        }
 
+                    }
                 }
             }
-
         }
         return smHospitalLog;
 
