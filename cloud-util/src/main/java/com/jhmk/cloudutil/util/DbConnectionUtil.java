@@ -55,6 +55,19 @@ public class DbConnectionUtil {
             return conn;
         }
     }
+    public static Connection openTempGamConnectionDBForBaogao() {
+        Connection conn = null;
+        try {
+            Class.forName(OracleConstants.DRIVER);
+            conn = DriverManager.getConnection(OracleConstants.GAM_TEMP_BAOGAOURL, OracleConstants.GAM_BAOGAOUSERNAME, OracleConstants.GAM_BAOGAOPASSWORD);
+        } catch (SQLException ex2) {
+            ex2.printStackTrace();
+        } catch (Exception ex2) {
+            ex2.printStackTrace();
+        } finally {
+            return conn;
+        }
+    }
     /**
      * 广安门入院记录视图
      * @return
