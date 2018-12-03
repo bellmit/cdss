@@ -26,6 +26,10 @@ public class Binganshouye {
     private String pat_visit_dept_discharge_from_code;
     private String drug_allergy_name;
 
+    private String inp_no;
+    private String name;//病人姓名
+    private String bed_no;//床号
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -158,6 +162,33 @@ public class Binganshouye {
     public void setPat_visit_dept_discharge_from_code(String pat_visit_dept_discharge_from_code) {
         this.pat_visit_dept_discharge_from_code = pat_visit_dept_discharge_from_code;
     }
+
+    public String getInp_no() {
+        return inp_no;
+    }
+
+    public void setInp_no(String inp_no) {
+        this.inp_no = inp_no;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+
+    public String getBed_no() {
+        return bed_no;
+    }
+
+    public void setBed_no(String bed_no) {
+        this.bed_no = bed_no;
+    }
+
 
     @Override
     public boolean equals(Object o) {
