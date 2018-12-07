@@ -80,6 +80,8 @@ public class BaseConstants {
     //获取疾病父节点
     public static final String getParentList = "/med/cdss/getParentList.json";
 
+    public static final String participle = "/extractchapter/ruyuanjilu.json";
+
 
     /**
      * OID账号，用于数据中心权限通行证
