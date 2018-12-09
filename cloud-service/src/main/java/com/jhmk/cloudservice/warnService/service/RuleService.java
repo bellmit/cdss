@@ -281,16 +281,20 @@ public class RuleService {
 
 
     public String ruleMatchGetResp(Rule fill) {
-        //todo 获取疾病同义词，用于跑医院数据到数据库
-//        Rule sameZhenDuanList = getSameZhenDuanList(fill);
-        String o = JSONObject.toJSONString(fill);
-        Object parse = JSONObject.parse(o);
         String data = "";
-        try {
-            data = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.matchrule, parse, String.class);
+
+        String deptName = fill.getBinganshouye().getPat_visit_dept_admission_to_name();
+        if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
+            //todo 获取疾病同义词，用于跑医院数据到数据库
+//        Rule sameZhenDuanList = getSameZhenDuanList(fill);
+            String o = JSONObject.toJSONString(fill);
+            Object parse = JSONObject.parse(o);
+            try {
+                data = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.matchrule, parse, String.class);
 //            logger.info("匹配规则结果为{}", data);
-        } catch (Exception e) {
-            logger.info("规则匹配失败：,url={},原因:{},返回结果为：{}", urlConfig.getCdssurl() + BaseConstants.matchrule, e.getMessage(), data);
+            } catch (Exception e) {
+                logger.info("规则匹配失败：,url={},原因:{},返回结果为：{}", urlConfig.getCdssurl() + BaseConstants.matchrule, e.getMessage(), data);
+            }
         }
         return data;
     }
@@ -791,7 +795,9 @@ public class RuleService {
             Object o = JSONObject.parse(map);
             String result = "";
             try {
+                logger.info(BaseConstants.getTipList + "：发送的数据为：{}", map);
                 result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getTipList, o, String.class);
+                logger.info(BaseConstants.getTipList + "：获取到的数据为：{}", result);
                 if (StringUtils.isNotBlank(result) && !symbol.equals(result)) {
                     JSONArray array = JSONArray.parseArray(result);
                     Iterator<Object> iterator = array.iterator();
@@ -914,7 +920,6 @@ public class RuleService {
     }
 
 
-
     /**
      * 获取医嘱
      *
@@ -1004,7 +1009,7 @@ public class RuleService {
             rule.setPageSource(basicInfo.getPageSource());
             rule.setWarnSource(basicInfo.getWarnSource());
             rule.setDoctor_name(basicInfo.getDept_name());
-        }else{
+        } else {
             rule.setPatient_id(patient_id);
             rule.setVisit_id(visit_id);
         }
