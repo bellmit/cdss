@@ -319,6 +319,7 @@ public class CdssPageService {
 //        map.add("map", "");
 //        map.add("keywords", "{\"page\":\"0\",\"size\":\"1\",\"expressions\":[[{\"field\":\"fieldId\",\"exp\":\"等于\",\"values\":[" + substring + "]}]]}");
         map.add("keywords", "");
+        //todo 重构 stringbuild
         map.add("map", "{\"page\":\"0\",\"size\":\"1\",\"expressions\":[[{\"field\":\"fieldId\",\"exp\":\"等于\",\"values\":[" + substring + "]}]]}");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(urlConfig.getPageurl()+CdssPageConstants.TREATPLAN, request, String.class);
