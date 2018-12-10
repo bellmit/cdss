@@ -56,6 +56,13 @@ public interface SmHospitalLogRepository extends PagingAndSortingRepository<SmHo
     List<SmHospitalLog> getDeptCountByYear(Date startTime, Date endTime);
 
 
+
+    /**
+     *  todo 应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描 解决方案 设置默认值 ！=0
+
+     * 应尽量避免在 where 子句中使用!=或<>操作符，否则将引擎放弃使用索引而进行全表扫描。优化器将无法通过索引来确定将要命中的行数,因此需要搜索该表的所有行。
+     * @return
+     */
     @Query("select distinct (d.deptCode)from SmHospitalLog d where d.deptCode<>null")
     List<String> getCountByDistinctDeptCode();
 

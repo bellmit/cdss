@@ -5,6 +5,7 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -23,13 +24,15 @@ import java.util.stream.Collectors;
 
 @Component
 public class JianyanbaogaoService {
+    @Autowired
+    DbConnectionUtil dbConnectionUtil;
     public List<Jianyanbaogao> getJianyanbaogaoBypatientIdAndVisitId(String patientId, String visitId) {
         List<Jianyanbaogao> jianyanbaogaoList = new LinkedList<>();
         Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbConnectionUtil.openGamConnectionDBForBaogao();
+            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
 
 //            cstmt = conn.prepareCall(" select * from v_cdss_exam_report");
             cstmt = conn.prepareCall("select * from v_cdss_lab_report WHERE patient_id=? and visit_id=?");
@@ -110,7 +113,7 @@ public class JianyanbaogaoService {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
 
         //检验报告获取最近时间的

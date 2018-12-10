@@ -32,7 +32,8 @@ public class AnalysisXmlService {
     public Map<String, String> analysisXml2Binganshouye(String str) {
         Map<String, String> binganshouye = new HashMap<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            //将&转换为空格，处理解析特殊符号 报错
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             Element item = root.element("item");
             if (Objects.nonNull(item)) {
@@ -108,7 +109,7 @@ public class AnalysisXmlService {
     public List<Map<String, String>> analysisXml2Zhenduan(String str) {
         List<Map<String, String>> blzdList = new LinkedList<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -168,7 +169,7 @@ public class AnalysisXmlService {
     public List<Map<String, String>> analysisXml2Jianchabaogao(String str) {
         List<Map<String, String>> jcbgList = new LinkedList<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -221,7 +222,7 @@ public class AnalysisXmlService {
     public List<OriginalJianyanbaogao> analysisXml2Jianyanbaogao(String str, List<JianyanbaogaoForAuxiliary> analysisXmlServiceList) {
         List<OriginalJianyanbaogao> jybgList = new LinkedList<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -331,7 +332,7 @@ public class AnalysisXmlService {
     public List<JianyanbaogaoForAuxiliary> analysisXml2JianyanbaogaoMX(String str) {
         List<JianyanbaogaoForAuxiliary> jybgMXList = new LinkedList<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -384,7 +385,7 @@ public class AnalysisXmlService {
     public Map<String, String> getHospitalDate(String str) {
         Map<String, String> rcz = new HashMap<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -416,7 +417,7 @@ public class AnalysisXmlService {
 //    public List<Map<String, String>> analysisXml2Ruyuanjilu(String str) {
 //        List<Map<String, String>> ruyuanjiluList = new LinkedList<>();
 //        try {
-//            Document dom = DocumentHelper.parseText(str);
+//            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
 //            Element root = dom.getRootElement();
 //            List<Element> items = root.elements();
 //            if (Objects.nonNull(items)) {
@@ -487,7 +488,7 @@ public class AnalysisXmlService {
     public List<Map<String, String>> analysisXml2Ruyuanjilu(String str) {
         List<Map<String, String>> ruyuanjiluList = new LinkedList<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -523,7 +524,7 @@ public class AnalysisXmlService {
         List<Map<String, String>> ruyuanjiluList = new LinkedList<>();
         Map<String, String> tzMap = new HashMap<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -570,7 +571,7 @@ public class AnalysisXmlService {
         List<Yizhu> yizhuList = new LinkedList<>();
         Map<String, String> tzMap = new HashMap<>();
         try {
-            Document dom = DocumentHelper.parseText(str);
+            Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
             List<Element> items = root.elements();
             if (Objects.nonNull(items)) {
@@ -643,5 +644,28 @@ public class AnalysisXmlService {
         return yizhuList;
     }
 
+    public static void main(String[] args) {
+//        String s =
+//                "<ArrayList>\n" +
+//                "  <item> \n" +
+//                "   <LAB_SUB_ITEM_ENAME>Gentamicin High &30;Level Resistance</LAB_SUB_ITEM_ENAME>\n" +
+//                "  </item>\n" +
+//                "</ArrayList>\n";
+//        String s1="<xml><![CDATA[" + s + "]]></xml>";
+        String s1="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<ArrayList>\n" +
+                "  <item> \n" +
+                "   <LAB_SUB_ITEM_ENAME>Gentamicin High &#30;Level Resistance</LAB_SUB_ITEM_ENAME>\n" +
+                "  </item>\n" +
+                "</ArrayList>\n";
 
+
+        try {
+            String ss = s1.replaceAll("&", "%%%");
+            Document dom = DocumentHelper.parseText(ss);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

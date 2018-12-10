@@ -6,6 +6,8 @@ import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataWsImpl;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,6 +19,14 @@ import java.util.*;
 
 @Service
 public class CdrService {
+    private static final Logger logger = LoggerFactory.getLogger(CdrService.class);
+    static HdrQueryDataWsImpl hdrQueryDataWsImplPort = null;
+
+    static {
+        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
+        hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
+    }
+
     public static String getXml(Map<String, String> params, List<Map<String, String>> conditions) {
         StringBuffer sb = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         sb.append("<MSG>")
@@ -55,9 +65,9 @@ public class CdrService {
      */
     public String getDataByCDR(Map<String, String> params, List<Map<String, String>> coditions) {
         String xml = getXml(params, coditions);
-        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
-        HdrQueryDataWsImpl hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
+        logger.info("调用参数：{}", xml);
         String data = hdrQueryDataWsImplPort.queryData(xml);
+        logger.info("获取数据中心数据为：{}", data);
         return data;
     }
 

@@ -34,6 +34,8 @@ public class RuyuanjiluService {
     private static final Logger logger = LoggerFactory.getLogger(RuyuanjiluService.class);
 
     @Autowired
+    DbConnectionUtil dbConnectionUtil;
+    @Autowired
     UrlConfig urlConfig;
     @Autowired
     RestTemplate restTemplate;
@@ -64,7 +66,7 @@ public class RuyuanjiluService {
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbConnectionUtil.openGamConnectionDBForRyjl();
+            conn = dbConnectionUtil.openGamConnectionDBForRyjl();
             //HkT:<GB<： 在数据库中代表入院记录 caseid：=patient_id  admincount:入院次数
 //            JuG0P!=a#术前小结
 //            HkT:<GB<#入院记录
@@ -99,7 +101,7 @@ public class RuyuanjiluService {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
         return null;
     }
