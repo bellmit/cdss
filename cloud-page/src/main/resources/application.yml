@@ -1,13 +1,16 @@
 server:
   port: 8112
+  context-path: /page
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8000/eureka/
+      defaultZone: http://192.168.8.20:8000/eureka/
+
 spring:
   application:
-    name: cloud-earlywarn
+    name: cloud-page
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://192.168.8.22:3306/jhmk_waring?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
     username: root
     password: 123456
@@ -16,5 +19,4 @@ spring:
     show-sql: true
     generate-ddl: true
     database: mysql
-logging:
-  config: logback-spring.xml
+
