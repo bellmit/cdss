@@ -33,6 +33,8 @@ public class JianchabaogaoService {
     CdrService cdrService;
     @Autowired
     AnalysisXmlService analysisXmlService;
+    @Autowired
+    DbConnectionUtil dbConnectionUtil;
 
     /**
      * 从视图获取检查报告（广安门）
@@ -47,7 +49,7 @@ public class JianchabaogaoService {
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbConnectionUtil.openGamConnectionDBForBaogao();
+            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
 
 //            cstmt = conn.prepareCall(" select * from v_cdss_exam_report");
             cstmt = conn.prepareCall("select * from v_cdss_exam_report WHERE patient_id=? and visit_id=?");
@@ -93,7 +95,7 @@ public class JianchabaogaoService {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
         return jianchabaogaoList;
     }
