@@ -25,6 +25,8 @@ import java.util.*;
 @Service
 public class BinganshouyeService {
     @Autowired
+    DbConnectionUtil dbConnectionUtil;
+    @Autowired
     BinganshouyeRepService binganshouyeRepService;
 
     /**
@@ -60,7 +62,7 @@ public class BinganshouyeService {
         rule.setPatient_id(patientId);
         rule.setVisit_id(visitId);
         try {
-            conn = DbConnectionUtil.openTempGamConnectionDBForBaogao();
+            conn = dbConnectionUtil.openTempGamConnectionDBForBaogao();
             //HkT:<GB<： 在数据库中代表入院记录 caseid：=patient_id  admincount:入院次数
             cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit where PATIENT_ID='" + patientId + "' and VISIT_ID='" + visitId + "'");
             rs = cstmt.executeQuery();// 执行
@@ -183,7 +185,7 @@ public class BinganshouyeService {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
         return rule;
     }
@@ -200,7 +202,7 @@ public class BinganshouyeService {
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbConnectionUtil.openGamConnectionDBForBaogao();
+            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
             //HkT:<GB<： 在数据库中代表入院记录 caseid：=patient_id  admincount:入院次数
             cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit ");
             rs = cstmt.executeQuery();// 执行
@@ -217,7 +219,7 @@ public class BinganshouyeService {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
         return set;
     }
