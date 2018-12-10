@@ -377,6 +377,7 @@ public class RuleService {
                         }
 
                         SmHospitalLog save = smHospitalLogRepService.save(smHospitalLog);
+                        //todo 下版本修改 不用主键作为 不要用自增属性字段作为主键与子表关联。不便于系统的迁移和数据恢复。对外统计系统映射关系丢失
                         int id = save.getId();
                         for (LogMapping mapping : notSaveLogMapping) {
                             mapping.setLogId(id);
