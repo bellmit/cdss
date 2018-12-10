@@ -1,9 +1,9 @@
 package com.jhmk.cloudutil.util;
 
-import ch.qos.logback.core.db.dialect.DBUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.OracleConstants;
+import com.jhmk.cloudutil.config.ViewPropertiesConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -15,16 +15,18 @@ import java.util.Optional;
  * @author ziyu.zhou
  * @date 2018/11/6 11:32
  */
-
+@Component
 public class DbConnectionUtil {
 
+    @Autowired
+    ViewPropertiesConfig viewPropertiesConfig;
 //    private final static String driver = "oracle.jdbc.driver.OracleDriver";
 //    private final static String url = "jdbc:oracle:thin:@172.16.254.102:1521/ORCL";
 //    private final static String account = "lcjczc";
 //    private final static String password = "gam_cdss";
 
 
-    public static Connection openConnectionDB(String driver, String url, String account, String password) {
+    public Connection openConnectionDB(String driver, String url, String account, String password) {
         Connection conn = null;
         try {
             Class.forName(driver);
@@ -40,13 +42,14 @@ public class DbConnectionUtil {
 
     /**
      * 广安门检验检查报告视图
+     *
      * @return
      */
-    public static Connection openGamConnectionDBForBaogao() {
+    public Connection openGamConnectionDBForBaogao() {
         Connection conn = null;
         try {
-            Class.forName(OracleConstants.DRIVER);
-            conn = DriverManager.getConnection(OracleConstants.GAM_BAOGAOURL, OracleConstants.GAM_BAOGAOUSERNAME, OracleConstants.GAM_BAOGAOPASSWORD);
+            Class.forName(viewPropertiesConfig.getDriver());
+            conn = DriverManager.getConnection(viewPropertiesConfig.getGam_temp_baogaourl(), viewPropertiesConfig.getGam_baogaousername(), viewPropertiesConfig.getGam_baogaopassword());
         } catch (SQLException ex2) {
             ex2.printStackTrace();
         } catch (Exception ex2) {
@@ -55,11 +58,12 @@ public class DbConnectionUtil {
             return conn;
         }
     }
-    public static Connection openTempGamConnectionDBForBaogao() {
+
+    public Connection openTempGamConnectionDBForBaogao() {
         Connection conn = null;
         try {
-            Class.forName(OracleConstants.DRIVER);
-            conn = DriverManager.getConnection(OracleConstants.GAM_TEMP_BAOGAOURL, OracleConstants.GAM_BAOGAOUSERNAME, OracleConstants.GAM_BAOGAOPASSWORD);
+            Class.forName(viewPropertiesConfig.getDriver());
+            conn = DriverManager.getConnection(viewPropertiesConfig.getGam_temp_baogaourl(), viewPropertiesConfig.getGam_baogaousername(), viewPropertiesConfig.getGam_baogaopassword());
         } catch (SQLException ex2) {
             ex2.printStackTrace();
         } catch (Exception ex2) {
@@ -68,15 +72,17 @@ public class DbConnectionUtil {
             return conn;
         }
     }
+
     /**
      * 广安门入院记录视图
+     *
      * @return
      */
-    public static Connection openGamConnectionDBForRyjl() {
+    public Connection openGamConnectionDBForRyjl() {
         Connection conn = null;
         try {
-            Class.forName(OracleConstants.DRIVER);
-            conn = DriverManager.getConnection(OracleConstants.GAM_RYJLURL, OracleConstants.GAM_RYJLUSERNAME, OracleConstants.GAM_RYJLPASSWORD);
+            Class.forName(viewPropertiesConfig.getDriver());
+            conn = DriverManager.getConnection(viewPropertiesConfig.getGam_ryjlurl(), viewPropertiesConfig.getGam_ryjlusername(), viewPropertiesConfig.getGam_ryjlpassword());
         } catch (SQLException ex2) {
             ex2.printStackTrace();
         } catch (Exception ex2) {
@@ -88,7 +94,7 @@ public class DbConnectionUtil {
 
 
     // 关闭连接
-    public static void closeConnectionDB(Connection conn, CallableStatement stat, ResultSet rs) {
+    public void closeConnectionDB(Connection conn, CallableStatement stat, ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
@@ -122,13 +128,13 @@ public class DbConnectionUtil {
 
     public static void main(String[] args) {
 //        List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
-
+        DbConnectionUtil dbConnectionUtil = new DbConnectionUtil();
 
         Connection conn = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbConnectionUtil.openGamConnectionDBForRyjl();
+            conn = dbConnectionUtil.openGamConnectionDBForRyjl();
             cstmt = conn.prepareCall(" select * from CIOTEST.Emr_jiahe where caseid='082839' and admincount='12'and FRAMEWORKCODE='1'");
 //            cstmt = conn.prepareCall(" select * from CIOTEST.Emr_jiahe where caseid='000205' and admincount='3'and FRAMEWORKCODE='1'");
 //            cstmt = conn.prepareCall("SELECT * FROM    select * from v_cdss_exam_report WHERE patient_id=? and visit_id=?");
@@ -141,7 +147,7 @@ public class DbConnectionUtil {
                 int indexOf = sharetxtcase.indexOf("入");
                 String substring = sharetxtcase.substring(indexOf);
 //                String s = sharetxtcase.replaceAll("\\r\\n", "\\\\r\\\\n");
-                String s = substring.replaceAll("\\\\","\\\\\\\\");
+                String s = substring.replaceAll("\\\\", "\\\\\\\\");
                 System.out.println(s);
                 System.out.println(JSONObject.toJSONString(sharetxtcase));
 
@@ -152,7 +158,7 @@ public class DbConnectionUtil {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
 //        System.out.println(jianchabaogaoList);
     }
