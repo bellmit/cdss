@@ -6,7 +6,10 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.apache.commons.lang3.StringUtils;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,12 +89,14 @@ public class StringUtil {
 
         return flg;
     }
+
     //判断是否为数字
     public static boolean isInteger(String str) {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
     }
-    public static boolean isNumber(String str){
+
+    public static boolean isNumber(String str) {
         String reg = "^[0-9]+(.[0-9]+)?$";
         return str.matches(reg);
     }
@@ -114,5 +119,68 @@ public class StringUtil {
         }
         return s2;
     }
-}
 
+    /**
+     * oracle  blob转str
+     *
+     * @param blob
+     * @return
+     */
+//    public static String ConvertBLOBtoString(Blob blob) {
+//        long BlobLength; // BLOB字段长度
+//        byte[] bytes; // BLOB临时存储字节数组
+//        int i = 1; // 循环变量
+//        String newStr = ""; // 返回字符串
+//        try {
+//            bytes = blob.getBytes((long) 1, (int) blob.length());
+//
+//            BlobLength = blob.length();  //获取BLOB长度
+//            if (bytes == null || BlobLength == 0)  //如果为空，返回空值
+//            {
+//                return "";
+//            } else {
+//                while (i < BlobLength)             //循环处理字符串转换，每次1024；Oracle字符串限制最大4k
+//                {
+//                    bytes = blob.getBytes(i, 1024);
+//                    i = i + 1024;
+////                    newStr = newStr + new String(bytes, "gb2312");
+//                    newStr = newStr + new String(bytes, "gbk");
+//                }
+//            }
+//        } catch (SQLException e1) {
+//            e1.printStackTrace();
+//        } catch (UnsupportedEncodingException e1) {
+//            e1.printStackTrace();
+//        }
+//        return newStr;
+//    }
+
+    public static String getETLBlobToString(Blob blob, long blwsContentCount, String path, String charset) throws SQLException, IOException {
+        String value = null;
+        InputStream is = blob.getBinaryStream();
+        int length = (int) blob.length();
+        if (length != 0) {
+            byte[] buffer = new byte[length];
+            is.read(buffer);
+            is.close();
+//    String uuid = UUID.randomUUID().toString();
+//    uuid = cleaningStringByETL(uuid);
+//    path = path +  uuid + blwsContentCount + ".txt";
+//    File file = new File(path);
+//    if (file.exists()) {
+//       file.delete();
+//    }
+//    FileOutputStream fo = new FileOutputStream(file); //数据到的文件名
+//    fo.write(buffer);
+//    fo.close();
+//
+            // value = FileUtils.getStrFromFile(path,charset);
+//    file.delete();
+            value = new String(buffer, charset);
+        } else {
+            value = "";
+        }
+
+        return value;
+    }
+}
