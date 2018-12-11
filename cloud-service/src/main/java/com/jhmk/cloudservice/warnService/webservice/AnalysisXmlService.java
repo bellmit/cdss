@@ -7,6 +7,7 @@ import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.RegularUtils;
 import com.jhmk.cloudutil.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -30,6 +31,9 @@ public class AnalysisXmlService {
      * @return
      */
     public Map<String, String> analysisXml2Binganshouye(String str) {
+        if (StringUtils.isEmpty(str)) {
+            return null;
+        }
         Map<String, String> binganshouye = new HashMap<>();
         try {
             //将&转换为空格，处理解析特殊符号 报错
@@ -107,6 +111,9 @@ public class AnalysisXmlService {
      * @return
      */
     public List<Map<String, String>> analysisXml2Zhenduan(String str) {
+        if (StringUtils.isEmpty(str)) {
+            return null;
+        }
         List<Map<String, String>> blzdList = new LinkedList<>();
         try {
             Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
@@ -167,6 +174,9 @@ public class AnalysisXmlService {
      * @return
      */
     public List<Map<String, String>> analysisXml2Jianchabaogao(String str) {
+        if (StringUtils.isEmpty(str)) {
+            return null;
+        }
         List<Map<String, String>> jcbgList = new LinkedList<>();
         try {
             Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
@@ -330,6 +340,9 @@ public class AnalysisXmlService {
      * @return
      */
     public List<JianyanbaogaoForAuxiliary> analysisXml2JianyanbaogaoMX(String str) {
+        if (StringUtils.isEmpty(str)) {
+            return null;
+        }
         List<JianyanbaogaoForAuxiliary> jybgMXList = new LinkedList<>();
         try {
             Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
@@ -569,7 +582,6 @@ public class AnalysisXmlService {
      */
     public List<Yizhu> analysisXml2Yizhu(String str) {
         List<Yizhu> yizhuList = new LinkedList<>();
-        Map<String, String> tzMap = new HashMap<>();
         try {
             Document dom = DocumentHelper.parseText(str.replaceAll("&", ""));
             Element root = dom.getRootElement();
@@ -583,7 +595,6 @@ public class AnalysisXmlService {
                     Element element = items.get(i);
                     Element order_end_time = element.element("ORDER_END_TIME");
                     if (Objects.nonNull(order_end_time)) {
-
                         String text = order_end_time.getText();
                         Date date = DateFormatUtil.parseDate(text, DateFormatUtil.DATETIME_PATTERN_SS);
                         if (date.before(new Date())) {
@@ -652,7 +663,7 @@ public class AnalysisXmlService {
 //                "  </item>\n" +
 //                "</ArrayList>\n";
 //        String s1="<xml><![CDATA[" + s + "]]></xml>";
-        String s1="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        String s1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<ArrayList>\n" +
                 "  <item> \n" +
                 "   <LAB_SUB_ITEM_ENAME>Gentamicin High &#30;Level Resistance</LAB_SUB_ITEM_ENAME>\n" +
