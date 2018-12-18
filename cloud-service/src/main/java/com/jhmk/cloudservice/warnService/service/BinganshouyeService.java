@@ -64,17 +64,17 @@ public class BinganshouyeService {
         try {
             conn = dbConnectionUtil.openTempGamConnectionDBForBaogao();
             //HkT:<GB<： 在数据库中代表入院记录 caseid：=patient_id  admincount:入院次数
-            cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit where PATIENT_ID='" + patientId + "' and VISIT_ID='" + visitId + "'");
+            cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit where patient_id='" + patientId + "' and VISIT_ID='" + visitId + "'");
             rs = cstmt.executeQuery();// 执行
             while (rs.next()) {
-                Optional.ofNullable(rs.getString("inp_no")).ifPresent(s -> {
+                Optional.ofNullable(rs.getString("INP_NO")).ifPresent(s -> {
                     try {
                         binganshouye.setInp_no(new String(s.getBytes("iso-8859-1"), "GBK"));
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                 });
-                Optional.ofNullable(rs.getString("warnSource")).ifPresent(s -> {
+                Optional.ofNullable(rs.getString("WARNSOURCE")).ifPresent(s -> {
                     try {
                         rule.setWarnSource(new String(s.getBytes("iso-8859-1"), "GBK"));
                     } catch (UnsupportedEncodingException e) {
@@ -204,7 +204,7 @@ public class BinganshouyeService {
         try {
             conn = dbConnectionUtil.openGamConnectionDBForBaogao();
             //HkT:<GB<： 在数据库中代表入院记录 caseid：=patient_id  admincount:入院次数
-            cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit ");
+            cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit_out ");
             rs = cstmt.executeQuery();// 执行
             while (rs.next()) {
                 String patientId = rs.getString("patient_id");
@@ -220,6 +220,38 @@ public class BinganshouyeService {
             exception.printStackTrace();
         } finally {
             dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+        }
+        return set;
+    }
+
+    /**
+     * 获取在院数据
+     *
+     * @return
+     */
+    public Set<String> getHospitalPidAndVid() {
+        Set<String> set = new HashSet<>();
+        Connection conn = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DbConnectionUtil.openGamConnectionDBForBaogao();
+            //HkT:<GB<： 在数据库中代表入院记录 caseid：=patient_id  admincount:入院次数
+            cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit ");
+            rs = cstmt.executeQuery();// 执行
+            while (rs.next()) {
+                String patientId = rs.getString("patient_id");
+                String visitId = rs.getString("visit_id");
+                if (StringUtils.isNotBlank(patientId) && StringUtils.isNotBlank(visitId)) {
+                    set.add(patientId + "," + visitId);
+                }
+            }
+        } catch (SQLException ex2) {
+            ex2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
         return set;
     }
