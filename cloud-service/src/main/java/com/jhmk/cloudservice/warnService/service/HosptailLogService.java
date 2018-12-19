@@ -14,7 +14,7 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.Binganshouye;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Binglizhenduan;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Shouyezhenduan;
-import com.jhmk.cloudutil.config.UrlConfig;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.WebPage;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
@@ -57,7 +57,7 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
     @Autowired
     RestTemplate restTemplate;
     @Autowired
-    UrlConfig urlConfig;
+    UrlPropertiesConfig urlPropertiesConfig;
 
     private static String blue = "蓝色预警";
     private static String red = "红色预警";

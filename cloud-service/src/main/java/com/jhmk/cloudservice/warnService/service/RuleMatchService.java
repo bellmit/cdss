@@ -103,7 +103,7 @@ public class RuleMatchService {
             Rule ruleBean = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
             ruleBean.setDoctor_id(doctor_id);
             //获取 拼接检验检查报告
-//            Rule ruleBean = ruleService.getbaogao(rule);
+            ruleBean = ruleService.getbaogao(ruleBean);
             //获取 拼接检验检查报告
             List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
             ruleBean.setJianyanbaogao(jianyanbaogaoList);
@@ -142,7 +142,6 @@ public class RuleMatchService {
         String s2 = StringUtil.stringTransform(s);
         JSONObject parse = JSONObject.parseObject(s2);
         Rule rule = Rule.fill(parse);
-        System.out.println(JSONObject.toJSONString(rule));
         String data = "";
         try {
             //规则匹配
