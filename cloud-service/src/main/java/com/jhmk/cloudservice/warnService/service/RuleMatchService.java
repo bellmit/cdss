@@ -105,10 +105,10 @@ public class RuleMatchService {
             //获取 拼接检验检查报告
             ruleBean = ruleService.getbaogao(ruleBean);
             //获取 拼接检验检查报告
-            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
-            ruleBean.setJianyanbaogao(jianyanbaogaoList);
-            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogaoBypatientIdAndVisitId(patient_id, visit_id);
-            ruleBean.setJianchabaogao(jianchabaogaoList);
+//            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
+//            ruleBean.setJianyanbaogao(jianyanbaogaoList);
+//            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogaoBypatientIdAndVisitId(patient_id, visit_id);
+//            ruleBean.setJianchabaogao(jianchabaogaoList);
             ruleBean.setYizhu(yizhus);
             String data = "";
             try {
