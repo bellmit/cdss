@@ -7,7 +7,7 @@ import com.jhmk.cloudentity.earlywaring.entity.UserModel;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.UserDataModelMappingRepService;
 import com.jhmk.cloudservice.warnService.service.UserModelService;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConfig;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class UserModelController extends BaseEntityController<UserModel> {
     @Autowired
     UserModelService userModelService;
     @Autowired
-    UrlConfig urlConfig;
+    UrlPropertiesConfig urlPropertiesConfig;
     @Autowired
     UserDataModelMappingRepService userDataModelMappingRepService;
     @Autowired
@@ -69,7 +69,7 @@ public class UserModelController extends BaseEntityController<UserModel> {
             Object o = JSON.toJSON(map);
             String data = "";
             try {
-                data = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getfieldbyid, o, String.class);
+                data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getfieldbyid, o, String.class);
             } catch (Exception e) {
                 logger.info("调用{}接口失败，错误原因{}，错误信息{}", BaseConstants.getfieldbyid, e.getCause(), e.getMessage());
             } finally {
@@ -97,7 +97,7 @@ public class UserModelController extends BaseEntityController<UserModel> {
             Object o = JSON.toJSON(map);
             String data = "";
             try {
-                data = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getunitsbyid, o, String.class);
+                data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getunitsbyid, o, String.class);
                 resp.setData(data);
                 resp.setResponseCode(ResponseCode.OK);
             } catch (Exception e) {
