@@ -116,7 +116,9 @@ public class JianchabaogaoService {
         params.putAll(baseParams);
         //获取入出转xml
         String hospitalDate = cdrService.getDataByCDR(params, null);
-
+        if (StringUtils.isEmpty(hospitalDate)) {
+            return null;
+        }
         Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
 
         //入院时间
@@ -150,6 +152,9 @@ public class JianchabaogaoService {
          */
         params.put("ws_code", BaseConstants.JHHDRWS005);
         String jianchaXML = cdrService.getDataByCDR(params, listConditions);
+        if (StringUtils.isEmpty(hospitalDate)) {
+            return null;
+        }
         List<Map<String, String>> jianchabaogao = analysisXmlService.analysisXml2Jianchabaogao(jianchaXML);
         List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
         for (Map<String, String> map : jianchabaogao) {

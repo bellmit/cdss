@@ -10,6 +10,7 @@ import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.config.OrderStatusConstants;
 import com.jhmk.cloudutil.util.MapUtil;
 import com.jhmk.cloudutil.util.ReflexUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +96,9 @@ public class YizhuService {
 
         //获取入出转xml
         String yizhuData = cdrService.getDataByCDR(params, listConditions);
+        if (StringUtils.isEmpty(yizhuData)) {
+            return null;
+        }
         //获取入院时间 出院时间
         List<Yizhu> maps = analysisXmlService.analysisXml2Yizhu(yizhuData);
         return maps;
