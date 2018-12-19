@@ -9,7 +9,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.page.bean.DrugTendency;
 import com.jhmk.cloudservice.cdssPageService.CdssPageService;
-import com.jhmk.cloudutil.config.CdssPageConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import org.slf4j.Logger;
@@ -41,13 +42,16 @@ import java.util.Set;
  * cdss小界面控制层
  */
 @Controller
-@RequestMapping("/page/cdss")
+@RequestMapping("/cdss")
 public class CdssPageController extends BaseController {
     Logger logger = LoggerFactory.getLogger(CdssPageController.class);
 
 
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    UrlPropertiesConfig urlPropertiesConfig;
+
     @Autowired
     CdssPageService cdssPageService;
 
@@ -90,5 +94,25 @@ public class CdssPageController extends BaseController {
         String treatPlan = cdssPageService.getTreatPlan(list);
         wirte(response, treatPlan);
     }
+
+    /**
+     * 获取鉴别诊断疾病名
+     *
+     * @param response
+     * @param map
+     */
+
+    @PostMapping("/getDifferentialDiagnosisName")
+    public void getDifferentialDiagnosisName(HttpServletResponse response, @RequestBody(required = false) String map) {
+
+//        JSONObject object = JSONObject.parseObject(map);
+//        String diseaseName = object.getString("diseaseName");
+//        Object o = JSON.toJSON(param);
+        Object parse = JSONObject.parse(map);
+//        Object o = JSONObject.toJSON(parse);
+        String s = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getDifferentialDiagnosisName, parse, String.class);
+        System.out.println(s);
+    }
+
 
 }

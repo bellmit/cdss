@@ -1,5 +1,6 @@
 package com.jhmk.cloudpage.controller;
 
+import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudpage.demo.FrontHitEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,14 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2018/8/31 18:54
  */
 @Controller
-@RequestMapping("/page/demo")
-public class DemoController {
+@RequestMapping("/demo")
+public class DemoController extends BaseController {
     @Autowired
     private ApplicationContext applicationContext;
 
     @RequestMapping("/test1")
-    public String demo() {
-        return "www.baidu.com";
+    public void demo(HttpServletResponse response) {
+        wirte(response, "www.baidu.com");
     }
 
     @RequestMapping("/test2")

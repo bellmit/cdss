@@ -37,7 +37,7 @@ import java.util.Map;
  * @date 2018/11/16 16:48
  */
 @Controller
-@RequestMapping("/page/match")
+@RequestMapping("/match")
 public class MatchRuleController extends BaseEntityController<Object> {
     private static final Logger logger = LoggerFactory.getLogger(MatchRuleController.class);
 

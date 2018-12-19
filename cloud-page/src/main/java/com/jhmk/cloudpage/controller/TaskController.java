@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2018/8/31 14:46
  */
 @Controller
-@RequestMapping("/page/task")
+@RequestMapping("/task")
 public class TaskController extends BaseController {
     Logger logger = LoggerFactory.getLogger(ClickRateController.class);
 
