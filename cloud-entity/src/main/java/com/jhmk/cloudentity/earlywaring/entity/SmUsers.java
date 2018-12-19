@@ -11,7 +11,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "sm_users", schema = "jhmk_waring", catalog = "")
 public class SmUsers {
-    private int id;
+//    private int id;
     private String userId;
     private String userName;
     private String userLoginName;
@@ -22,18 +22,19 @@ public class SmUsers {
     private String roleId;
 
 
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
-        return id;
-    }
+//    @Id
+//    @Column(name = "id", nullable = false)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    public int getId() {
+//        return id;
+//    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
     @Basic
+    @Id
     @Column(name = "USER_ID", nullable = true, length = 255)
     public String getUserId() {
         return userId;
@@ -113,25 +114,4 @@ public class SmUsers {
         this.roleId = roleId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SmUsers smUsers = (SmUsers) o;
-        return id == smUsers.id &&
-                Objects.equals(userId, smUsers.userId) &&
-                Objects.equals(userName, smUsers.userName) &&
-                Objects.equals(userLoginName, smUsers.userLoginName) &&
-                Objects.equals(pym, smUsers.pym) &&
-                Objects.equals(userDept, smUsers.userDept) &&
-                Objects.equals(createDate, smUsers.createDate) &&
-                Objects.equals(userPwd, smUsers.userPwd) &&
-                Objects.equals(roleId, smUsers.roleId);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, userId, userName, userLoginName, pym, userDept, createDate, userPwd, roleId);
-    }
 }
