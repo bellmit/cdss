@@ -65,9 +65,12 @@ public class CdrService {
      */
     public String getDataByCDR(Map<String, String> params, List<Map<String, String>> coditions) {
         String xml = getXml(params, coditions);
-        logger.info("调用参数：{}", xml);
-        String data = hdrQueryDataWsImplPort.queryData(xml);
-        logger.info("获取数据中心数据为：{}", data);
+        String data = "";
+        try {
+            data = hdrQueryDataWsImplPort.queryData(xml);
+        } catch (Exception e) {
+            logger.error("获取数据中心数据失败：{},请求参数为：{}", e.getMessage(),xml);
+        }
         return data;
     }
 
