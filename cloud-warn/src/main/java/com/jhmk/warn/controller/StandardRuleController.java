@@ -13,7 +13,7 @@ import com.jhmk.cloudservice.warnService.service.UserModelService;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConfig;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.MapUtil;
@@ -61,7 +61,7 @@ public class StandardRuleController extends BaseController {
     @Autowired
     UserModelService userModelService;
     @Autowired
-    UrlConfig urlConfig;
+    UrlPropertiesConfig urlPropertiesConfig;
     //    @Autowired
 //    OriRuleRepService oriRuleRepService;
     @Autowired
@@ -83,7 +83,7 @@ public class StandardRuleController extends BaseController {
         Map<String, Object> dataMap = null;
         try {
 
-            result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.findallstandardrules, parse, String.class);
+            result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.findallstandardrules, parse, String.class);
             dataMap = ruleService.formatData(result);
         } catch (Exception e) {
             logger.info("查询所有标准规则信息失败:{},错误信息为:{}", result, e.getMessage());
@@ -110,7 +110,7 @@ public class StandardRuleController extends BaseController {
         AtResponse resp = new AtResponse();
 
         Object o = JSONObject.parse(map);
-        String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getruleforid, o, String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getruleforid, o, String.class);
         JSONObject jsonObject = JSONObject.parseObject(result);
         Map obj = (Map) JSONObject.parse(jsonObject.get("result").toString());
         //获取cdss规则

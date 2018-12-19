@@ -10,7 +10,7 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.LogMapping;
 import com.jhmk.cloudservice.warnService.service.HosptailLogService;
 import com.jhmk.cloudservice.warnService.service.RuleService;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConfig;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.CompareUtil;
@@ -58,7 +58,7 @@ public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
     @Autowired
     LogMappingRepService logMappingRepService;
     @Autowired
-    UrlConfig urlConfig;
+    UrlPropertiesConfig urlPropertiesConfig;
 
 
     /**

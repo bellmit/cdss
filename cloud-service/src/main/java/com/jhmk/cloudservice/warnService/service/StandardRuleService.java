@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.rule.FormatRule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.StandardRule;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConfig;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.util.MapUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class StandardRuleService {
     @Autowired
     RuleService ruleService;
     @Autowired
-    UrlConfig urlConfig;
+    UrlPropertiesConfig urlPropertiesConfig;
     @Autowired
     RestTemplate restTemplate;
     private static final Logger logger = LoggerFactory.getLogger(StandardRuleService.class);
@@ -206,7 +206,7 @@ public class StandardRuleService {
      * @param field        需要添加或者删除的子集字段名
      * @param standardName 标准规则名
      * @param formatrule   标准股则解析的实体类
-     * @param flag   true 添加 FALSE 删除
+     * @param flag         true 添加 FALSE 删除
      * @return
      */
     public boolean updataStandardChildElement(String field, String standardName, FormatRule formatrule, boolean flag) {
@@ -316,7 +316,7 @@ public class StandardRuleService {
         String s = "";
         boolean isOK = true;
         try {
-            s = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.updatechildelement, parse, String.class);
+            s = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.updatechildelement, parse, String.class);
         } catch (Exception e) {
             logger.info("调用{}借口失败,错误原因{}，错误信息{}", BaseConstants.updatechildelement, e.getCause(), e.getMessage());
             isOK = false;
@@ -349,7 +349,7 @@ public class StandardRuleService {
         String result = null;
         try {
 
-            result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.findallchildrules, obj, String.class);
+            result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.findallchildrules, obj, String.class);
         } catch (Exception e) {
             logger.info("调用" + BaseConstants.findallchildrules + "接口失败：{}", e.getMessage());
         } finally {
@@ -382,7 +382,7 @@ public class StandardRuleService {
                 param.put("_id", id);
                 Object obj = JSONObject.toJSON(param);
                 try {
-                    String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.deleterule, obj, String.class);
+                    String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.deleterule, obj, String.class);
                     JSONObject jsonObject = JSONObject.parseObject(result);
                     String code = jsonObject.getString("code");
                     if (!BaseConstants.OK.equals(code)) {
