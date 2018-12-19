@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties()
-@PropertySource(value = "classpath:urlPropertiesConfig.yml")
+@PropertySource(value = "classpath:urlConfig.yml")
 public class UrlPropertiesConfig {
 
     private String cdssurl;
