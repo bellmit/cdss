@@ -2,10 +2,11 @@ package com.jhmk.warn.filter;
 
 
 import com.alibaba.fastjson.JSON;
-import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
+import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             } else {
                 if (token.equals(sessionToken)) {
                     request.getSession().setMaxInactiveInterval(2 * 60 * 60);
-                    chain.doFilter(request, response);
+//                    request.getSession().setMaxInactiveInterval(10);
+                    String userId = (String) request.getSession().getAttribute(BaseConstants.USER_ID);
+
+                    if (StringUtils.isEmpty(userId)) {
+                        resp.setResponseCode(ResponseCode.INERERROR);
+                        resp.setMessage("用户登录失效");
+                        writer.print(JSON.toJSONString(resp));
+                    } else {
+                        chain.doFilter(request, response);
+                    }
                 } else {
                     logger.info("无效token" + token);
                     resp.setResponseCode(ResponseCode.INERERROR5);
