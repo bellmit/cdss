@@ -22,10 +22,10 @@ public class CdrService {
     private static final Logger logger = LoggerFactory.getLogger(CdrService.class);
     static HdrQueryDataWsImpl hdrQueryDataWsImplPort = null;
 
-//    static {
-//        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
-//        hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
-//    }
+    static {
+        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
+        hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
+    }
 
     public static String getXml(Map<String, String> params, List<Map<String, String>> conditions) {
         StringBuffer sb = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -65,14 +65,12 @@ public class CdrService {
      */
     public String getDataByCDR(Map<String, String> params, List<Map<String, String>> coditions) {
         String xml = getXml(params, coditions);
-        logger.info("调用参数：{}", xml);
-        String data = null;
+        String data = "";
         try {
             data = hdrQueryDataWsImplPort.queryData(xml);
         } catch (Exception e) {
-            logger.error("调用数据中心失败：原因为：{}", e.getMessage());
+            logger.error("获取数据中心数据失败：{},请求参数为：{}", e.getMessage(),xml);
         }
-        logger.info("获取数据中心数据为：{}", data);
         return data;
     }
 
