@@ -290,9 +290,9 @@ public class RuleService {
             Object parse = JSONObject.parse(o);
             try {
                 data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.matchrule, parse, String.class);
-//            logger.info("匹配规则结果为{}", data);
+                logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + BaseConstants.matchrule,JSONObject.toJSONString(parse),data);
             } catch (Exception e) {
-                logger.info("规则匹配失败：,url={},原因:{},返回结果为：{}", urlPropertiesConfig.getCdssurl() + BaseConstants.matchrule, e.getMessage(), data);
+                logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + BaseConstants.matchrule, e.getMessage(),JSONObject.toJSONString(parse), data);
             }
         }
         return data;
