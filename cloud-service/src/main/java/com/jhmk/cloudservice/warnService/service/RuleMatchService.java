@@ -86,7 +86,7 @@ public class RuleMatchService {
         } catch (ClassCastException e) {
             logger.info("类型转换失败，{}，原始数据为：{}", e.getMessage(), map);
         } catch (Exception e) {
-            logger.info("规则匹配失败:{}" + e.getMessage());
+            logger.info("类型转换失败，{}，原始数据为：{}", e.getMessage(), map);
         }
 
         return resp;
