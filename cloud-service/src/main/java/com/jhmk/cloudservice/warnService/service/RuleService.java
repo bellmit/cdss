@@ -864,7 +864,7 @@ public class RuleService {
         //获取入出转xml
         String hospitalDate = cdrService.getDataByCDR(params, null);
         if (StringUtils.isEmpty(hospitalDate)) {
-            return null;
+            return rule;
         }
         //获取入院时间 出院时间
         Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
@@ -910,13 +910,13 @@ public class RuleService {
         params.put("ws_code", "JHHDRWS006A");
         String jianyanzhubiao = cdrService.getDataByCDR(params, listConditions);
         if (StringUtils.isEmpty(jianyanzhubiao)) {
-            return null;
+            return rule;
         }
         //检验数据明细
         params.put("ws_code", "JHHDRWS006B");
         String jybgzbMX = cdrService.getDataByCDR(params, listConditions);
         if (StringUtils.isEmpty(jybgzbMX)) {
-            return null;
+            return rule;
         }
         //获取检验报告原始数据
         List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
