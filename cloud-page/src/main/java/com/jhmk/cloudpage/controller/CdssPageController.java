@@ -5,6 +5,7 @@ package com.jhmk.cloudpage.controller;
  * @date 2018/8/23 9:57
  */
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.page.bean.DrugTendency;
@@ -13,30 +14,18 @@ import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * cdss小界面控制层
@@ -104,14 +93,35 @@ public class CdssPageController extends BaseController {
 
     @PostMapping("/getDifferentialDiagnosisName")
     public void getDifferentialDiagnosisName(HttpServletResponse response, @RequestBody(required = false) String map) {
-
-//        JSONObject object = JSONObject.parseObject(map);
-//        String diseaseName = object.getString("diseaseName");
-//        Object o = JSON.toJSON(param);
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        List<String> resultList = new ArrayList<>(10);
         Object parse = JSONObject.parse(map);
-//        Object o = JSONObject.toJSON(parse);
-        String s = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getDifferentialDiagnosisName, parse, String.class);
-        System.out.println(s);
+        String s = null;
+        try {
+
+            s = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getDifferentialDiagnosisName, parse, String.class);
+        } catch (Exception e) {
+            logger.info("调用{}失败，原因为：{}", UrlConstants.getDifferentialDiagnosisName, e.getCause());
+            resp.setResponseCode(ResponseCode.INERERROR);
+        }
+        if (StringUtils.isNotBlank(s)) {
+            JSONArray jsonArray = JSONObject.parseArray(s);
+            List<Object> objects = null;
+            if (jsonArray.size() > 10) {
+                objects = jsonArray.subList(0, 10);
+            } else {
+                objects = jsonArray.subList(0, jsonArray.size());
+            }
+            Iterator<Object> iterator = objects.iterator();
+            while (iterator.hasNext()) {
+                Map<String, String> next = (Map) iterator.next();
+                resultList.add(next.get("disease_obj_differential_diagnosis_differential_diagnosis_differential_diagnosis_name"));
+            }
+            resp.setResponseCode(ResponseCode.OK);
+            resp.setData(resultList);
+
+        }
+        wirte(response, resp);
     }
 
 
