@@ -13,6 +13,7 @@ public class BaseConstants {
     public static final String DEPT_ID = "deptId";
     public static final String DEPT_NAME = "deptName";
     public static final String TOKEN = "token";
+    public static final String SYMPOL = "[]";
 
 
     //参数状态：1-启用 0- 未启用
@@ -70,6 +71,7 @@ public class BaseConstants {
     public static final String getVariableListNew = "/med/getVariableListNew.json";
     //获取诊疗提醒
     public static final String getTipList = "/med/cdss/getTipList.json";
+    public static final String getLocalJybg = "/test/rule/labWarnById";
 
 
     //获取疾病同义词

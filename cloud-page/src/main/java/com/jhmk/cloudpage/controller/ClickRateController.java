@@ -70,6 +70,21 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         wirte(response, resp);
     }
 
+    /**
+     * 添加详细医生操作日志信息
+     *
+     * @param response
+     * @param clickRate
+     */
+    @PostMapping("/addParticularLog")
+    public void addParticularLog(HttpServletResponse response, @RequestBody ClickRate clickRate) {
+        clickRate.setCreateTime(new Date());
+        clickRateRepService.save(clickRate);
+        AtResponse resp = new AtResponse();
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
 
     @PostMapping("/addList")
     public void addList(HttpServletResponse response, @RequestBody ClickRate clickRate) {

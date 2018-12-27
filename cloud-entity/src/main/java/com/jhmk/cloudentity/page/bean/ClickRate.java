@@ -16,6 +16,8 @@ public class ClickRate {
     private int id;
     private String type;
     private String doctorId;
+    private String patientId;
+    private String visitId;
     private String deptCode;
     private Date createTime;
     private int count;
@@ -55,7 +57,25 @@ public class ClickRate {
     public void setDoctorId(String doctorId) {
         this.doctorId = doctorId;
     }
+    @Basic
+    @Column(name = "patient_id", nullable = true, length = 30)
+    public String getPatientId() {
+        return patientId;
+    }
 
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    @Basic
+    @Column(name = "visit_id", nullable = true, length = 5)
+    public String getVisitId() {
+        return visitId;
+    }
+
+    public void setVisitId(String visitId) {
+        this.visitId = visitId;
+    }
     @Basic
     @Column(name = "dept_code", nullable = true, length = 32)
     public String getDeptCode() {
