@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -51,6 +52,7 @@ public class RuleMatchService {
      * @param map
      * @return
      */
+    @Transactional
     public AtResponse ruleMatchByDiagnose(String map) {
         AtResponse resp = new AtResponse();
         try {
@@ -84,9 +86,11 @@ public class RuleMatchService {
             //一诉五史信息入库
             ruleService.saveRule2Database(rule);
         } catch (ClassCastException e) {
+            e.printStackTrace();
             logger.info("类型转换失败，{}，原始数据为：{}", e.getMessage(), map);
         } catch (Exception e) {
-            logger.info("类型转换失败，{}，原始数据为：{}", e.getMessage(), map);
+            e.printStackTrace();
+            logger.info("ruleMatchByDiagnose方法报错：{}，原始数据为：{}", e.getMessage(), map);
         }
 
         return resp;

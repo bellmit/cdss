@@ -398,10 +398,10 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/ruleMatch")
     public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = null;
-        Map<String, String> paramMap = (Map) JSON.parse(map);
-        logger.info("接受到的初始数据{}", map);
+        JSONObject object = JSON.parseObject(map);
+        logger.info("接受到的初始数据{}", JSONObject.toJSONString(object));
         //页面来源 入院记录： 0 :保存病历 1：下诊断 2：打开病例 3：新建病例 6：下医嘱 7：病案首页 8：其他
-        String pageSource = paramMap.get("pageSource");//页面来源
+        String pageSource = object.getString("pageSource");//页面来源
         logger.info("页面来源：{}", pageSource);
         if (StringUtils.isEmpty(pageSource) || "test".equals(pageSource)) {
             resp = ruleMatchService.ruleMatch(map);
