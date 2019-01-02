@@ -7,6 +7,7 @@ import java.util.Date;
 /**
  * @author ziyu.zhou
  * @date 2018/12/18 17:49
+ * 日志表
  */
 
 public class LoggerBean {

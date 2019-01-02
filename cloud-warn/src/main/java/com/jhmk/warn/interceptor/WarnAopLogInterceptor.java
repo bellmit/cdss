@@ -1,4 +1,4 @@
-package com.jhmk.cloudpage.aop;
+package com.jhmk.warn.interceptor;
 
 /**
  * @author ziyu.zhou
@@ -6,7 +6,7 @@ package com.jhmk.cloudpage.aop;
  */
 
 import com.jhmk.cloudentity.common.LoggerBean;
-import javassist.*;
+import javassist.NotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,21 +22,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Objects;
 
 /**
- * Created by XFL * time on 2018/5/28 23:07 * description:
+ * 配置页面log日志
  */
 @Aspect
 @Component
-public class ControllerInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(ControllerInterceptor.class);
+public class WarnAopLogInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(WarnAopLogInterceptor.class);
     private static ThreadLocal<LoggerBean> param = new ThreadLocal<LoggerBean>();
 
 
 //    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
 //    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
-    @Pointcut("execution(public * com.jhmk.cloudpage.controller..*.*(..))")
+    @Pointcut("execution(public * com.jhmk.warn.controller..*.*(..))")
     public void controllerMethodPointcut() {
     }
 
