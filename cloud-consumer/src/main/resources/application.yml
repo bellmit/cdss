@@ -1,0 +1,55 @@
+server:
+  port: 8110
+#  context-path: /base
+
+eureka:
+  client:
+    service-url:
+#      defaultZone: http://192.168.8.20:8000/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8000/eureka/
+  instance:
+    hostname: localhost
+#zuul:
+#  routes:
+#    api-page:
+#      path: /page/**
+#      service-id: jhmk-page　
+#    api-earlywarn:
+#      path: /warn/**
+#      service-id: jhmk-earlywarn
+
+#url 超时生效
+#  host:
+#    socket-timeout-millis: 60000
+#    connect-timeout-millis: 60000
+
+#设置zuul请求超时时间  service-id  方式生效
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            #熔断超时 在zuul配置了熔断fallback的话，熔断超时也要配置，不然如果配置的ribbon超时时间大于熔断的超时，那么会先走熔断，相当于配的ribbon超时就不生效了。
+            timeoutInMilliseconds: 10000
+
+spring:
+  application:
+    name: jhmk-consumer
+  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.8.22:3306/jhmk_waring?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
+    username: root
+    password: 123456
+#    password: root
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database: mysql
+
+
+
