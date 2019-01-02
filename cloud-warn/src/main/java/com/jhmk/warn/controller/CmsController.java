@@ -10,6 +10,7 @@ import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepServ
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmRoleRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.JWTUtil;

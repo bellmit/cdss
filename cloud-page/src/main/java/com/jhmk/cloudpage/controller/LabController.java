@@ -8,7 +8,7 @@ import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudservice.cdssPageService.SmShowLogService;
-import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
@@ -53,7 +53,7 @@ public class LabController extends BaseController {
     public void warnByLab(HttpServletResponse response, @RequestBody String map) {
         Object object = JSONObject.parse(map);
         AtResponse resp = new AtResponse(System.currentTimeMillis());
-        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getTipList, object, String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getTipList, object, String.class);
         List<SmShowLog> tipList2ShowLogList = smShowLogService.getTipList2ShowLogList(result);
         List<SmShowLog> labShowLogList = smShowLogService.getLabShowLogList(tipList2ShowLogList);
         resp.setData(labShowLogList);
@@ -66,9 +66,9 @@ public class LabController extends BaseController {
     public void labWarnById(HttpServletResponse response, @RequestBody String map) {
         Object object = JSONObject.parse(map);
         AtResponse resp = new AtResponse(System.currentTimeMillis());
-//        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getTipList, object, String.class);
-//        String result = restTemplate.postForObject("http://localhost:7088"+ BaseConstants.getLocalJybg, object, String.class);
-        String result = restTemplate.postForObject("http://192.168.8.20:7088"+ BaseConstants.getLocalJybg, object, String.class);
+//        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getTipList, object, String.class);
+//        String result = restTemplate.postForObject("http://localhost:7088"+ UrlConstants.getLocalJybg, object, String.class);
+        String result = restTemplate.postForObject("http://192.168.8.20:7088"+ UrlConstants.getLocalJybg, object, String.class);
         List<SmShowLog> tipList2ShowLogList = smShowLogService.getTipList2ShowLogList(result);
         List<SmShowLog> labShowLogList = smShowLogService.getLabShowLogList(tipList2ShowLogList);
         resp.setData(labShowLogList);

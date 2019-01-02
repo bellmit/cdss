@@ -13,7 +13,7 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.*;
 import com.jhmk.cloudservice.warnService.service.*;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.warnService.webservice.CdrService;
-import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
@@ -88,7 +88,7 @@ public class RuleController extends BaseEntityController<Object> {
     @GetMapping("/getVariableList")
     @ResponseBody
     public void getVariableList(HttpServletResponse response) {
-        String forObject = restTemplate.getForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getVariableList, String.class);
+        String forObject = restTemplate.getForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getVariableList, String.class);
         wirte(response, forObject);
     }
 
@@ -120,7 +120,7 @@ public class RuleController extends BaseEntityController<Object> {
         logger.info("添加条件为：{}", JSONObject.toJSONString(param));
         String forObject = "";
         try {
-            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.addrule, o, String.class);
+            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.addrule, o, String.class);
         } catch (Exception e) {
             logger.error("添加规则失败,Message:{},cause:{}", e.getMessage(), e.getCause());
         } finally {
@@ -139,7 +139,7 @@ public class RuleController extends BaseEntityController<Object> {
         FormatRule formatRule = null;
         try {
 
-            data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getruleforid, o, String.class);
+            data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getruleforid, o, String.class);
             JSONObject jsonObject = JSONObject.parseObject(data);
             Object result = jsonObject.get("result");
             formatRule = JSONObject.parseObject(result.toString(), FormatRule.class);
@@ -171,7 +171,7 @@ public class RuleController extends BaseEntityController<Object> {
         String forObject = "";
         Map<String, Object> foramtData = null;
         try {
-            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.findallnotsubmitrule, o, String.class);
+            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.findallnotsubmitrule, o, String.class);
             foramtData = ruleService.formatData(forObject);
         } catch (Exception e) {
             logger.info("查询所有未提交的规则信息失败：" + o);
@@ -194,7 +194,7 @@ public class RuleController extends BaseEntityController<Object> {
         String forObject = "";
         Map<String, Object> foramtData = null;
         try {
-            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.findallsubmitrule, o, String.class);
+            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.findallsubmitrule, o, String.class);
             foramtData = ruleService.formatData(forObject);
         } catch (Exception e) {
             logger.info("查询所有以提交的规则信息失败：" + o);
@@ -271,11 +271,11 @@ public class RuleController extends BaseEntityController<Object> {
         String o = JSONObject.toJSONString(params);
         String forObject = "";
         try {
-            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.findrulebycondition, params, String.class);
+            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.findrulebycondition, params, String.class);
             Map<String, Object> mapData = ruleService.formatData(forObject);
             foramtData.putAll(mapData);
         } catch (Exception e) {
-            logger.info("按条件查询规则信息失败,url:{},请求参数：{},原因：{}", urlPropertiesConfig.getCdssurl() + BaseConstants.findrulebycondition, o, e.getCause() + "/" + e.getMessage());
+            logger.info("按条件查询规则信息失败,url:{},请求参数：{},原因：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.findrulebycondition, o, e.getCause() + "/" + e.getMessage());
         } finally {
             wirte(response, foramtData);
         }
@@ -290,7 +290,7 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/submitrule")
     public void submitrule(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
-        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.submitrule, parse, String.class);
+        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.submitrule, parse, String.class);
         wirte(response, forObject);
     }
 
@@ -303,7 +303,7 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/changewarninglevel")
     public void changewarninglevel(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
-        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.changewarninglevel, parse, String.class);
+        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.changewarninglevel, parse, String.class);
         wirte(response, forObject);
     }
 
@@ -315,7 +315,7 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/examinerule")
     public void examinerule(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
-        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.examinerule, parse, String.class);
+        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.examinerule, parse, String.class);
         wirte(response, forObject);
     }
 
@@ -328,7 +328,7 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/isrunruler")
     public void isrunruler(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
-        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.isrunruler, parse, String.class);
+        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.isrunruler, parse, String.class);
         wirte(response, forObject);
     }
 
@@ -340,7 +340,7 @@ public class RuleController extends BaseEntityController<Object> {
     @PostMapping("/changeIdentification")
     public void changeIdentification(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
-        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.changeIdentification, parse, String.class);
+        String forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.changeIdentification, parse, String.class);
         wirte(response, forObject);
     }
 
@@ -396,7 +396,7 @@ public class RuleController extends BaseEntityController<Object> {
     }
 
     @PostMapping("/ruleMatch")
-    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
+    public AtResponse ruleMatch(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = null;
         JSONObject object = JSON.parseObject(map);
         logger.info("接受到的初始数据{}", JSONObject.toJSONString(object));
@@ -411,6 +411,7 @@ public class RuleController extends BaseEntityController<Object> {
             resp = ruleMatchService.ruleMatchByDiagnose(map);
         }
         wirte(response, resp);
+        return resp;
     }
 
     @PostMapping("/ruleMatch1")
@@ -529,7 +530,7 @@ public class RuleController extends BaseEntityController<Object> {
         String data = "";
         try {
 
-            data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getruleforid, o, String.class);
+            data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getruleforid, o, String.class);
             JSONObject jsonObject = JSONObject.parseObject(data);
             Object result = jsonObject.get("result");
             Map<String, String> parse = (Map) JSONObject.parse(result.toString());
@@ -551,8 +552,8 @@ public class RuleController extends BaseEntityController<Object> {
         Map parse = (Map) JSONObject.parse(map);
         String result = null;
         try {
-            result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.deleterule, parse, String.class);
-//            result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.deleterule, parse, String.class);
+            result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.deleterule, parse, String.class);
+//            result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.deleterule, parse, String.class);
         } catch (Exception e) {
             logger.info("删除规则失败：" + map);
         } finally {
@@ -584,7 +585,7 @@ public class RuleController extends BaseEntityController<Object> {
         Object o = JSON.toJSON(param);
         String forObject = "";
         try {
-            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.updaterule, o, String.class);
+            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.updaterule, o, String.class);
         } catch (Exception e) {
             logger.info("更新规则失败：" + e.getMessage());
         } finally {
@@ -602,7 +603,7 @@ public class RuleController extends BaseEntityController<Object> {
      */
     @PostMapping("/statisticsrulercount")
     public void statisticsrulercount(HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.statisticsrulercount, "", String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.statisticsrulercount, "", String.class);
 
         wirte(response, result);
     }
@@ -616,7 +617,7 @@ public class RuleController extends BaseEntityController<Object> {
      */
     @PostMapping("/groupbyclassification")
     public void groupbyclassification(HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.groupbyclassification, "", String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.groupbyclassification, "", String.class);
 
         wirte(response, result);
     }
@@ -630,7 +631,7 @@ public class RuleController extends BaseEntityController<Object> {
      */
     @PostMapping("/groupbywarninglevel")
     public void groupbywarninglevel(HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.groupbywarninglevel, "", String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.groupbywarninglevel, "", String.class);
 
         wirte(response, result);
     }
@@ -644,7 +645,7 @@ public class RuleController extends BaseEntityController<Object> {
      */
     @PostMapping("/groupbyidentification")
     public void groupbyidentification(HttpServletResponse response) throws ExecutionException, InterruptedException {
-        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.groupbyidentification, "", String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.groupbyidentification, "", String.class);
 
         wirte(response, result);
     }
@@ -660,7 +661,7 @@ public class RuleController extends BaseEntityController<Object> {
     public void groupbycreatetime(HttpServletResponse response, @RequestBody String map) throws
             ExecutionException, InterruptedException {
         Object o = JSONObject.parse(map);
-        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.groupbycreatetime, o, String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.groupbycreatetime, o, String.class);
         wirte(response, result);
     }
 }

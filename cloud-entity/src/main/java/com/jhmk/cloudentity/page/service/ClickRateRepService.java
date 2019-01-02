@@ -1,17 +1,13 @@
 package com.jhmk.cloudentity.page.service;
 
 import com.jhmk.cloudentity.base.BaseRepService;
-import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.repository.ClickRateRepository;
 import com.jhmk.cloudutil.model.WebPage;
-import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

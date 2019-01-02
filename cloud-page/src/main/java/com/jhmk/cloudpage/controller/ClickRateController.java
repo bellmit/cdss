@@ -10,7 +10,7 @@ import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepServ
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
-import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
@@ -57,7 +57,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         Map<String, String> param = new HashMap<>();
         param.put("diseaseName", "高血压");
         Object parse1 = JSONObject.toJSON(param);
-        String sames = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getSamilarWord, parse1, String.class);
+        String sames = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getSamilarWord, parse1, String.class);
         System.out.println(sames);
     }
 

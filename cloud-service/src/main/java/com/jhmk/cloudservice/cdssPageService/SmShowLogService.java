@@ -2,9 +2,9 @@ package com.jhmk.cloudservice.cdssPageService;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

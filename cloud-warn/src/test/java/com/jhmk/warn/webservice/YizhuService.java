@@ -3,7 +3,7 @@
 //import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 //import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataService;
 //import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataWsImpl;
-//import com.jhmk.cloudutil.config.BaseConstants;
+//import com.jhmk.cloudutil.config.UrlConstants;
 //
 //import java.util.HashMap;
 //import java.util.List;

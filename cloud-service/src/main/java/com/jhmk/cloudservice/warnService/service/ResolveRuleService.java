@@ -12,7 +12,6 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.StandardRule;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.MapUtil;
 import com.jhmk.cloudutil.util.StringUtil;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

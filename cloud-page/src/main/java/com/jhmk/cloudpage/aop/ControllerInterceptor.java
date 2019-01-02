@@ -33,9 +33,7 @@ public class ControllerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(ControllerInterceptor.class);
     private static ThreadLocal<LoggerBean> param = new ThreadLocal<LoggerBean>();
 
-    /**
-     * 定义拦截规则：拦截com.xfl.boot.controller..*(..))包下面的所有类中，有@RequestMapping注解的方法
-     */
+
 //    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
 //    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     @Pointcut("execution(public * com.jhmk.cloudpage.controller..*.*(..))")

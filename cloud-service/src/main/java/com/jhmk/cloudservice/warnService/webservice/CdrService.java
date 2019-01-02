@@ -4,6 +4,7 @@ package com.jhmk.cloudservice.warnService.webservice;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataService;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataWsImpl;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,10 +23,10 @@ public class CdrService {
     private static final Logger logger = LoggerFactory.getLogger(CdrService.class);
     static HdrQueryDataWsImpl hdrQueryDataWsImplPort = null;
 
-    static {
-        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
-        hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
-    }
+//    static {
+//        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
+//        hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
+//    }
 
     public static String getXml(Map<String, String> params, List<Map<String, String>> conditions) {
         StringBuffer sb = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

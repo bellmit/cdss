@@ -6,7 +6,7 @@ import com.jhmk.cloudentity.earlywaring.entity.UserDataModelMapping;
 import com.jhmk.cloudentity.earlywaring.entity.UserModel;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.UserDataModelMappingRepService;
 import com.jhmk.cloudservice.warnService.service.UserModelService;
-import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
@@ -69,9 +69,9 @@ public class UserModelController extends BaseEntityController<UserModel> {
             Object o = JSON.toJSON(map);
             String data = "";
             try {
-                data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getfieldbyid, o, String.class);
+                data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getfieldbyid, o, String.class);
             } catch (Exception e) {
-                logger.info("调用{}接口失败，错误原因{}，错误信息{}", BaseConstants.getfieldbyid, e.getCause(), e.getMessage());
+                logger.info("调用{}接口失败，错误原因{}，错误信息{}", UrlConstants.getfieldbyid, e.getCause(), e.getMessage());
             } finally {
                 wirte(response, data);
             }
@@ -97,11 +97,11 @@ public class UserModelController extends BaseEntityController<UserModel> {
             Object o = JSON.toJSON(map);
             String data = "";
             try {
-                data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + BaseConstants.getunitsbyid, o, String.class);
+                data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getunitsbyid, o, String.class);
                 resp.setData(data);
                 resp.setResponseCode(ResponseCode.OK);
             } catch (Exception e) {
-                logger.info("调用{}接口失败，错误原因{}，错误信息{}", BaseConstants.getunitsbyid, e.getCause(), e.getMessage());
+                logger.info("调用{}接口失败，错误原因{}，错误信息{}", UrlConstants.getunitsbyid, e.getCause(), e.getMessage());
                 resp.setResponseCode(ResponseCode.INERERROR);
             } finally {
                 wirte(response, data);

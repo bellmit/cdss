@@ -17,6 +17,7 @@ import com.jhmk.cloudservice.warnService.service.YizhuService;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
