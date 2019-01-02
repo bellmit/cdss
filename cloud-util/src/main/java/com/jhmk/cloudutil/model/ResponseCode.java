@@ -23,27 +23,16 @@ public enum ResponseCode {
      * 系统错误
      */
     TIMEOUT(-400, "请求超时"),
-
     INERERROR(500, "internal error."),
-
     INERERROR1(501, "该角色正被使用，不能删除."),
-
     INERERROR2(502, "用户或密码错误，请重新输入."),
     INERERROR3(503, "用户未登录，请重新登录."),
     INERERROR4(504, "规则匹配失败"),
     INERERROR5(505, "用户过期，请重新登陆"),
     UPDATERULEERROR1(601, "修改规则失败"),
-
     ADDRERROR(650, "添加失败,请重新添加"),
-
     ROLEDELETEERROR(-500, "请先删除此角色关联的菜单权限与用户"),
-
-
-    NODATA(900, "data is empty"),
-
-
     CUSTOMER_NOT_EXIST(-11000, "客户号不存在");
-
 
     public int code;
     public String msg;
