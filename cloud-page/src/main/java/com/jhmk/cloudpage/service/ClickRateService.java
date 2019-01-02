@@ -1,19 +1,10 @@
 package com.jhmk.cloudpage.service;
 
 import com.jhmk.cloudentity.page.bean.ClickRate;
-import com.jhmk.cloudentity.page.service.ClickRateRepService;
-import com.jhmk.cloudutil.model.WebPage;
-import com.netflix.discovery.converters.Auto;
-import org.apache.poi.ss.formula.functions.T;
+import com.jhmk.cloudentity.page.bean.repository.service.ClickRateRepService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.sql.Date;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 

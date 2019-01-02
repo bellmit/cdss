@@ -3,6 +3,8 @@ package com.jhmk.cloudpage.controller;
 import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudpage.demo.FrontHitEvent;
+import com.jhmk.cloudutil.model.AtResponse;
+import com.jhmk.cloudutil.model.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -22,8 +24,11 @@ public class DemoController extends BaseController {
     private ApplicationContext applicationContext;
 
     @RequestMapping("/test1")
-    public void demo(HttpServletResponse response) {
-        wirte(response, "www.baidu.com");
+    public AtResponse demo() {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        resp.setData("www.baidu.com");
+        resp.setResponseCode(ResponseCode.OK);
+        return resp;
     }
 
     @RequestMapping("/test2")

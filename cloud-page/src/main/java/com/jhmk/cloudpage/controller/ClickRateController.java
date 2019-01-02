@@ -8,7 +8,7 @@ import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.page.bean.ClickRate;
-import com.jhmk.cloudentity.page.service.ClickRateRepService;
+import com.jhmk.cloudentity.page.bean.repository.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
 import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;

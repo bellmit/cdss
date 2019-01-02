@@ -5,7 +5,6 @@ import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
-import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.SchedulerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
