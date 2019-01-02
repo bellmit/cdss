@@ -1,4 +1,4 @@
-package com.jhmk.cloudentity.page.repository;
+package com.jhmk.cloudentity.page.bean.repository;
 
 import com.jhmk.cloudentity.page.bean.SysDiseases;
 import org.springframework.data.jpa.repository.JpaRepository;

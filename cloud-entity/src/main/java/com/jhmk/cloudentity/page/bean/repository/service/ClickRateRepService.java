@@ -1,8 +1,8 @@
-package com.jhmk.cloudentity.page.service;
+package com.jhmk.cloudentity.page.bean.repository.service;
 
 import com.jhmk.cloudentity.base.BaseRepService;
 import com.jhmk.cloudentity.page.bean.ClickRate;
-import com.jhmk.cloudentity.page.repository.ClickRateRepository;
+import com.jhmk.cloudentity.page.bean.repository.ClickRateRepository;
 import com.jhmk.cloudutil.model.WebPage;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;

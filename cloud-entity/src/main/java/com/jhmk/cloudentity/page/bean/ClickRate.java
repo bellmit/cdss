@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 
 @Entity
-@Table(name = "sm_click_rate", schema = "jhmk_waring", catalog = "")
+@Table(name = "sm_click_rate")
 public class ClickRate {
     private int id;
     private String type;

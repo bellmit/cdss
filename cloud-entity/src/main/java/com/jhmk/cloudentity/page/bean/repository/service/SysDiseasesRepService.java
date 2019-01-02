@@ -1,9 +1,9 @@
-package com.jhmk.cloudentity.page.service;
+package com.jhmk.cloudentity.page.bean.repository.service;
 
 
 import com.jhmk.cloudentity.base.BaseRepService;
 import com.jhmk.cloudentity.page.bean.SysDiseases;
-import com.jhmk.cloudentity.page.repository.SysDiseasesRepository;
+import com.jhmk.cloudentity.page.bean.repository.SysDiseasesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

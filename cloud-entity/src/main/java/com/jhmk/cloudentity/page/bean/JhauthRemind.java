@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 
 @Entity
-@Table(name = "jhauth_remind", schema = "jhmk_waring", catalog = "")
+@Table(name = "jhauth_remind")
 public class JhauthRemind {
     private int id;
     private String doctorId;
