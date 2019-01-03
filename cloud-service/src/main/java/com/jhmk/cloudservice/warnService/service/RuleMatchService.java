@@ -86,9 +86,11 @@ public class RuleMatchService {
             //一诉五史信息入库
             ruleService.saveRule2Database(rule);
         } catch (ClassCastException e) {
+            resp.setResponseCode(ResponseCode.INERERROR);
             e.printStackTrace();
             logger.info("类型转换失败，{}，原始数据为：{}", e.getMessage(), map);
         } catch (Exception e) {
+            resp.setResponseCode(ResponseCode.INERERROR);
             e.printStackTrace();
             logger.info("ruleMatchByDiagnose方法报错：{}，原始数据为：{}", e.getMessage(), map);
         }
@@ -152,7 +154,10 @@ public class RuleMatchService {
             logger.info("测试规则匹配json串：{}", JSONObject.toJSONString(rule));
             data = ruleService.ruleMatchGetResp(rule);
             logger.info("规则匹配返回结果为：{}", data);
+            resp.setResponseCode(ResponseCode.OK);
+
         } catch (Exception e) {
+            resp.setResponseCode(ResponseCode.INERERROR);
             logger.info("规则匹配失败:{},请求数据为：{}", e.getMessage(), map);
         }
         if (StringUtils.isNotBlank(data)) {
