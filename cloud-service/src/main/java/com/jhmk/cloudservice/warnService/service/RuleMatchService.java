@@ -52,7 +52,6 @@ public class RuleMatchService {
      * @param map
      * @return
      */
-    @Transactional
     public AtResponse ruleMatchByDiagnose(String map) {
         AtResponse resp = new AtResponse();
         try {

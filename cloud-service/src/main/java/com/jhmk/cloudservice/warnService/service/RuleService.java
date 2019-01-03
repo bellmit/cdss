@@ -292,9 +292,9 @@ public class RuleService {
         Object parse = JSONObject.parse(o);
         try {
             data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, parse, String.class);
-            logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule,JSONObject.toJSONString(parse),data);
+            logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, JSONObject.toJSONString(parse), data);
         } catch (Exception e) {
-            logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, e.getMessage(),JSONObject.toJSONString(parse), data);
+            logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, e.getMessage(), JSONObject.toJSONString(parse), data);
         }
 //        }
         return data;
@@ -333,7 +333,10 @@ public class RuleService {
             }
         }
         //将提醒状态全部设为3，表示未触发，如果触发，再将状态改为0
-        smShowLogRepService.updateShowLogStatus(3, doctor_id, patient_id, visit_id, "rulematch", 0);
+        List<SmShowLog> existLogByRuleMatch = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+        if (existLogByRuleMatch != null && existLogByRuleMatch.size() > 0) {
+            smShowLogRepService.updateShowLogStatus(3, doctor_id, patient_id, visit_id, "rulematch", 0);
+        }
         JSONObject jsonObject = JSONObject.parseObject(resultData);
         if (!symbol.equals(jsonObject.getString(resultSym))) {
             Object result = jsonObject.get(resultSym);
@@ -809,7 +812,8 @@ public class RuleService {
                         String type = next.getString("type");
                         String stat = next.getString("stat");
                         List<SmShowLog> logList = smShowLogRepService.findAllByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitIdOrderByDateDesc(doctor_id, patient_id, itemName, type, stat, visit_id);
-                        if (logList != null && logList.size() > 0 && 3 == logList.get(0).getRuleStatus()) {
+//                        if (logList != null && logList.size() > 0 && 3 == logList.get(0).getRuleStatus()) {
+                        if (logList != null && logList.size() > 0) {
                             String date = next.getString("data");
                             smShowLogRepService.updateSmHospitalStatusAndDateById(0, date, logList.get(0).getId());
                             continue;
