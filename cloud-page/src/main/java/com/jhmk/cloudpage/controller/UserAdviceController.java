@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +57,7 @@ public class UserAdviceController extends BaseEntityController<UserAdvice> {
     @PostMapping(value = "/add")
     public void addUser(HttpServletResponse response, @RequestBody UserAdvice advice) {
         AtResponse<String> resp = new AtResponse<>();
-
+        advice.setCreateDate(new Date());
         UserAdvice save = userAdviceRepService.save(advice);
         if (save != null) {
             resp.setResponseCode(ResponseCode.OK);
