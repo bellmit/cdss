@@ -32,9 +32,8 @@ public class BasicInfoService {
         String doctor_id = rule.getDoctor_id();
         String doctor_name = rule.getDoctor_name();
         BasicInfo byPatient_idAndVisit_id = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-        String doctorId = byPatient_idAndVisit_id.getDoctor_id();
-        String doctorName = byPatient_idAndVisit_id.getDoctor_name();
-        if (byPatient_idAndVisit_id == null || (byPatient_idAndVisit_id.getDoctor_id() == null && doctor_id != null)||!(doctorId.equals(doctor_id))||!(doctor_name.equals(doctorName))) {
+
+        if (byPatient_idAndVisit_id == null || (byPatient_idAndVisit_id.getDoctor_id() == null && doctor_id != null) || !(doctor_id.equals(byPatient_idAndVisit_id.getDoctor_id())) || !(doctor_name.equals(byPatient_idAndVisit_id.getDoctor_name()))) {
             basicInfoRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             String pageSource = rule.getPageSource();
             String warnSource = rule.getWarnSource();

@@ -286,16 +286,16 @@ public class RuleService {
 
 //        String deptName = fill.getBinganshouye().getPat_visit_dept_admission_to_name();
 //        if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
-            //todo 获取疾病同义词，用于跑医院数据到数据库
+        //todo 获取疾病同义词，用于跑医院数据到数据库
 //        Rule sameZhenDuanList = getSameZhenDuanList(fill);
-            String o = JSONObject.toJSONString(fill);
-            Object parse = JSONObject.parse(o);
-            try {
-                data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, parse, String.class);
-                logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule,JSONObject.toJSONString(parse),data);
-            } catch (Exception e) {
-                logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, e.getMessage(),JSONObject.toJSONString(parse), data);
-            }
+        String o = JSONObject.toJSONString(fill);
+        Object parse = JSONObject.parse(o);
+        try {
+            data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, parse, String.class);
+            logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule,JSONObject.toJSONString(parse),data);
+        } catch (Exception e) {
+            logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, e.getMessage(),JSONObject.toJSONString(parse), data);
+        }
 //        }
         return data;
     }
