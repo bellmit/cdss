@@ -796,6 +796,7 @@ public class RuleService {
         String patient_id = fill.getPatient_id();
         String visit_id = fill.getVisit_id();
         if (StringUtils.isNotBlank(doctor_id) && StringUtils.isNotBlank(patient_id)) {
+            //将既往史提醒 状态为0的改为状态为3 自动置灰
             smShowLogRepService.updateJwsLogStatus(doctor_id, patient_id, visit_id);
             Object o = JSONObject.parse(map);
             String result = "";
@@ -812,8 +813,7 @@ public class RuleService {
                         String type = next.getString("type");
                         String stat = next.getString("stat");
                         List<SmShowLog> logList = smShowLogRepService.findAllByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitIdOrderByDateDesc(doctor_id, patient_id, itemName, type, stat, visit_id);
-//                        if (logList != null && logList.size() > 0 && 3 == logList.get(0).getRuleStatus()) {
-                        if (logList != null && logList.size() > 0) {
+                        if (logList != null && logList.size() > 0 && 3 == logList.get(0).getRuleStatus()) {
                             String date = next.getString("data");
                             smShowLogRepService.updateSmHospitalStatusAndDateById(0, date, logList.get(0).getId());
                             continue;
