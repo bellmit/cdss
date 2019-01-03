@@ -1,7 +1,7 @@
 package com.jhmk.cloudentity.page.bean;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -19,7 +19,7 @@ public class UserAdvice {
     private String doctorName;
     private String deptId;
     private String doctorAdvice;
-    private Timestamp createDate;
+    private Date createDate;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -114,11 +114,11 @@ public class UserAdvice {
 
     @Basic
     @Column(name = "createDate", nullable = true)
-    public Timestamp getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Timestamp createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 }
