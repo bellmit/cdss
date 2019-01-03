@@ -396,7 +396,7 @@ public class RuleController extends BaseEntityController<Object> {
     }
 
     @PostMapping("/ruleMatch")
-    public AtResponse ruleMatch(HttpServletResponse response, @RequestBody String map) {
+    public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = null;
         JSONObject object = JSON.parseObject(map);
         logger.info("接受到的初始数据{}", JSONObject.toJSONString(object));
@@ -411,7 +411,6 @@ public class RuleController extends BaseEntityController<Object> {
             resp = ruleMatchService.ruleMatchByDiagnose(map);
         }
         wirte(response, resp);
-        return resp;
     }
 
     @PostMapping("/ruleMatch1")
