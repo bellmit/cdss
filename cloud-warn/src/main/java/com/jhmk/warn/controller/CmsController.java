@@ -53,7 +53,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
     public void loginPost(HttpServletRequest httpServletRequest, HttpServletResponse response, @RequestBody String map) {
         logger.info("登录信息：{}", map);
         Map<String, String> param = (Map) JSONObject.parse(map);
-        AtResponse<Map<String, Object>> resp = new AtResponse<>(System.currentTimeMillis());
+        AtResponse resp = new AtResponse<>(System.currentTimeMillis());
         Map<String, Object> data = new HashMap<>();
         if (param.get("username") == null || "".equals(param.get("username")) || "".equals(param.get("password"))) {
             resp.setResponseCode(ResponseCode.INERERROR2);
@@ -97,6 +97,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
 
                     logger.info("登录成功");
                     resp.setMessage("登录成功");
+                    resp.setData(admin);
                     resp.setResponseCode(ResponseCode.OK);
                     response.setHeader(BaseConstants.TOKEN, token);
                 } else {
