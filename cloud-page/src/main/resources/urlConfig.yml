@@ -2,9 +2,12 @@
 
 #urlConfig:
 #cdss规则匹配接口
-cdssurl: http://172.16.254.163:8010
+#cdssurl: http://172.16.254.163:8010
+cdssurl: http://192.168.8.20:8011
 #诊疗计划
 pageurl: http://172.16.254.163:8800
+#pageurl: http://172.16.254.163:8800
 #   分词接口
+participleurl: http://172.16.254.163:8802
 participleurl: http://172.16.254.163:8802
 
