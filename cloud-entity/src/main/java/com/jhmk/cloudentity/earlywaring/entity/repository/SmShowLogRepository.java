@@ -94,7 +94,7 @@ public interface SmShowLogRepository extends PagingAndSortingRepository<SmShowLo
      */
     @Modifying(clearAutomatically = true)
     @Transactional
-    @Query("update SmShowLog l set l.ruleStatus = 3 where l.doctorId=?1 and l.patientId=?2 and l.visitId=?3 and l.type<>'rulematch' ")
+    @Query("update SmShowLog l set l.ruleStatus = 3 where l.doctorId=?1 and l.patientId=?2 and l.visitId=?3 and l.type<>'rulematch' and  l.ruleStatus = 0 ")
     int updateJwsLogStatus(String doctorId, String patientId, String visitId);
 
 }
