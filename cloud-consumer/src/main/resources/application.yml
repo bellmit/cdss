@@ -5,7 +5,6 @@ server:
 eureka:
   client:
     service-url:
-#      defaultZone: http://192.168.8.20:8000/eureka/
       defaultZone: http://${eureka.instance.hostname}:8000/eureka/
   instance:
     hostname: localhost
@@ -24,6 +23,12 @@ eureka:
 #    connect-timeout-millis: 60000
 
 #设置zuul请求超时时间  service-id  方式生效
+
+feign:
+  hystrix:
+    enabled: true
+
+
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
