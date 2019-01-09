@@ -11,6 +11,8 @@ import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
 import com.jhmk.cloudutil.util.MapUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +31,8 @@ import java.util.*;
 
 @Component
 public class JianchabaogaoService {
+    private static final Logger logger = LoggerFactory.getLogger(JianchabaogaoService.class);
+
     @Autowired
     CdrService cdrService;
     @Autowired
@@ -116,7 +120,6 @@ public class JianchabaogaoService {
         params.putAll(baseParams);
         //获取入出转xml
         String hospitalDate = cdrService.getDataByCDR(params, null);
-
         Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
 
         //入院时间
@@ -156,6 +159,37 @@ public class JianchabaogaoService {
             Jianchabaogao jiancha = MapUtil.map2Bean(map, Jianchabaogao.class);
             jianchabaogaoList.add(jiancha);
         }
+        logger.info("获取到的检查报告为：{}", JSONObject.toJSONString(jianchabaogaoList));
+        return jianchabaogaoList;
+    }
+
+    /**
+     * （广医二院）
+     * 从数据中心获取检查数据
+     */
+    public List<Jianchabaogao> getJianchabaogaoFromGyeyCdr(Rule rule) {
+        //基础map 放相同数据
+        Map<String, String> params = new HashMap<>();
+        params.put("oid", BaseConstants.OID);
+        /**
+         *  广医二院  检查报告
+         *  patient_id 是 inp_no
+         *  visit_id 是 patient_id
+         */
+        params.put("patient_id", rule.getInp_no());
+        params.put("visit_id", rule.getPatient_id());
+        params.put("ws_code", BaseConstants.JHHDRWS005);
+        String jianchaXML = cdrService.getDataByCDR(params, null);
+        logger.info("检查结果原始数据为：========={}", jianchaXML);
+        List<Map<String, String>> jianchabaogao = analysisXmlService.analysisXml2Jianchabaogao(jianchaXML);
+        List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
+        if (Objects.nonNull(jianchabaogao)) {
+            for (Map<String, String> map : jianchabaogao) {
+                Jianchabaogao jiancha = MapUtil.map2Bean(map, Jianchabaogao.class);
+                jianchabaogaoList.add(jiancha);
+            }
+        }
+        logger.info("获取到的检查报告为：{}", JSONObject.toJSONString(jianchabaogaoList));
         return jianchabaogaoList;
     }
 
