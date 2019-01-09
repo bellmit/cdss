@@ -4,7 +4,6 @@ package com.jhmk.cloudservice.warnService.webservice;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataService;
 import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataWsImpl;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,10 +22,10 @@ public class CdrService {
     private static final Logger logger = LoggerFactory.getLogger(CdrService.class);
     static HdrQueryDataWsImpl hdrQueryDataWsImplPort = null;
 
-//    static {
-//        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
-//        hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
-//    }
+    static {
+        HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
+        hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
+    }
 
     public static String getXml(Map<String, String> params, List<Map<String, String>> conditions) {
         StringBuffer sb = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -66,11 +65,12 @@ public class CdrService {
      */
     public String getDataByCDR(Map<String, String> params, List<Map<String, String>> coditions) {
         String xml = getXml(params, coditions);
-        String data = "";
+        logger.info("调用参数：{}", xml);
+        String data = null;
         try {
             data = hdrQueryDataWsImplPort.queryData(xml);
         } catch (Exception e) {
-            logger.error("获取数据中心数据失败：{},请求参数为：{}", e.getMessage(),xml);
+            logger.error("获取数据中心数据失败：{},原始数据为：{}", e.getMessage(), xml);
         }
         return data;
     }
@@ -103,8 +103,12 @@ public class CdrService {
         System.out.println(xml);
         HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
         HdrQueryDataWsImpl hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
-        String data = hdrQueryDataWsImplPort.queryData(xml);
-        System.out.println(data);
+        String data = null;
+        try {
+            data = hdrQueryDataWsImplPort.queryData(xml);
+        } catch (Exception e) {
+            logger.error("获取数据中心数据失败：{},原始数据为：{}", e.getMessage(), xml);
+        }
         AnalysisXmlService analysisXmlService = new AnalysisXmlService();
 //        analysisXmlService.analysisXml2Binganshouye(data);
     }

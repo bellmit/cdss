@@ -1,6 +1,7 @@
 package com.jhmk.cloudservice.warnService.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
@@ -11,6 +12,10 @@ import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
+import com.jhmk.cloudutil.util.MapUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,36 +36,15 @@ import java.util.stream.Collectors;
 
 @Component
 public class JianyanbaogaoService {
+    private static final Logger logger = LoggerFactory.getLogger(JianyanbaogaoService.class);
+
     @Autowired
-    AnalysisXmlService analysisXmlService;
+    DbConnectionUtil dbConnectionUtil;
     @Autowired
     CdrService cdrService;
     @Autowired
-    DbConnectionUtil dbConnectionUtil;
+    AnalysisXmlService analysisXmlService;
 
-
-    public List<Jianyanbaogao> getJianyanbaogao(String patientId, String visitId, String hospitalName) {
-        List<Jianyanbaogao> jianyanbaogaoList = null;
-        if (hospitalName.equals("bysy")) {//北医三院
-            jianyanbaogaoList = getJianyanbaogaoFromBysyCDR(patientId, visitId);
-        } else if (hospitalName.equals("gam")) {//广安门
-            jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
-        } else if (hospitalName.equals("xzey")) {//徐州二院
-
-        } else if (hospitalName.equals("gyey")) {//徐州二院
-            getJianyanbaogaoFromGyeyCdr(patientId, visitId);
-        }
-        return jianyanbaogaoList;
-    }
-
-
-    /**
-     * 广安门 视图
-     *
-     * @param patientId
-     * @param visitId
-     * @return
-     */
     public List<Jianyanbaogao> getJianyanbaogaoBypatientIdAndVisitId(String patientId, String visitId) {
         List<Jianyanbaogao> jianyanbaogaoList = new LinkedList<>();
         Connection conn = null;
@@ -255,6 +239,94 @@ public class JianyanbaogaoService {
         } else {
             return null;
         }
+    }
+
+    public List<Jianyanbaogao> getJianyanbaogaoFromGyeyCdr(Rule rule) {
+        //基础map 放相同数据
+        Map<String, String> params = new HashMap<>();
+        params.put("oid", BaseConstants.OID);
+        /**
+         *  广医二院  检查报告
+         *  patient_id 是 inp_no
+         *  visit_id 是 patient_id
+         */
+        params.put("patient_id", rule.getInp_no());
+        params.put("visit_id", rule.getPatient_id());
+        params.put("ws_code", BaseConstants.JHHDRWS006A);
+        String jianyanzhubiao = cdrService.getDataByCDR(params, null);
+        logger.info("检验主表原始数据为：========={}", jianyanzhubiao);
+        //检验数据明细
+        params.put("ws_code", BaseConstants.JHHDRWS006B);
+        String jybgzbMX = cdrService.getDataByCDR(params, null);
+        logger.info("检验明细原始数据为：========={}", jybgzbMX);
+        //获取检验报告原始数据
+        if (StringUtils.isNotBlank(jybgzbMX)) {
+            List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
+            List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
+            rule.setOriginalJianyanbaogaos(originalJianyanbaogaos);
+            List<Jianyanbaogao> jianyanbaogaos = analysisXmlService.analysisOriginalJianyanbaogao2Jianyanbaogao(originalJianyanbaogaos);
+            logger.info("获取到的检验报告为：{}", JSONObject.toJSONString(jianyanbaogaos));
+            return jianyanbaogaos;
+        } else {
+            return null;
+        }
+    }
+
+
+    public List<Jianyanbaogao> getJianyanbaogaoFromCdr(Rule rule) {
+        //检验数据
+//        paramMap.put()
+        //解析规则 一诉五史 检验报告等
+
+        //基础map 放相同数据
+        Map<String, String> baseParams = new HashMap<>();
+        baseParams.put("oid", BaseConstants.OID);
+        baseParams.put("patient_id", rule.getPatient_id());
+        baseParams.put("visit_id", rule.getVisit_id());
+        Map<String, String> params = new HashMap<>();
+        params.put("ws_code", BaseConstants.JHHDRWS004A);
+        params.putAll(baseParams);
+        //获取入出转xml
+        String hospitalDate = cdrService.getDataByCDR(params, null);
+        //获取入院时间 出院时间
+        Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
+        //入院时间
+        String admission_time = hospitalDateMap.get("admission_time");
+        //出院时间
+        String discharge_time = hospitalDateMap.get("discharge_time");
+        /**
+         * 根据入院出院时间  获取时间段内的检验报告
+         */
+        List<Map<String, String>> listConditions = new LinkedList<>();
+        if (StringUtils.isNotBlank(admission_time)) {
+            Map<String, String> conditionParams = new HashMap<>();
+            conditionParams.put("elemName", "REPORT_TIME");
+            conditionParams.put("value", admission_time);
+//            conditionParams.put("operator", ">=");
+            conditionParams.put("operator", "&gt;=");
+            listConditions.add(conditionParams);
+            rule.setAdmission_time(admission_time);
+        }
+        if (StringUtils.isNotBlank(discharge_time)) {
+            Map<String, String> conditionParams = new HashMap<>();
+            conditionParams.put("elemName", "REPORT_TIME");
+            conditionParams.put("value", discharge_time);
+            conditionParams.put("operator", "&lt;=");
+            listConditions.add(conditionParams);
+            rule.setDischarge_time(discharge_time);
+        }
+        //检验数据（主表）
+        params.put("ws_code", BaseConstants.JHHDRWS006A);
+        String jianyanzhubiao = cdrService.getDataByCDR(params, listConditions);
+        //检验数据明细
+        params.put("ws_code", BaseConstants.JHHDRWS006B);
+        String jybgzbMX = cdrService.getDataByCDR(params, listConditions);
+        //获取检验报告原始数据
+        List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
+        List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
+        List<Jianyanbaogao> jianyanbaogaos = analysisXmlService.analysisOriginalJianyanbaogao2Jianyanbaogao(originalJianyanbaogaos);
+        logger.info("获取到的检验报告为：{}", JSONObject.toJSONString(jianyanbaogaos));
+        return jianyanbaogaos;
     }
 
     public static void main(String[] args) {
