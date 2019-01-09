@@ -313,7 +313,6 @@ public class AnalysisXmlService {
                 String unit = jianyanbaogaoForAuxiliary.getUnit();
                 jianyanbaogao.setLab_result_value_unit(unit);
                 String lab_result = jianyanbaogaoForAuxiliary.getLab_result();
-                //todo  过滤检验定量结果是否是汉字 汉字在放进去
                 if (!StringUtil.isNumber(lab_result)) {
                     continue;
                 }
