@@ -235,7 +235,7 @@ public class BinganshouyeService {
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbConnectionUtil.openGamConnectionDBForBaogao();
+            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
             //HkT:<GB<： 在数据库中代表入院记录 caseid：=patient_id  admincount:入院次数
             cstmt = conn.prepareCall(" select * from  v_cdss_pat_visit ");
             rs = cstmt.executeQuery();// 执行
@@ -251,7 +251,7 @@ public class BinganshouyeService {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            DbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
         }
         return set;
     }
