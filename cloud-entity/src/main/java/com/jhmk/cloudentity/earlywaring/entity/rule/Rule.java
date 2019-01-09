@@ -20,6 +20,7 @@ public class Rule implements Serializable {
     private String doctor_id;
     private String doctor_name;
     private String dept_code;
+    private String inp_no;
     private String warnSource;
     private String patient_id;
     private String visit_id;
@@ -184,11 +185,22 @@ public class Rule implements Serializable {
         this.originalJianyanbaogaos = originalJianyanbaogaos;
     }
 
+    public String getInp_no() {
+        return inp_no;
+    }
+
+    public void setInp_no(String inp_no) {
+        this.inp_no = inp_no;
+    }
+
     public static Rule fill(JSONObject jo) {
         Rule o = new Rule();
 
         if (jo.containsKey("doctor_id")) {
             o.setDoctor_id(jo.getString("doctor_id"));
+        }
+        if (jo.containsKey("inp_no")) {
+            o.setInp_no(jo.getString("inp_no"));
         }
         if (jo.containsKey("doctor_name")) {
             o.setDoctor_name(jo.getString("doctor_name"));
