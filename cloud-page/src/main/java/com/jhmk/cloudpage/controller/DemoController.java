@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +29,14 @@ public class DemoController extends BaseController {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
         resp.setData("www.baidu.com");
         resp.setResponseCode(ResponseCode.OK);
+        return resp;
+    }
+    @RequestMapping("/testtwo")
+    @ResponseBody
+    public AtResponse demo2() {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        String s="1234";
+        resp.setData(s);
         return resp;
     }
 
