@@ -120,6 +120,9 @@ public class JianchabaogaoService {
         params.putAll(baseParams);
         //获取入出转xml
         String hospitalDate = cdrService.getDataByCDR(params, null);
+        if (StringUtils.isEmpty(hospitalDate)) {
+            return null;
+        }
         Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
 
         //入院时间

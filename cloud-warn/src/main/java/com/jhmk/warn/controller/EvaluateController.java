@@ -4,6 +4,7 @@ import com.jhmk.cloudentity.base.BaseEntityController;
 import com.jhmk.cloudentity.earlywaring.entity.SmEvaluate;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmEvaluateRepService;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;

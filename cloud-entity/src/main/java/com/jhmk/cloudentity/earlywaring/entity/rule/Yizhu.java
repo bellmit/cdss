@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 
 @Entity
-@Table(name = "rule_yizhu", schema = "jhmk_waring", catalog = "")
+@Table(name = "rule_yizhu")
 public class Yizhu implements Serializable{
     private int id;
     private String patient_id;

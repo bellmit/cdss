@@ -6,8 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.RuyuanjiluRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.*;
-import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConfig;
+import com.jhmk.cloudutil.config.UrlConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
 import com.jhmk.cloudutil.util.MapUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,7 @@ public class RuyuanjiluService {
     @Autowired
     DbConnectionUtil dbConnectionUtil;
     @Autowired
-    UrlConfig urlConfig;
+    UrlPropertiesConfig urlPropertiesConfig;
     @Autowired
     RestTemplate restTemplate;
     @Autowired
@@ -86,7 +87,7 @@ public class RuyuanjiluService {
                 param.put("data", sharetxtcase);
 
                 //亚飞分词接口
-                String returnData = restTemplate.postForObject(urlConfig.getParticipleurl() + BaseConstants.participle, JSONObject.toJSON(param), String.class);
+                String returnData = restTemplate.postForObject(urlPropertiesConfig.getParticipleurl() + UrlConstants.participle, JSONObject.toJSON(param), String.class);
                 System.out.println(JSONObject.toJSONString(param));
                 JSONObject resultObj = JSONObject.parseObject(returnData);
                 String value = resultObj.getString("value");

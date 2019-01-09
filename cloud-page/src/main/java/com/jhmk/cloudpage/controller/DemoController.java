@@ -1,12 +1,16 @@
 package com.jhmk.cloudpage.controller;
 
+import com.jhmk.cloudentity.base.BaseController;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudpage.demo.FrontHitEvent;
+import com.jhmk.cloudutil.model.AtResponse;
+import com.jhmk.cloudutil.model.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,14 +19,25 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2018/8/31 18:54
  */
 @Controller
-@RequestMapping("/page/demo")
-public class DemoController {
+@RequestMapping("/demo")
+public class DemoController extends BaseController {
     @Autowired
     private ApplicationContext applicationContext;
 
     @RequestMapping("/test1")
-    public String demo() {
-        return "www.baidu.com";
+    public AtResponse demo() {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        resp.setData("www.baidu.com");
+        resp.setResponseCode(ResponseCode.OK);
+        return resp;
+    }
+    @RequestMapping("/testtwo")
+    @ResponseBody
+    public AtResponse demo2() {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        String s="1234";
+        resp.setData(s);
+        return resp;
     }
 
     @RequestMapping("/test2")

@@ -15,12 +15,13 @@ import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConfig;
+import com.jhmk.cloudutil.config.UrlConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.MapUtil;
 import com.jhmk.cloudutil.util.ReflexUtil;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class RuleService {
     @Autowired
     RestTemplate restTemplate;
     @Autowired
-    UrlConfig urlConfig;
+    UrlPropertiesConfig urlPropertiesConfig;
     @Autowired
     HosptailLogService hosptailLogService;
     @Autowired
@@ -283,19 +284,19 @@ public class RuleService {
     public String ruleMatchGetResp(Rule fill) {
         String data = "";
 
-        String deptName = fill.getBinganshouye().getPat_visit_dept_admission_to_name();
-        if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
-            //todo 获取疾病同义词，用于跑医院数据到数据库
+//        String deptName = fill.getBinganshouye().getPat_visit_dept_admission_to_name();
+//        if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
+        //todo 获取疾病同义词，用于跑医院数据到数据库
 //        Rule sameZhenDuanList = getSameZhenDuanList(fill);
-            String o = JSONObject.toJSONString(fill);
-            Object parse = JSONObject.parse(o);
-            try {
-                data = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.matchrule, parse, String.class);
-//            logger.info("匹配规则结果为{}", data);
-            } catch (Exception e) {
-                logger.info("规则匹配失败：,url={},原因:{},返回结果为：{}", urlConfig.getCdssurl() + BaseConstants.matchrule, e.getMessage(), data);
-            }
+        String o = JSONObject.toJSONString(fill);
+        Object parse = JSONObject.parse(o);
+        try {
+            data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, parse, String.class);
+            logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, JSONObject.toJSONString(parse), data);
+        } catch (Exception e) {
+            logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, e.getMessage(), JSONObject.toJSONString(parse), data);
         }
+//        }
         return data;
     }
 
@@ -332,7 +333,10 @@ public class RuleService {
             }
         }
         //将提醒状态全部设为3，表示未触发，如果触发，再将状态改为0
-        smShowLogRepService.updateShowLogStatus(3, doctor_id, patient_id, visit_id, "rulematch", 0);
+        List<SmShowLog> existLogByRuleMatch = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+        if (existLogByRuleMatch != null && existLogByRuleMatch.size() > 0) {
+            smShowLogRepService.updateShowLogStatus(3, doctor_id, patient_id, visit_id, "rulematch", 0);
+        }
         JSONObject jsonObject = JSONObject.parseObject(resultData);
         if (!symbol.equals(jsonObject.getString(resultSym))) {
             Object result = jsonObject.get(resultSym);
@@ -747,7 +751,7 @@ public class RuleService {
         Map<String, String> param = new HashMap<>();
         param.put("diseaseName", b.getDiagnosis_name());
         Object parse1 = JSONObject.toJSON(param);
-        String sames = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getSamilarWord, parse1, String.class);
+        String sames = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getSamilarWord, parse1, String.class);
         if (sames != null && !symbol.equals(sames.trim())) {
             JSONArray objects = JSONArray.parseArray(sames);
             Iterator<Object> iterator = objects.iterator();
@@ -765,7 +769,7 @@ public class RuleService {
             binglizhenduanSet.add(newBlzd);
         }
         //发送 获取疾病父类
-        String parentList = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getParentList, parse1, String.class);
+        String parentList = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getParentList, parse1, String.class);
         if (parentList != null && !symbol.equals(parentList)) {
             JSONArray objects = JSONArray.parseArray(parentList);
             Iterator<Object> iterator = objects.iterator();
@@ -792,13 +796,14 @@ public class RuleService {
         String patient_id = fill.getPatient_id();
         String visit_id = fill.getVisit_id();
         if (StringUtils.isNotBlank(doctor_id) && StringUtils.isNotBlank(patient_id)) {
+            //将既往史提醒 状态为0的改为状态为3 自动置灰
             smShowLogRepService.updateJwsLogStatus(doctor_id, patient_id, visit_id);
             Object o = JSONObject.parse(map);
             String result = "";
             try {
-                logger.info(BaseConstants.getTipList + "：发送的数据为：{}", map);
-                result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getTipList, o, String.class);
-                logger.info(BaseConstants.getTipList + "：获取到的数据为：{}", result);
+                logger.info(UrlConstants.getTipList + "：发送的数据为：{}", map);
+                result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getTipList, o, String.class);
+                logger.info(UrlConstants.getTipList + "：获取到的数据为：{}", result);
                 if (StringUtils.isNotBlank(result) && !symbol.equals(result)) {
                     JSONArray array = JSONArray.parseArray(result);
                     Iterator<Object> iterator = array.iterator();
@@ -864,6 +869,9 @@ public class RuleService {
         params.putAll(baseParams);
         //获取入出转xml
         String hospitalDate = cdrService.getDataByCDR(params, null);
+        if (StringUtils.isEmpty(hospitalDate)) {
+            return rule;
+        }
         //获取入院时间 出院时间
         Map<String, String> hospitalDateMap = analysisXmlService.getHospitalDate(hospitalDate);
         //入院时间
@@ -901,16 +909,21 @@ public class RuleService {
         }
 
         //检验数据
-//        params.put("ws_code", BaseConstants.JHHDRWS004A);
+//        params.put("ws_code", UrlConstants.JHHDRWS004A);
 
 //        params.put("ws_code", "JHHDRWS006B");
         //检验数据（主表）
         params.put("ws_code", "JHHDRWS006A");
         String jianyanzhubiao = cdrService.getDataByCDR(params, listConditions);
+        if (StringUtils.isEmpty(jianyanzhubiao)) {
+            return rule;
+        }
         //检验数据明细
         params.put("ws_code", "JHHDRWS006B");
         String jybgzbMX = cdrService.getDataByCDR(params, listConditions);
-
+        if (StringUtils.isEmpty(jybgzbMX)) {
+            return rule;
+        }
         //获取检验报告原始数据
         List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
         List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
@@ -1045,7 +1058,7 @@ public class RuleService {
         idMap.put("_id", id);
         Object obj = JSONObject.toJSON(idMap);
         //获取所有子规则id 或者数据
-        String result = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.getruleforid, obj, String.class);
+        String result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getruleforid, obj, String.class);
         JSONObject jsonObject = JSONObject.parseObject(result);
         if (!symbol.equals(result) && StringUtils.isNotBlank(result)) {
             Object resultData = jsonObject.get("result");
@@ -1079,7 +1092,7 @@ public class RuleService {
         Object o = JSONObject.toJSON(childFormat);
         String forObject = null;
         try {
-            forObject = restTemplate.postForObject(urlConfig.getCdssurl() + BaseConstants.addrule, o, String.class);
+            forObject = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.addrule, o, String.class);
         } catch (Exception e) {
             logger.info("添加子规则失败,原因为：{},返回结果{}", e.getMessage(), forObject);
         } finally {

@@ -2,13 +2,17 @@ server:
   port: 8111
 
 eureka:
+  instance:
+    hostname: localhost
   client:
     service-url:
-      defaultZone: http://localhost:8000/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8000/eureka/
 
 spring:
+  application:
+    name: jhmk-earlywarn
   datasource:
-#    type: com.alibaba.druid.pool.DruidDataSource
+#    type: com.alibaba.druid.poolsm.DruidDataSource
 #    url: jdbc:mysql://localhost:3306/jhmk_waring?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
     url: jdbc:mysql://192.168.8.22:3306/jhmk_waring?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
 #    url: jdbc:mysql://192.168.132.4:3306/jhmk_waring?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
@@ -48,7 +52,5 @@ spring:
     timeout: 0
 url:
 #  cdssurl : http://192.168.8.20:8011
-  cdssurl : http://192.168.8.20:8010
+  cdssurl : http://192.168.8.20:8011
 #  cdssurl : http://192.168.132.7:8010
-logging:
-  config: logback-spring.xml

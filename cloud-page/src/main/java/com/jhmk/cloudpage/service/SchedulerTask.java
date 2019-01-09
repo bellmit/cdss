@@ -2,13 +2,11 @@ package com.jhmk.cloudpage.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
-import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.page.bean.ClickRate;
-import com.jhmk.cloudentity.page.service.ClickRateRepService;
-import com.jhmk.cloudutil.util.DateFormatUtil;
+import com.jhmk.cloudentity.page.bean.repository.service.ClickRateRepService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Map;
 
 /**

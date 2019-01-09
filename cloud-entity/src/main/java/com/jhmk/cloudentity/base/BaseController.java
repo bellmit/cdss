@@ -2,7 +2,6 @@ package com.jhmk.cloudentity.base;
 
 import com.alibaba.fastjson.JSON;
 import com.jhmk.cloudutil.config.BaseConstants;
-import javafx.application.Application;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

@@ -1,0 +1,12 @@
+#可配置文件
+
+#urlConfig:
+#cdss规则匹配接口
+cdssurl: http://192.168.8.20:8011
+#cdssurl: http://172.16.254.163:8010
+#诊疗计划
+pageurl: http://172.16.254.163:8800
+esurl: http://192.168.8.20/search/bysy
+#   分词接口
+participleurl: http://172.16.254.163:8802
+

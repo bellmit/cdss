@@ -10,6 +10,7 @@ import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepServ
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmRoleRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.JWTUtil;
@@ -52,7 +53,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
     public void loginPost(HttpServletRequest httpServletRequest, HttpServletResponse response, @RequestBody String map) {
         logger.info("登录信息：{}", map);
         Map<String, String> param = (Map) JSONObject.parse(map);
-        AtResponse<Map<String, Object>> resp = new AtResponse<>(System.currentTimeMillis());
+        AtResponse resp = new AtResponse<>(System.currentTimeMillis());
         Map<String, Object> data = new HashMap<>();
         if (param.get("username") == null || "".equals(param.get("username")) || "".equals(param.get("password"))) {
             resp.setResponseCode(ResponseCode.INERERROR2);
@@ -92,10 +93,11 @@ public class CmsController extends BaseEntityController<SmUsers> {
 
                     httpServletRequest.getSession().setAttribute(BaseConstants.TOKEN, token);
                     //设置session超时时间(2小时)
-                    httpServletRequest.getSession().setMaxInactiveInterval(4 * 60 * 60);
+                    httpServletRequest.getSession().setMaxInactiveInterval(2 * 60 * 60);
 
                     logger.info("登录成功");
                     resp.setMessage("登录成功");
+                    resp.setData(admin);
                     resp.setResponseCode(ResponseCode.OK);
                     response.setHeader(BaseConstants.TOKEN, token);
                 } else {
@@ -137,7 +139,9 @@ public class CmsController extends BaseEntityController<SmUsers> {
         resp.setMessage(BaseConstants.SUCCESS);
         resp.setResponseCode(ResponseCode.OK);
         logger.info("退出成功");
-        wirte(response, request);
+        resp.setMessage("退出成功");
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
 
     }
 

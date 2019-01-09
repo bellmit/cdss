@@ -17,6 +17,7 @@ import com.jhmk.cloudservice.warnService.service.YizhuService;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.warnService.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
+import com.jhmk.cloudutil.config.UrlConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,9 +135,15 @@ public class TempController extends BaseController {
             //检验数据（主表）
             params.put("ws_code", "JHHDRWS006A");
             String jianyanzhubiao = cdrService.getDataByCDR(params, listConditions);
+            if (StringUtils.isEmpty(jianyanzhubiao)){
+                return;
+            }
             //检验数据明细
             params.put("ws_code", "JHHDRWS006B");
             String jybgzbMX = cdrService.getDataByCDR(params, listConditions);
+            if (StringUtils.isEmpty(jianyanzhubiao)){
+                return;
+            }
             //获取检验报告原始数据
             List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaries = analysisXmlService.analysisXml2JianyanbaogaoMX(jybgzbMX);
             List<OriginalJianyanbaogao> originalJianyanbaogaos = analysisXmlService.analysisXml2Jianyanbaogao(jianyanzhubiao, jianyanbaogaoForAuxiliaries);
@@ -174,6 +181,9 @@ public class TempController extends BaseController {
 
             //获取入出转xml
             String yizhuData = cdrService.getDataByCDR(params, listConditions);
+            if (StringUtils.isEmpty(yizhuData)){
+                return;
+            }
             //获取入院时间 出院时间
             List<Yizhu> maps = analysisXmlService.analysisXml2Yizhu(yizhuData);
             wirte(response, maps);

@@ -8,8 +8,10 @@ import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.page.bean.ClickRate;
-import com.jhmk.cloudentity.page.service.ClickRateRepService;
+import com.jhmk.cloudentity.page.bean.repository.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.ClickRateService;
+import com.jhmk.cloudutil.config.UrlConstants;
+import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.model.WebPage;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -33,7 +35,7 @@ import java.util.*;
  * @date 2018/8/29 16:18
  */
 @Controller
-@RequestMapping("/page/clickrate")
+@RequestMapping("/clickrate")
 public class ClickRateController extends BaseEntityController<ClickRate> {
     Logger logger = LoggerFactory.getLogger(ClickRateController.class);
 
@@ -45,12 +47,39 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
     ClickRateService clickRateService;
     @Autowired
     ClickRateRepService clickRateRepService;
+    @Autowired
+    UrlPropertiesConfig urlPropertiesConfig;
+    @Autowired
+    RestTemplate restTemplate;
 
+    @PostMapping("/test")
+    public void test() {
+        Map<String, String> param = new HashMap<>();
+        param.put("diseaseName", "高血压");
+        Object parse1 = JSONObject.toJSON(param);
+        String sames = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getSamilarWord, parse1, String.class);
+        System.out.println(sames);
+    }
 
     @PostMapping("/add")
     public void add(HttpServletResponse response, @RequestBody ClickRate clickRate) {
         clickRate.setCreateTime(new java.sql.Date(System.currentTimeMillis()));
         ClickRateService.addDate2Map(clickRate);
+        AtResponse resp = new AtResponse();
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+    /**
+     * 添加详细医生操作日志信息
+     *
+     * @param response
+     * @param clickRate
+     */
+    @PostMapping("/addParticularLog")
+    public void addParticularLog(HttpServletResponse response, @RequestBody ClickRate clickRate) {
+        clickRate.setCreateTime(new Date());
+        clickRateRepService.save(clickRate);
         AtResponse resp = new AtResponse();
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
@@ -80,7 +109,6 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 //        wirte(response, resp);
 //    }
     @RequestMapping(value = "/list")
-    @ResponseBody
     public void roleList(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
         Map<String, Object> parse = (Map) JSON.parse(map);
@@ -109,7 +137,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
 //        if (data[i].deptName.indexOf('血液') != -1 || data[i].deptName.indexOf('呼吸') != -1 || data[i].deptN
 //        ame.indexOf('骨科') != -1 || data[i].deptName.indexOf('耳鼻喉') != -
 //                1 || data[i].deptName.indexOf('心血管') != -1 || data[i].deptName.indexOf('普外') != -1)
-        Collections.sort(dataByCondition,CompareUtil.createComparator(-1,"createTime"));
+        Collections.sort(dataByCondition, CompareUtil.createComparator(-1, "createTime"));
         for (ClickRate clickRate : dataByCondition) {
             String deptName = clickRate.getDeptName();
             if (StringUtils.isEmpty(deptName)) {
@@ -133,6 +161,61 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         resp.setResponseCode(ResponseCode.OK);
         resp.setData(parse);
         wirte(response, resp);
+    }
+
+    @RequestMapping(value = "/listTest")
+    public AtResponse listTest(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        Map<String, Object> parse = (Map) JSON.parse(map);
+        List<ClickRate> resultList = new ArrayList<>();
+        List<ClickRate> dataByCondition = null;
+        int page = 0;
+        if (StringUtils.isNotBlank(map)) {
+            JSONObject jsonObject = JSONObject.parseObject(map);
+            Date startTime = jsonObject.getDate("startTime");
+            Date endTime = jsonObject.getDate("endTime");
+            String deptCode = jsonObject.getString("deptCode");
+            String pageNum = jsonObject.getString(WebPage.PAGE_NUM);
+            if (pageNum != null && !"".equals(pageNum.trim())) {
+                // Pageable页面从0开始计
+                page = new Integer(pageNum) - 1;
+            }
+            Map<String, Object> param = null;
+            if (StringUtils.isNotBlank(deptCode)) {
+                param = new HashMap<>();
+                param.put("deptCode", deptCode);
+            }
+            dataByCondition = clickRateRepService.getDataByCondition(startTime, endTime, param);
+        } else {
+            dataByCondition = clickRateRepService.getDataByCondition(null, null, null);
+        }
+//        if (data[i].deptName.indexOf('血液') != -1 || data[i].deptName.indexOf('呼吸') != -1 || data[i].deptN
+//        ame.indexOf('骨科') != -1 || data[i].deptName.indexOf('耳鼻喉') != -
+//                1 || data[i].deptName.indexOf('心血管') != -1 || data[i].deptName.indexOf('普外') != -1)
+        Collections.sort(dataByCondition, CompareUtil.createComparator(-1, "createTime"));
+        for (ClickRate clickRate : dataByCondition) {
+            String deptName = clickRate.getDeptName();
+            if (StringUtils.isEmpty(deptName)) {
+                continue;
+            }
+            if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
+                resultList.add(clickRate);
+            }
+        }
+        WebPage webPage = new WebPage();
+        int currentPage = page + 1;
+        // 当前页
+        webPage.setPageNo(currentPage);
+        // 总页数
+        webPage.setTotalPageNum(resultList.size() % 20 == 0 ? resultList.size() / 20 : resultList.size() / 20 + 1);
+        // 总记录数
+        webPage.setTotalCount(resultList.size());
+        List<ClickRate> clickRates = resultList.subList(page * 20, (page + 1) * 20);
+        parse.put(WebPage.WEB_PAGE, webPage);
+        parse.put(LIST_DATA, clickRates);
+        resp.setResponseCode(ResponseCode.OK);
+        resp.setData(parse);
+        return resp;
     }
 
     @PostMapping("/view")

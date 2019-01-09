@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -84,9 +85,13 @@ public class RuleMatchService {
             //一诉五史信息入库
             ruleService.saveRule2Database(rule);
         } catch (ClassCastException e) {
+            resp.setResponseCode(ResponseCode.INERERROR);
+            e.printStackTrace();
             logger.info("类型转换失败，{}，原始数据为：{}", e.getMessage(), map);
         } catch (Exception e) {
-            logger.info("规则匹配失败:{}" + e.getMessage());
+            resp.setResponseCode(ResponseCode.INERERROR);
+            e.printStackTrace();
+            logger.info("ruleMatchByDiagnose方法报错：{}，原始数据为：{}", e.getMessage(), map);
         }
 
         return resp;
@@ -103,12 +108,12 @@ public class RuleMatchService {
             Rule ruleBean = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
             ruleBean.setDoctor_id(doctor_id);
             //获取 拼接检验检查报告
-//            Rule ruleBean = ruleService.getbaogao(rule);
+            ruleBean = ruleService.getbaogao(ruleBean);
             //获取 拼接检验检查报告
-            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
-            ruleBean.setJianyanbaogao(jianyanbaogaoList);
-            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogaoBypatientIdAndVisitId(patient_id, visit_id);
-            ruleBean.setJianchabaogao(jianchabaogaoList);
+//            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
+//            ruleBean.setJianyanbaogao(jianyanbaogaoList);
+//            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogaoBypatientIdAndVisitId(patient_id, visit_id);
+//            ruleBean.setJianchabaogao(jianchabaogaoList);
             ruleBean.setYizhu(yizhus);
             String data = "";
             try {
@@ -142,14 +147,16 @@ public class RuleMatchService {
         String s2 = StringUtil.stringTransform(s);
         JSONObject parse = JSONObject.parseObject(s2);
         Rule rule = Rule.fill(parse);
-        System.out.println(JSONObject.toJSONString(rule));
         String data = "";
         try {
             //规则匹配
             logger.info("测试规则匹配json串：{}", JSONObject.toJSONString(rule));
             data = ruleService.ruleMatchGetResp(rule);
             logger.info("规则匹配返回结果为：{}", data);
+            resp.setResponseCode(ResponseCode.OK);
+
         } catch (Exception e) {
+            resp.setResponseCode(ResponseCode.INERERROR);
             logger.info("规则匹配失败:{},请求数据为：{}", e.getMessage(), map);
         }
         if (StringUtils.isNotBlank(data)) {

@@ -30,18 +30,21 @@ public class BasicInfoService {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
         String doctor_id = rule.getDoctor_id();
+        String doctor_name = rule.getDoctor_name();
         BasicInfo byPatient_idAndVisit_id = basicInfoRepService.findByPatient_idAndVisit_id(patient_id, visit_id);
-        if (byPatient_idAndVisit_id == null || (byPatient_idAndVisit_id.getDoctor_id()==null&&doctor_id!=null)) {
+
+        if (byPatient_idAndVisit_id == null || (byPatient_idAndVisit_id.getDoctor_id() == null && doctor_id != null) || !(doctor_id.equals(byPatient_idAndVisit_id.getDoctor_id())) || !(doctor_name.equals(byPatient_idAndVisit_id.getDoctor_name()))) {
             basicInfoRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
             String pageSource = rule.getPageSource();
             String warnSource = rule.getWarnSource();
-            String doctor_name = rule.getDoctor_name();
-            String dept_code = rule.getDept_code();
+//            String dept_code = rule.getDept_code();
+            String pat_visit_dept_admission_to_name = rule.getBinganshouye().getPat_visit_dept_admission_to_name();
+            String pat_visit_dept_admission_to_code = rule.getBinganshouye().getPat_visit_dept_admission_to_code();
             //基本信息
             BasicInfo basicInfo = new BasicInfo();
             basicInfo.setPatient_id(patient_id);
             basicInfo.setVisit_id(visit_id);
-            basicInfo.setDept_name(dept_code);
+            basicInfo.setDept_name(pat_visit_dept_admission_to_name);
             basicInfo.setDoctor_id(doctor_id);
             basicInfo.setPageSource(pageSource);
             basicInfo.setWarnSource(warnSource);

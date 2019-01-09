@@ -254,7 +254,7 @@ public class BaseEntityController<P> extends BaseController {
                             continue;
                         } else {
                             Object value = params.get(key);
-                            if (!org.springframework.util.StringUtils.isEmpty(value.toString())) {
+                            if (!StringUtils.isEmpty(value.toString())) {
                                 list.add(cb.equal(root.get(key), value));
                             }
                         }

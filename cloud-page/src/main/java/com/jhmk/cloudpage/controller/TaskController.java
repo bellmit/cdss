@@ -5,7 +5,6 @@ import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
-import com.jhmk.cloudentity.page.service.ClickRateRepService;
 import com.jhmk.cloudpage.service.SchedulerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2018/8/31 14:46
  */
 @Controller
-@RequestMapping("/page/task")
+@RequestMapping("/task")
 public class TaskController extends BaseController {
     Logger logger = LoggerFactory.getLogger(ClickRateController.class);
 

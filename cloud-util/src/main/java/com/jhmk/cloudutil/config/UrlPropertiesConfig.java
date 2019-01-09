@@ -16,6 +16,7 @@ public class UrlPropertiesConfig {
     private String cdssurl;
     private String pageurl;
     private String participleurl;
+    private String esurl;
 
     public String getCdssurl() {
         return cdssurl;
@@ -39,5 +40,13 @@ public class UrlPropertiesConfig {
 
     public void setParticipleurl(String participleurl) {
         this.participleurl = participleurl;
+    }
+
+    public String getEsurl() {
+        return esurl;
+    }
+
+    public void setEsurl(String esurl) {
+        this.esurl = esurl;
     }
 }
