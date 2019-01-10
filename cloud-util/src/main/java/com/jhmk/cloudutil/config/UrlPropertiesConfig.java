@@ -17,6 +17,10 @@ public class UrlPropertiesConfig {
     private String pageurl;
     private String participleurl;
     private String esurl;
+    //知识库
+    private String knowbaseurl;
+    //知识库页面地址
+    private String knowbasePageurl;
 
     public String getCdssurl() {
         return cdssurl;
@@ -48,5 +52,21 @@ public class UrlPropertiesConfig {
 
     public void setEsurl(String esurl) {
         this.esurl = esurl;
+    }
+
+    public String getKnowbaseurl() {
+        return knowbaseurl;
+    }
+
+    public void setKnowbaseurl(String knowbaseurl) {
+        this.knowbaseurl = knowbaseurl;
+    }
+
+    public String getKnowbasePageurl() {
+        return knowbasePageurl;
+    }
+
+    public void setKnowbasePageurl(String knowbasePageurl) {
+        this.knowbasePageurl = knowbasePageurl;
     }
 }
