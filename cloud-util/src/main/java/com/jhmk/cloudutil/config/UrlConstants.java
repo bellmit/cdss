@@ -38,6 +38,7 @@ public class UrlConstants {
     public static final String groupbywarninglevel = "/med/cindecision/groupbywarninglevel.json"; // 分组统计预警等级数据
     public static final String groupbyidentification = "/med/cindecision/groupbyidentification.json";//  分组统计专科标识数据
     public static final String groupbycreatetime = "/med/cindecision/groupbycreatetime.json";// 传入 startDate  endDate 两个参数  按时间分组统计规则
+    public static final String getWikiInfoByExpress = "/med/cdss/getWikiInfoByExpress.json";
 
 
     //医问道接口
@@ -68,5 +69,16 @@ public class UrlConstants {
     public static final String updatechildelement = "/med/cindecision/updatechildelement.json";//  更新childElement 接口  需要提供两个参数  _id  (规则ID)  childElement 具体信息
     public static final String findallstandardrules = "/med/cindecision/findallstandardrules.json";//  查询所有得标准规则信息    需要提供page pageSize两个参数
     public static final String findallchildrules = "/med/cindecision/findallchildrules.json";//  查询规则下所有得子类规则信息
+
+
+    //知识库接口
+
+    //  获取一个词的同义词列表
+    public static final String sameWord = "/med/cdss/sameWord.json";
+    //获取一个词的标准名称
+    public static final String standardFromAlias = "/med/cdss/standardFromAlias.json";
+    public static final String getAllChildDisease = "/med/cdss/getAllChildDisease.json";
+
+
 
 }

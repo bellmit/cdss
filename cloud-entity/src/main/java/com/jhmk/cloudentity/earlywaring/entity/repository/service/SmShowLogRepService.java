@@ -135,6 +135,11 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public List<SmShowLog> findAllByDoctorIdAndPatientIdAndVisitIdAndType(String doctorId, String patientId, String visitId,String type) {
+        return repository.findAllByDoctorIdAndPatientIdAndVisitIdAndType(doctorId, patientId, visitId,type);
+    }
+
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<SmShowLog> findExistLogByRuleMatch(String doctorId, String patientId, String visitId) {
         return repository.findExistLogByRuleMatch(doctorId, patientId, visitId);
     }

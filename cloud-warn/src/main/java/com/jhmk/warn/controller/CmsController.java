@@ -143,7 +143,9 @@ public class CmsController extends BaseEntityController<SmUsers> {
         resp.setMessage(BaseConstants.SUCCESS);
         resp.setResponseCode(ResponseCode.OK);
         logger.info("退出成功");
-        wirte(response, request);
+        resp.setMessage("退出成功");
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
 
     }
 

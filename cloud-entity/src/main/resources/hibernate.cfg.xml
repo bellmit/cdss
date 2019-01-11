@@ -4,11 +4,9 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
-    <property name="connection.url">jdbc:oracle:thin:@10.2.2.94:1521:jhemr</property>
-    <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
-      <mapping class="com.jhmk.clouddatasource.entity.PatDiagnosis"/>
-      <mapping class="com.jhmk.clouddatasource.entity.Diagnosis"/>
-      <mapping class="com.jhmk.clouddatasource.entity.PatMasterIndex"/>
+    <property name="connection.url">jdbc:mysql://192.168.8.22:3306/jhmk_waring</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+      <mapping class="com.jhmk.cloudentity.page.bean.UserAdvice"/>
       <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 
