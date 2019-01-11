@@ -14,6 +14,8 @@ import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.JWTUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ import java.util.Map;
 
 
 @Controller
-
+@Api("swaggerCmsController相关的api")
 public class CmsController extends BaseEntityController<SmUsers> {
     @Autowired
     SmDeptsRepService smDeptsRepService;
@@ -48,7 +50,8 @@ public class CmsController extends BaseEntityController<SmUsers> {
      * @param map
      */
 
-    @RequestMapping(value = "/warn/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/warn/login")
+    @ApiOperation(value = "登录", notes = "登录")
     @ResponseBody
     public void loginPost(HttpServletRequest httpServletRequest, HttpServletResponse response, @RequestBody String map) {
         logger.info("登录信息：{}", map);
@@ -126,6 +129,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
      */
     @RequestMapping(value = "/warn/loginout", method = RequestMethod.POST)
     @ResponseBody
+    @ApiOperation(value = "退出登录", notes = "退出登录")
     public void loginout(HttpServletRequest request, HttpServletResponse response) {
         request.removeAttribute(BaseConstants.USER_ID);
         request.removeAttribute(BaseConstants.CURRENT_ROLE_ID);

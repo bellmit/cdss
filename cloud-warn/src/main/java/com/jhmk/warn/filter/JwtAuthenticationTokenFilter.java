@@ -40,7 +40,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         Object sessionToken = request.getSession().getAttribute("token");
         //设置session过期时间，每次访问资源都会经过过滤器，如超过2小时时间不访问则过期
         response.setCharacterEncoding("utf-8");
-        PrintWriter writer = response.getWriter();
         AtResponse resp = new AtResponse();
 
         if (token == null) {
@@ -55,6 +54,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     || requestURI.contains("/updateShowLog")
                     || requestURI.contains("/getLogFile")
                     || requestURI.contains("/temp")
+                    || requestURI.contains("/swagger-resources")
+                    || requestURI.contains("/webjars")
+                    || requestURI.contains("/v2")
+                    || requestURI.contains("/swagger-ui.html")
+                    || requestURI.contains("/favicon.ico")
                     ) {
 //                response.reset();
                 chain.doFilter(request, response);
@@ -63,11 +67,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.setResponseCode(ResponseCode.INERERROR3);
                 resp.setMessage("用户未登录，请重新登陆");
+
+                getResponse(response, resp);
             }
         } else {
             if (sessionToken == null) {
                 logger.info("用户登录过期，请重新登陆");
                 resp.setResponseCode(ResponseCode.INERERROR5);
+
+                getResponse(response, resp);
             } else {
                 if (token.equals(sessionToken)) {
                     request.getSession().setMaxInactiveInterval(2 * 60 * 60);
@@ -77,16 +85,23 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     if (StringUtils.isEmpty(userId)) {
                         resp.setResponseCode(ResponseCode.INERERROR);
                         resp.setMessage("用户登录失效");
-                        writer.print(JSON.toJSONString(resp));
+
+                        getResponse(response, resp);
                     } else {
                         chain.doFilter(request, response);
                     }
                 } else {
                     logger.info("无效token" + token);
                     resp.setResponseCode(ResponseCode.INERERROR5);
+
+                    getResponse(response, resp);
                 }
             }
         }
+    }
+
+    private void getResponse(HttpServletResponse response, AtResponse resp) throws IOException {
+        PrintWriter writer = response.getWriter();
         writer.print(JSON.toJSONString(resp));
     }
 
