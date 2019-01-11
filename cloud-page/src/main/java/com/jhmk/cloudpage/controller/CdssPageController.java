@@ -8,6 +8,8 @@ package com.jhmk.cloudpage.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
+import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmShowLogRepService;
 import com.jhmk.cloudentity.page.bean.DrugTendency;
 import com.jhmk.cloudservice.cdssPageService.CdssPageService;
 import com.jhmk.cloudutil.config.UrlConstants;
@@ -41,6 +43,8 @@ public class CdssPageController extends BaseController {
     @Autowired
     UrlPropertiesConfig urlPropertiesConfig;
 
+    @Autowired
+    SmShowLogRepService smShowLogRepService;
     @Autowired
     CdssPageService cdssPageService;
 
@@ -85,7 +89,7 @@ public class CdssPageController extends BaseController {
     }
 
     /**
-     * 获取鉴别诊断疾病名
+     * 获取鉴别诊断疾病名 前10个
      *
      * @param response
      * @param map
@@ -124,5 +128,23 @@ public class CdssPageController extends BaseController {
         wirte(response, resp);
     }
 
+    /**
+     * 检验报告解读
+     *
+     * @param response
+     * @param map
+     */
+    @PostMapping("/interpretLab")
+    public void interpretLab (HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        JSONObject object = JSONObject.parseObject(map);
+        String patientId = object.getString("patientId");
+        String visitId = object.getString("visitId");
+        String doctorId = object.getString("doctorId");
+        List<SmShowLog> lab = smShowLogRepService.findAllByDoctorIdAndPatientIdAndVisitIdAndType(doctorId, patientId, visitId, "lab");
+        resp.setData(lab);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
 
 }

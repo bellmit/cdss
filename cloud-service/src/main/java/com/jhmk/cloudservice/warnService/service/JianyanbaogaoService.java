@@ -260,6 +260,10 @@ public class JianyanbaogaoService {
         }
     }
 
+
+
+
+
     public static void main(String[] args) {
         JianyanbaogaoService jianyanbaogaoService = new JianyanbaogaoService();
         List<Jianyanbaogao> jianyanbaogaoBypatientIdAndVisitId = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId("115608460", "2");
