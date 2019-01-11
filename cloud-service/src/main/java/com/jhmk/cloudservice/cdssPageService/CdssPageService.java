@@ -30,8 +30,8 @@ public class CdssPageService {
     RestTemplate restTemplate;
     @Autowired
     CdssPageService cdssPageService;
-    @Autowired
-    CommonService commonService;
+//    @Autowired
+//    CommonService commonService;
 
     /**
      * 获取变化趋势
@@ -54,39 +54,39 @@ public class CdssPageService {
         return jsonObject;
     }
 
-    /**
-     * 过同义词表
-     *
-     * @param strs
-     * @return
-     */
-    public Map<String, Map<String, Integer>> transform2StandardName1(String strs) {
-        JSONObject jsonObject = JSONObject.parseObject(strs);
-        Set<String> strings = jsonObject.keySet();
-        List<String> drudList = commonService.getDrudList();
-        Map<String, Map<String, Integer>> resultMap = new HashMap<>();
-        //分时间 遍历
-        for (String keyName : strings) {
-            JSONObject o = (JSONObject) jsonObject.get(keyName);
-            //药品名集合
-            Set<String> nameList = o.keySet();
-            Map<String, Integer> grudMap = new HashMap<>();
-            //分药品名遍历
-            for (String grudName : nameList) {
-                Integer count = o.getInteger(grudName);
-                //药品同义词表
-                String drugStandardName = commonService.getDrugStandardName(grudName, drudList);
-                //保存到map中
-                if (grudMap.containsKey(drugStandardName)) {
-                    grudMap.put(drugStandardName, grudMap.get(drugStandardName) + count);
-                } else {
-                    grudMap.put(drugStandardName, count);
-                }
-            }
-            resultMap.put(keyName, grudMap);
-        }
-        return resultMap;
-    }
+//    /**
+//     * 过同义词表
+//     *
+//     * @param strs
+//     * @return
+//     */
+//    public Map<String, Map<String, Integer>> transform2StandardName1(String strs) {
+//        JSONObject jsonObject = JSONObject.parseObject(strs);
+//        Set<String> strings = jsonObject.keySet();
+//        List<String> drudList = commonService.getDrudList();
+//        Map<String, Map<String, Integer>> resultMap = new HashMap<>();
+//        //分时间 遍历
+//        for (String keyName : strings) {
+//            JSONObject o = (JSONObject) jsonObject.get(keyName);
+//            //药品名集合
+//            Set<String> nameList = o.keySet();
+//            Map<String, Integer> grudMap = new HashMap<>();
+//            //分药品名遍历
+//            for (String grudName : nameList) {
+//                Integer count = o.getInteger(grudName);
+//                //药品同义词表
+//                String drugStandardName = commonService.getDrugStandardName(grudName, drudList);
+//                //保存到map中
+//                if (grudMap.containsKey(drugStandardName)) {
+//                    grudMap.put(drugStandardName, grudMap.get(drugStandardName) + count);
+//                } else {
+//                    grudMap.put(drugStandardName, count);
+//                }
+//            }
+//            resultMap.put(keyName, grudMap);
+//        }
+//        return resultMap;
+//    }
 
     /**
      * 只要括号里边的 标准名 没有括号 则直接用
