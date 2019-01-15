@@ -18,10 +18,7 @@ import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
-import com.jhmk.cloudutil.util.CompareUtil;
-import com.jhmk.cloudutil.util.DateFormatUtil;
-import com.jhmk.cloudutil.util.MapUtil;
-import com.jhmk.cloudutil.util.ReflexUtil;
+import com.jhmk.cloudutil.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -281,11 +278,17 @@ public class RuleService {
     }
 
 
+    /**
+     * 获取规则匹配响应结果
+     * @param fill
+     * @return
+     */
     public String ruleMatchGetResp(Rule fill) {
 
         String data = "";
         String o = JSONObject.toJSONString(fill);
-        Object parse = JSONObject.parse(o);
+        String s = StringUtil.stringTransform(o);
+        Object parse = JSONObject.parse(s);
         try {
             data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, parse, String.class);
             logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, JSONObject.toJSONString(parse), data);
