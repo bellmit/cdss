@@ -938,25 +938,27 @@ public class RuleService {
                             String date = next.getString("data");
                             smShowLogRepService.updateSmHospitalStatusAndDateById(0, date, logList.get(0).getId());
                             continue;
-                        }
-                        SmShowLog smShowLog = new SmShowLog();
-                        smShowLog.setItemName(itemName);
-                        smShowLog.setType(type);
-                        smShowLog.setStat(stat);
-                        String data = next.getString("data");
-                        smShowLog.setDate(data);
-                        String significance = next.getString("significance");
-                        if (StringUtils.isNotBlank(itemName) || StringUtils.isNotBlank(significance) || !"{}".equals(significance.trim())) {
+                        } else if (logList == null || logList.size() == 0) {
+                            SmShowLog smShowLog = new SmShowLog();
+                            smShowLog.setItemName(itemName);
+                            smShowLog.setType(type);
+                            smShowLog.setStat(stat);
+                            String data = next.getString("data");
+                            smShowLog.setDate(data);
+                            String significance = next.getString("significance");
+                            if (StringUtils.isNotBlank(itemName) || StringUtils.isNotBlank(significance) || !"{}".equals(significance.trim())) {
 
-                            smShowLog.setSignificance(significance);
-                            String value = next.getString("value");
-                            smShowLog.setValue(value);
-                            smShowLog.setRuleStatus(0);
-                            smShowLog.setPatientId(patient_id);
-                            smShowLog.setDoctorId(doctor_id);
-                            smShowLog.setVisitId(visit_id);
-                            smShowLogRepService.save(smShowLog);
+                                smShowLog.setSignificance(significance);
+                                String value = next.getString("value");
+                                smShowLog.setValue(value);
+                                smShowLog.setRuleStatus(0);
+                                smShowLog.setPatientId(patient_id);
+                                smShowLog.setDoctorId(doctor_id) ;
+                                smShowLog.setVisitId(visit_id);
+                                smShowLogRepService.save(smShowLog);
+                            }
                         }
+
                     }
                 }
 

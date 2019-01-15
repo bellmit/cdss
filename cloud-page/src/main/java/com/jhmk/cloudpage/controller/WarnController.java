@@ -46,7 +46,7 @@ public class WarnController extends BaseController {
 
     @PostMapping("/ruleMatch")
     public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
-        AtResponse resp = null;
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
 
         //1. 拼接规则  基本信息 检验检查 医嘱
         Rule rule = warnService.getRule(map, hospital);
@@ -54,19 +54,15 @@ public class WarnController extends BaseController {
         logger.info("下诊断规则匹配json串：{}", JSONObject.toJSONString(rule));
         String data = ruleService.ruleMatchByRuleBase(rule);
         // 2.1 修改页面显示触发项的状态为  由 0（未修改的原始状态） 到 3（自动置灰的状态）
-        smShowLogRepService.updateShowLogStatus(0, rule.getDoctor_id(), rule.getPatient_id(), rule.getVisit_id(), 3);
+        smShowLogRepService.updateShowLogStatus(3, rule.getDoctor_id(), rule.getPatient_id(), rule.getVisit_id(), 0);
         // 2.2 将匹配结果入库
         ruleService.add2LogTableNew(data, rule);
-
         //3. 既往史匹配
         //3.1 匹配结果入库
         List<SmShowLog> logList = ruleService.add2ShowLog(rule, map);
         resp.setData(logList);
         resp.setResponseCode(ResponseCode.OK);
-
         //4. 返回信息
-
-
         wirte(response, resp);
     }
 
