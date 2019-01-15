@@ -66,12 +66,11 @@ public class WarnService {
             Rule rule = Rule.fill(parse);
             return rule;
         } else if ("6".equals(pageSource)) {//医嘱 为6 其他做下诊断处理
-            JSONObject jsonObject = JSONObject.parseObject(data);
             List<Yizhu> yizhus = yizhuService.getYizhu(data, hospital);
-            if (Objects.nonNull(jsonObject)) {
-                String patient_id = jsonObject.getString("patient_id");
-                String visit_id = jsonObject.getString("visit_id");
-                String doctor_id = jsonObject.getString("doctor_id");
+            if (Objects.nonNull(object)) {
+                String patient_id = object.getString("patient_id");
+                String visit_id = object.getString("visit_id");
+                String doctor_id = object.getString("doctor_id");
                 Rule rule = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
                 rule.setYizhu(yizhus);
                 rule.setDoctor_id(doctor_id);
@@ -81,20 +80,19 @@ public class WarnService {
                 List<Jianchabaogao> jianchabaogao = jianchabaogaoService.getJianchabaogao(rule, hospital);
                 rule.setJianchabaogao(jianchabaogao);
                 return rule;
-
             }
         } else {
             Map<String, String> parse = (Map) JSONObject.parse(data);
             String s = ruleService.anaRule(parse);
+            JSONObject object1 = JSONObject.parseObject(s);
             //解析一诉五史
-            Rule rule = Rule.fill(object);
+            Rule rule = Rule.fill(object1);
             //获取 拼接检验检查报告
             List<Jianyanbaogao> jianyanbaogao = jianyanbaogaoService.getJianyanbaogao(rule, hospital);
             rule.setJianyanbaogao(jianyanbaogao);
             List<Jianchabaogao> jianchabaogao = jianchabaogaoService.getJianchabaogao(rule, hospital);
             rule.setJianchabaogao(jianchabaogao);
-            //从数据库获取 如果数据可没有 从数据中心获取
-            List<Yizhu> yizhuList = yizhuService.getYizhu(data, hospital);
+            List<Yizhu> yizhuList = yizhuService.getYizhu(parse, hospital);
             rule.setYizhu(yizhuList);
             return rule;
         }

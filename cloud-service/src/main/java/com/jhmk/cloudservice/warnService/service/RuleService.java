@@ -280,6 +280,7 @@ public class RuleService {
 
     /**
      * 获取规则匹配响应结果
+     *
      * @param fill
      * @return
      */
@@ -497,7 +498,7 @@ public class RuleService {
                         smHospitalLog.setLogMappingList(notSaveLogMapping);
 
                         SmHospitalLog save = smHospitalLogRepService.save(smHospitalLog);
-
+                        //记录触发的规则入库
                         updateRuleMatchSmShowLog(save);
                     }
                 }
@@ -519,10 +520,6 @@ public class RuleService {
         String signContent = smHospitalLog.getSignContent();
         String hintContent = smHospitalLog.getHintContent();
         //将提醒状态全部设为3，表示未触发，如果触发，再将状态改为0
-        List<SmShowLog> existLogByRuleMatch = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
-        if (existLogByRuleMatch != null && existLogByRuleMatch.size() > 0) {
-            smShowLogRepService.updateShowLogStatus(3, doctor_id, patient_id, visit_id, "rulematch", 0);
-        }
         int id = smHospitalLog.getId();
         SmShowLog log = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(doctor_id, patient_id, ruleId, visit_id);
         //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有触发此规则，前台自动变灰
@@ -922,8 +919,6 @@ public class RuleService {
         String patient_id = fill.getPatient_id();
         String visit_id = fill.getVisit_id();
         if (StringUtils.isNotBlank(doctor_id) && StringUtils.isNotBlank(patient_id)) {
-            //将既往史提醒 状态为0的改为状态为3 自动置灰
-            smShowLogRepService.updateJwsLogStatus(doctor_id, patient_id, visit_id);
             Object o = JSONObject.parse(map);
             String result = "";
             try {

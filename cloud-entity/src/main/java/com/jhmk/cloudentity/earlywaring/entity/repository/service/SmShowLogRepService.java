@@ -116,6 +116,11 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
+    public int updateShowLogStatus(int newStatus, String doctorId, String patientId, String visitId, int oldStatus) {
+        return repository.updateShowLogStatus(newStatus, doctorId, patientId, visitId, oldStatus);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
     public int updateJwsLogStatus(String doctorId, String patientId, String visitId) {
         return repository.updateJwsLogStatus(doctorId, patientId, visitId);
     }
@@ -124,6 +129,7 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
     public SmShowLog findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(String doctorId, String patientId, String itemName, String type, String stat, String visitId) {
         return repository.findFirstByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitId(doctorId, patientId, itemName, type, stat, visitId);
     }
+
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<SmShowLog> findAllByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitIdOrderByDateDesc(String doctorId, String patientId, String itemName, String type, String stat, String visitId) {
         return repository.findAllByDoctorIdAndPatientIdAndItemNameAndTypeAndStatAndVisitIdOrderByDateDesc(doctorId, patientId, itemName, type, stat, visitId);
@@ -135,8 +141,8 @@ public class SmShowLogRepService extends BaseRepService<SmShowLog, Integer> {
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public List<SmShowLog> findAllByDoctorIdAndPatientIdAndVisitIdAndType(String doctorId, String patientId, String visitId,String type) {
-        return repository.findAllByDoctorIdAndPatientIdAndVisitIdAndType(doctorId, patientId, visitId,type);
+    public List<SmShowLog> findAllByDoctorIdAndPatientIdAndVisitIdAndType(String doctorId, String patientId, String visitId, String type) {
+        return repository.findAllByDoctorIdAndPatientIdAndVisitIdAndType(doctorId, patientId, visitId, type);
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
