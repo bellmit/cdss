@@ -1,5 +1,7 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
+import com.jhmk.cloudutil.util.StringUtil;
+
 import java.io.Serializable;
 
 /**
@@ -27,7 +29,7 @@ public class Jianchabaogao implements Serializable{
     }
 
     public void setExam_item_name(String exam_item_name) {
-        this.exam_item_name = exam_item_name;
+        this.exam_item_name = StringUtil.stringTransform(exam_item_name);
     }
 
     public String getExam_time() {
@@ -43,7 +45,7 @@ public class Jianchabaogao implements Serializable{
     }
 
     public void setExam_diag(String exam_diag) {
-        this.exam_diag = exam_diag;
+        this.exam_diag = StringUtil.stringTransform(exam_diag);
     }
 
     public String getExam_feature() {
@@ -51,6 +53,6 @@ public class Jianchabaogao implements Serializable{
     }
 
     public void setExam_feature(String exam_feature) {
-        this.exam_feature = exam_feature;
+        this.exam_feature = StringUtil.stringTransform(exam_feature);
     }
 }

@@ -1,6 +1,7 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
 import com.jhmk.cloudutil.util.DateFormatUtil;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.util.*;
@@ -29,7 +30,7 @@ public class Jianyanbaogao {
     }
 
     public void setLab_item_name(String lab_item_name) {
-        this.lab_item_name = lab_item_name;
+        this.lab_item_name = StringUtil.stringTransform(lab_item_name);
     }
 
     public String getSpecimen() {
@@ -77,7 +78,7 @@ public class Jianyanbaogao {
     }
 
     public void setLab_sub_item_name(String lab_sub_item_name) {
-        this.lab_sub_item_name = lab_sub_item_name;
+        this.lab_sub_item_name = StringUtil.stringTransform(lab_sub_item_name);
     }
 
     public String getResult_status_code() {
@@ -111,7 +112,6 @@ public class Jianyanbaogao {
     public void setLab_result_value_unit(String lab_result_value_unit) {
         this.lab_result_value_unit = lab_result_value_unit;
     }
-
 
 
     //做排序用 删除重复项

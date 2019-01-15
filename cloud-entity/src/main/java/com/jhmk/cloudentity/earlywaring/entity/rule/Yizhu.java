@@ -1,5 +1,7 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
+import com.jhmk.cloudutil.util.StringUtil;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -114,7 +116,7 @@ public class Yizhu implements Serializable{
     }
 
     public void setOrder_item_name(String order_item_name) {
-        this.order_item_name = order_item_name;
+        this.order_item_name = StringUtil.stringTransform(order_item_name);
     }
 
     @Basic
@@ -301,5 +303,12 @@ public class Yizhu implements Serializable{
     public int hashCode() {
 
         return Objects.hash(id, patient_id, visit_id, inp_no, order_no, order_class_name, order_class_code, order_item_name, order_item_code, order_status_name, order_begin_time, order_end_time, frequency_name, frequency_code, dosage_form, specification, drug_amount_value, order_properties_name, duration_value, dosage_value, total_dosage_value, total_dosage_unit, status);
+    }
+
+
+    public static void main(String[] args) {
+        Yizhu yizhu=new Yizhu();
+        yizhu.setOrder_item_name("(eqw)");
+        System.out.println(yizhu.getOrder_item_name());
     }
 }
