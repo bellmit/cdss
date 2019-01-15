@@ -40,6 +40,25 @@ public class JianchabaogaoService {
     @Autowired
     DbConnectionUtil dbConnectionUtil;
 
+
+    public List<Jianchabaogao> getJianchabaogao(Rule rule, String hospitalName) {
+        String patientId = rule.getPatient_id();
+        String visitId = rule.getVisit_id();
+        String inpNo = rule.getInp_no();
+        List<Jianchabaogao> jianchabaogaoList = null;
+        if (hospitalName.equals("bysy")) {//北医三院
+            jianchabaogaoList = getJianchabaogaoFromCdr(rule);
+        } else if (hospitalName.equals("gam")) {//广安门
+            jianchabaogaoList = getJianchabaogaoBypatientIdAndVisitId(patientId, visitId);
+        } else if (hospitalName.equals("xzey")) {//徐州二院
+//            jianchabaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
+        } else if (hospitalName.equals("gyey")) {//广医二院
+            jianchabaogaoList = getJianchabaogaoFromGyeyCdr(rule);
+        }
+        return jianchabaogaoList;
+    }
+
+
     /**
      * 从视图获取检查报告（广安门）
      *

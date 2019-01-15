@@ -1,7 +1,9 @@
 package com.jhmk.cloudservice.warnService.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhuRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.*;
 import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
@@ -34,6 +36,22 @@ public class YizhuService {
     @Autowired
     YizhuRepService yizhuRepService;
 
+
+    public List<Yizhu> getYizhu(String data, String hospitalName) {
+        List<Yizhu> yizhuList = null;
+        if (hospitalName.equals("bysy")) {//北医三院
+            yizhuList = analyzeJson2Yizhu(data);
+        } else if (hospitalName.equals("gam")) {//广安门
+//            jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
+        } else if (hospitalName.equals("xzey")) {//徐州二院
+//            jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
+        } else if (hospitalName.equals("gyey")) {//广医二院
+//            getJianyanbaogaoFromGyeyCdr(inpNo, patientId);
+        }
+        return yizhuList;
+    }
+
+
     @Transactional
     public void saveAndFlush(Rule rule) {
         String patient_id = rule.getPatient_id();
@@ -52,6 +70,13 @@ public class YizhuService {
                 logger.debug("医嘱数据为：{}", JSONObject.toJSONString(yizhu));
             }
         }
+    }
+
+    public List<Yizhu> analyzeJson2Yizhu(String data) {
+        JSONObject object = JSONObject.parseObject(data);
+        List<Yizhu> yizhuList = JSONObject.parseObject(data, new TypeReference<List<Yizhu>>() {
+        });
+        return yizhuList;
     }
 
     public List<Yizhu> analyzeJson2Yizhu(JSONObject jo) {

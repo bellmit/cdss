@@ -298,7 +298,7 @@ public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
     }
 
     /**
-     *
+     *todo 删除 此功能 改用shell脚本 备份数据库
      */
     @PostMapping(value = "/getLogFile")
     public void getLogFile(HttpServletResponse response) {
