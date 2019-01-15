@@ -282,12 +282,8 @@ public class RuleService {
 
 
     public String ruleMatchGetResp(Rule fill) {
-        String data = "";
 
-//        String deptName = fill.getBinganshouye().getPat_visit_dept_admission_to_name();
-//        if (deptName.contains("血液") || deptName.contains("呼吸") || deptName.contains("骨科") || deptName.contains("耳鼻喉") || deptName.contains("心血管") || deptName.contains("普外")) {
-        //todo 获取疾病同义词，用于跑医院数据到数据库
-//        Rule sameZhenDuanList = getSameZhenDuanList(fill);
+        String data = "";
         String o = JSONObject.toJSONString(fill);
         Object parse = JSONObject.parse(o);
         try {
@@ -296,7 +292,25 @@ public class RuleService {
         } catch (Exception e) {
             logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, e.getMessage(), JSONObject.toJSONString(parse), data);
         }
-//        }
+        return data;
+    }
+
+    /**
+     * cdss 规则库匹配
+     *
+     * @param fill
+     * @return
+     */
+    public String ruleMatchByRuleBase(Rule fill) {
+        String data = "";
+        String o = JSONObject.toJSONString(fill);
+        Object parse = JSONObject.parse(o);
+        try {
+            data = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, parse, String.class);
+            logger.info("匹配规则请求地址uri：{}，请求数据为：{}，结果为{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, JSONObject.toJSONString(parse), data);
+        } catch (Exception e) {
+            logger.info("规则匹配失败：,url={},原因:{},请求数据为：{}，返回结果为：{}", urlPropertiesConfig.getCdssurl() + UrlConstants.matchrule, e.getMessage(), JSONObject.toJSONString(parse), data);
+        }
         return data;
     }
 
@@ -384,7 +398,7 @@ public class RuleService {
                         //todo 下版本修改 不用主键作为 不要用自增属性字段作为主键与子表关联。不便于系统的迁移和数据恢复。对外统计系统映射关系丢失
                         int id = save.getId();
                         for (LogMapping mapping : notSaveLogMapping) {
-                            mapping.setLogId(id);
+                            mapping.setSmHospitalLog(smHospitalLog);
                             logMappingRepService.save(mapping);
                         }
                         if (save == null) {
@@ -430,6 +444,115 @@ public class RuleService {
 
     }
 
+    /**
+     * 将触发规则入库
+     *
+     * @param resultData
+     * @param mes
+     */
+    public void add2LogTableNew(String resultData, Rule mes) {
+        JSONObject jsonObject = JSONObject.parseObject(resultData);
+        if (!symbol.equals(jsonObject.getString(resultSym))) {
+            Object result = jsonObject.get(resultSym);
+            SmHospitalLog smHospitalLog = hosptailLogService.addLog(mes);
+            if (Objects.nonNull(result)) {
+                JSONArray ja = (JSONArray) result;
+                if (ja.size() > 0) {
+                    Iterator<Object> iterator = ja.iterator();
+                    while (iterator.hasNext()) {
+                        Object next = iterator.next();
+                        JSONObject object = JSONObject.parseObject(next.toString());
+                        //预警等级
+                        String warninglevel = object.getString("warninglevel");
+                        smHospitalLog.setAlarmLevel(warninglevel);
+                        //释义
+                        String hintContent = object.getString("hintContent");
+                        String signContent = object.getString("signContent");
+                        smHospitalLog.setHintContent(hintContent);
+                        smHospitalLog.setSignContent(signContent);
+                        smHospitalLog.setRuleSource(object.getString("ruleSource"));
+                        smHospitalLog.setClassification(object.getString("classification"));
+                        smHospitalLog.setIdentification(object.getString("identification"));
+                        smHospitalLog.setNowTime(new Date());
+                        String ruleCondition = object.getString("ruleCondition");
+                        if (StringUtils.isNotBlank(ruleCondition)) {
+                            String condition = disposeRuleCondition(ruleCondition);
+                            smHospitalLog.setRuleCondition(condition);
+                        }
+                        String rule_id = object.getString("_id");
+                        //获取触发的规则id
+                        smHospitalLog.setRuleId(rule_id);
+                        JSONArray diseaseMessageMap = object.getJSONArray("diseaseMessageMap");
+                        List<LogMapping> notSaveLogMapping = getNotSaveLogMapping(mes, diseaseMessageMap);
+                        Collections.sort(notSaveLogMapping, CompareUtil.createComparator(-1, "logTime"));
+                        String logTime = notSaveLogMapping.get(0).getLogTime();
+                        if (StringUtils.isNotBlank(logTime)) {
+                            smHospitalLog.setCreateTime(DateFormatUtil.parseDateBySdf(logTime, DateFormatUtil.DATETIME_PATTERN_SS));
+                        } else {
+                            smHospitalLog.setCreateTime(new Date());
+                        }
+                        smHospitalLog.setLogMappingList(notSaveLogMapping);
+
+                        SmHospitalLog save = smHospitalLogRepService.save(smHospitalLog);
+
+                        updateRuleMatchSmShowLog(save);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 修改规则匹配 小页面 显示
+     *
+     * @param smHospitalLog
+     */
+    public void updateRuleMatchSmShowLog(SmHospitalLog smHospitalLog) {
+        String doctor_id = smHospitalLog.getDoctorId();
+        String patient_id = smHospitalLog.getPatientId();
+        String visit_id = smHospitalLog.getVisitId();
+        String ruleId = smHospitalLog.getRuleId();
+        Date createTime = smHospitalLog.getCreateTime();
+        String signContent = smHospitalLog.getSignContent();
+        String hintContent = smHospitalLog.getHintContent();
+        //将提醒状态全部设为3，表示未触发，如果触发，再将状态改为0
+        List<SmShowLog> existLogByRuleMatch = smShowLogRepService.findExistLogByRuleMatch(doctor_id, patient_id, visit_id);
+        if (existLogByRuleMatch != null && existLogByRuleMatch.size() > 0) {
+            smShowLogRepService.updateShowLogStatus(3, doctor_id, patient_id, visit_id, "rulematch", 0);
+        }
+        int id = smHospitalLog.getId();
+        SmShowLog log = smShowLogRepService.findFirstByDoctorIdAndPatientIdAndRuleIdAndVisitId(doctor_id, patient_id, ruleId, visit_id);
+        //先将所有规则状态改为3 如果触发规则，则改为0 否则一直为3 表示第二次没有触发此规则，前台自动变灰
+        if (log != null && 3 == log.getRuleStatus()) {
+            int tempId = log.getId();
+            if (createTime != null) {
+                smShowLogRepService.updateSmHospitalById(0, id, DateFormatUtil.format(createTime, DateFormatUtil.DATETIME_PATTERN_SS), tempId);
+            } else {
+                String date = DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS);
+                smShowLogRepService.updateSmHospitalById(0, id, date, tempId);
+            }
+        } else {
+            SmShowLog newLog = new SmShowLog();
+            newLog.setPatientId(patient_id);
+            newLog.setVisitId(visit_id);
+            newLog.setRuleId(ruleId);
+            newLog.setSmHospitalLogId(id);
+            if (createTime != null) {
+                newLog.setDate(DateFormatUtil.format(createTime, DateFormatUtil.DATETIME_PATTERN_SS));
+            } else {
+                newLog.setDate(DateFormatUtil.formatBySdf(new Date(), DateFormatUtil.DATETIME_PATTERN_SS));
+            }
+            newLog.setDoctorId(doctor_id);
+            newLog.setRuleStatus(0);
+            newLog.setType("ruleMatch");
+            if (StringUtils.isNotBlank(signContent)) {
+                newLog.setHintContent(signContent);
+            } else {
+                newLog.setHintContent(hintContent);
+            }
+            smShowLogRepService.save(newLog);
+        }
+    }
 
     /**
      * 添加触发规则项到sm_show_log 在查询显示
