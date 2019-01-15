@@ -1,9 +1,10 @@
 package com.jhmk.cloudentity.earlywaring.entity;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.jhmk.cloudentity.earlywaring.entity.rule.LogMapping;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,6 +36,8 @@ public class SmHospitalLog {
     private String ruleCondition;
     @Transient
     private String ruledate;
+
+    private List<LogMapping>logMappingList;
 
     public String getRuledate() {
         return ruledate;
@@ -166,8 +169,6 @@ public class SmHospitalLog {
     }
 
     @Column(name = "create_time", nullable = true)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Temporal(TemporalType.TIMESTAMP)
     public Date getCreateTime() {
         return createTime;
     }
@@ -233,6 +234,15 @@ public class SmHospitalLog {
 
     public void setRuleCondition(String ruleCondition) {
         this.ruleCondition = ruleCondition;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "smHospitalLog")
+    public List<LogMapping> getLogMappingList() {
+        return logMappingList;
+    }
+
+    public void setLogMappingList(List<LogMapping> logMappingList) {
+        this.logMappingList = logMappingList;
     }
 
     @Override

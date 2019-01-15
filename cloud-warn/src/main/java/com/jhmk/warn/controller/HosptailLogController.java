@@ -282,12 +282,14 @@ public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
         wirte(response, atsp);
     }
 
+    //todo 改为外键关联，此功能无用
     @PostMapping(value = "/getLogMappingById")
     @ResponseBody
     public void getLogMappingById(HttpServletResponse response, @RequestBody(required = false) String map) {
         JSONObject jsonObject = JSONObject.parseObject(map);
         Integer logId = jsonObject.getInteger("logId");
-        List<LogMapping> allByLogId = logMappingRepService.findAllByLogId(logId);
+        List<LogMapping> allByLogId = null;
+//        logMappingRepService.findAllByLogId(logId);
         Collections.sort(allByLogId, CompareUtil.createComparator(1, "logTime", "logOrderF", "logOrderS"));
         AtResponse atsp = new AtResponse();
         atsp.setResponseCode(ResponseCode.OK);

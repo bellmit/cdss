@@ -1,5 +1,9 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.jhmk.cloudentity.earlywaring.entity.SmHospitalLog;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -12,13 +16,15 @@ import java.util.Objects;
 @Table(name = "rule_log_mapping", schema = "jhmk_waring")
 public class LogMapping {
     private int id;
-    private int logId;
+//    private int logId;
     private String logObj;
     private String logRelation;
     private String logResult;
     private String logTime;
     private Integer logOrderF;
     private Integer logOrderS;
+    @JSONField(serialize=false)
+    private SmHospitalLog smHospitalLog;
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,15 +36,15 @@ public class LogMapping {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "log_id", nullable = false)
-    public int getLogId() {
-        return logId;
-    }
-
-    public void setLogId(int logId) {
-        this.logId = logId;
-    }
+//    @Basic
+//    @Column(name = "log_id", nullable = false)
+//    public int getLogId() {
+//        return logId;
+//    }
+//
+//    public void setLogId(int logId) {
+//        this.logId = logId;
+//    }
 
     @Basic
     @Column(name = "log_obj", nullable = true, length = 50)
@@ -99,6 +105,17 @@ public class LogMapping {
         this.logOrderS = logOrderS;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(cascade = {CascadeType.ALL, CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @JoinColumn(name = "log_id")
+    public SmHospitalLog getSmHospitalLog() {
+        return smHospitalLog;
+    }
+
+    public void setSmHospitalLog(SmHospitalLog smHospitalLog) {
+        this.smHospitalLog = smHospitalLog;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -109,7 +126,6 @@ public class LogMapping {
         }
         LogMapping that = (LogMapping) o;
         return id == that.id &&
-                logId == that.logId &&
                 Objects.equals(logObj, that.logObj) &&
                 Objects.equals(logRelation, that.logRelation) &&
                 Objects.equals(logResult, that.logResult) &&
@@ -121,14 +137,13 @@ public class LogMapping {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, logId, logObj, logRelation, logResult, logTime, logOrderF, logOrderS);
+        return Objects.hash(id,  logObj, logRelation, logResult, logTime, logOrderF, logOrderS);
     }
 
     @Override
     public String toString() {
         return "LogMapping{" +
                 "id=" + id +
-                ", logId=" + logId +
                 ", logObj='" + logObj + '\'' +
                 ", logRelation='" + logRelation + '\'' +
                 ", logResult='" + logResult + '\'' +

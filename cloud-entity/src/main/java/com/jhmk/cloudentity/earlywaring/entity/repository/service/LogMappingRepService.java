@@ -66,10 +66,10 @@ public class LogMappingRepService extends BaseRepService<LogMapping, Integer> {
         return repository.findAll(pageable);
     }
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public List<LogMapping> findAllByLogId(int logId) {
-        return repository.findAllByLogId(logId);
-
-    }
+//    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+//    public List<LogMapping> findAllByLogId(int logId) {
+//        return repository.findAllByLogId(logId);
+//
+//    }
 
 }

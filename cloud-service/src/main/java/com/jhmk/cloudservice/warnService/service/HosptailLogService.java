@@ -542,7 +542,7 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
             while (iterator.hasNext()) {
                 {
                     Binglizhenduan next = iterator.next();
-                    if ("1".equals(next.getDiagnosis_num())) {
+                    if ("1".equals(next.getDiagnosis_num())&&("初步诊断".equals(next.getDiagnosis_type_name())||"入院初诊".equals(next.getDiagnosis_type_name()))) {
                         Optional.ofNullable(next.getDiagnosis_name()).ifPresent(s -> {
                             smHospitalLog.setDiagnosisName(next.getDiagnosis_name().trim());
                         });
@@ -559,7 +559,7 @@ public class HosptailLogService extends BaseRepService<SmHospitalLog, Integer> {
                 while (iterator.hasNext()) {
                     {
                         Shouyezhenduan next = iterator.next();
-                        if ("1".equals(next.getDiagnosis_num())) {
+                        if ("1".equals(next.getDiagnosis_num())&&"出院诊断".equals(next.getDiagnosis_type_name())) {
                             Optional.ofNullable(next.getDiagnosis_name()).ifPresent(s -> {
                                 smHospitalLog.setDiagnosisName(next.getDiagnosis_name().trim());
                             });
