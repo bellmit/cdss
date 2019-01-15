@@ -2,13 +2,13 @@
 #广安门 视图
 driver: oracle.jdbc.driver.OracleDriver
 #测试库
-gam_temp_baogaourl: jdbc:oracle:thin:@172.16.254.106:1521/ORCL
+temp_baogaourl: jdbc:oracle:thin:@172.16.254.106:1521/ORCL
 #gam_temp_baogaourl jdbc:oracle:thin:@172.16.254.106:1521/ORCL
 #正式库
-gam_baogaourl: jdbc:oracle:thin:@172.16.254.102:1521/ORCL
-gam_baogaousername: lcjczc
-gam_baogaopassword: gam_cdss
+baogaourl: jdbc:oracle:thin:@172.16.254.102:1521/ORCL
+baogaousername: lcjczc
+baogaopassword: gam_cdss
 #  广安门 入院记录
-gam_ryjlurl: jdbc:oracle:thin:@172.16.254.13:1521/orcl
-gam_ryjlusername: emr_analysis
-gam_ryjlpassword: gam_jiahe
+ryjlurl: jdbc:oracle:thin:@172.16.254.13:1521/orcl
+ryjlusername: emr_analysis
+ryjlpassword: gam_jiahe

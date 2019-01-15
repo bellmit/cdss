@@ -49,7 +49,7 @@ public class DbConnectionUtil {
         Connection conn = null;
         try {
             Class.forName(viewPropertiesConfig.getDriver());
-            conn = DriverManager.getConnection(viewPropertiesConfig.getGam_temp_baogaourl(), viewPropertiesConfig.getGam_baogaousername(), viewPropertiesConfig.getGam_baogaopassword());
+            conn = DriverManager.getConnection(viewPropertiesConfig.getTemp_baogaourl(), viewPropertiesConfig.getBaogaousername(), viewPropertiesConfig.getBaogaopassword());
         } catch (SQLException ex2) {
             ex2.printStackTrace();
         } catch (Exception ex2) {
@@ -63,7 +63,7 @@ public class DbConnectionUtil {
         Connection conn = null;
         try {
             Class.forName(viewPropertiesConfig.getDriver());
-            conn = DriverManager.getConnection(viewPropertiesConfig.getGam_temp_baogaourl(), viewPropertiesConfig.getGam_baogaousername(), viewPropertiesConfig.getGam_baogaopassword());
+            conn = DriverManager.getConnection(viewPropertiesConfig.getTemp_baogaourl(), viewPropertiesConfig.getBaogaousername(), viewPropertiesConfig.getBaogaopassword());
         } catch (SQLException ex2) {
             ex2.printStackTrace();
         } catch (Exception ex2) {
@@ -82,7 +82,7 @@ public class DbConnectionUtil {
         Connection conn = null;
         try {
             Class.forName(viewPropertiesConfig.getDriver());
-            conn = DriverManager.getConnection(viewPropertiesConfig.getGam_ryjlurl(), viewPropertiesConfig.getGam_ryjlusername(), viewPropertiesConfig.getGam_ryjlpassword());
+            conn = DriverManager.getConnection(viewPropertiesConfig.getRyjlurl(), viewPropertiesConfig.getRyjlusername(), viewPropertiesConfig.getRyjlpassword());
         } catch (SQLException ex2) {
             ex2.printStackTrace();
         } catch (Exception ex2) {

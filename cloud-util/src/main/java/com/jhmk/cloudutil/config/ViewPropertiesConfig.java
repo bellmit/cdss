@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class ViewPropertiesConfig {
 
     private String driver;
-    private String gam_temp_baogaourl;
-    private String gam_baogaousername;
-    private String gam_baogaopassword;
-    private String gam_ryjlurl;
-    private String gam_ryjlusername;
-    private String gam_ryjlpassword;
+    private String temp_baogaourl;
+    private String baogaousername;
+    private String baogaopassword;
+    private String ryjlurl;
+    private String ryjlusername;
+    private String ryjlpassword;
 
     public String getDriver() {
         return driver;
@@ -29,51 +29,51 @@ public class ViewPropertiesConfig {
         this.driver = driver;
     }
 
-    public String getGam_temp_baogaourl() {
-        return gam_temp_baogaourl;
+    public String getTemp_baogaourl() {
+        return temp_baogaourl;
     }
 
-    public void setGam_temp_baogaourl(String gam_temp_baogaourl) {
-        this.gam_temp_baogaourl = gam_temp_baogaourl;
+    public void setTemp_baogaourl(String temp_baogaourl) {
+        this.temp_baogaourl = temp_baogaourl;
     }
 
-    public String getGam_baogaousername() {
-        return gam_baogaousername;
+    public String getBaogaousername() {
+        return baogaousername;
     }
 
-    public void setGam_baogaousername(String gam_baogaousername) {
-        this.gam_baogaousername = gam_baogaousername;
+    public void setBaogaousername(String baogaousername) {
+        this.baogaousername = baogaousername;
     }
 
-    public String getGam_baogaopassword() {
-        return gam_baogaopassword;
+    public String getBaogaopassword() {
+        return baogaopassword;
     }
 
-    public void setGam_baogaopassword(String gam_baogaopassword) {
-        this.gam_baogaopassword = gam_baogaopassword;
+    public void setBaogaopassword(String baogaopassword) {
+        this.baogaopassword = baogaopassword;
     }
 
-    public String getGam_ryjlurl() {
-        return gam_ryjlurl;
+    public String getRyjlurl() {
+        return ryjlurl;
     }
 
-    public void setGam_ryjlurl(String gam_ryjlurl) {
-        this.gam_ryjlurl = gam_ryjlurl;
+    public void setRyjlurl(String ryjlurl) {
+        this.ryjlurl = ryjlurl;
     }
 
-    public String getGam_ryjlusername() {
-        return gam_ryjlusername;
+    public String getRyjlusername() {
+        return ryjlusername;
     }
 
-    public void setGam_ryjlusername(String gam_ryjlusername) {
-        this.gam_ryjlusername = gam_ryjlusername;
+    public void setRyjlusername(String ryjlusername) {
+        this.ryjlusername = ryjlusername;
     }
 
-    public String getGam_ryjlpassword() {
-        return gam_ryjlpassword;
+    public String getRyjlpassword() {
+        return ryjlpassword;
     }
 
-    public void setGam_ryjlpassword(String gam_ryjlpassword) {
-        this.gam_ryjlpassword = gam_ryjlpassword;
+    public void setRyjlpassword(String ryjlpassword) {
+        this.ryjlpassword = ryjlpassword;
     }
 }
