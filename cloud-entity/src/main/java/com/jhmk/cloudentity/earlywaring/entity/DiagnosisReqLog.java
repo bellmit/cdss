@@ -8,10 +8,13 @@ public class DiagnosisReqLog {
     private Integer id;
     private String pid;
     private String vid;
-    private String diagnosis_name;
-    private String diagnosis_time;
-    private String in_time;
-    private String page_source;
+    private String diagnosisName;
+    private String diagnosisTime;
+    private String inTime;
+    private String pageSource;
+    private String doctorId;
+    private String doctorName;
+    private String deptCode;
 
     @Override
     public String toString() {
@@ -19,10 +22,13 @@ public class DiagnosisReqLog {
                 "id=" + id +
                 ", pid='" + pid + '\'' +
                 ", vid='" + vid + '\'' +
-                ", diagnosis_name='" + diagnosis_name + '\'' +
-                ", diagnosis_time='" + diagnosis_time + '\'' +
-                ", in_time='" + in_time + '\'' +
-                ", page_source='" + page_source + '\'' +
+                ", diagnosis_name='" + diagnosisName + '\'' +
+                ", diagnosis_time='" + diagnosisTime + '\'' +
+                ", in_time='" + inTime + '\'' +
+                ", page_source='" + pageSource + '\'' +
+                ", doctorId='" + doctorId + '\'' +
+                ", doctorName='" + doctorName + '\'' +
+                ", deptName='" + deptCode + '\'' +
                 '}';
     }
 
@@ -59,41 +65,71 @@ public class DiagnosisReqLog {
 
     @Basic
     @Column(name = "diagnosis_name")
-    public String getDiagnosis_name() {
-        return diagnosis_name;
+    public String getDiagnosisName() {
+        return diagnosisName;
     }
 
-    public void setDiagnosis_name(String diagnosis_name) {
-        this.diagnosis_name = diagnosis_name;
+    public void setDiagnosisName(String diagnosisName) {
+        this.diagnosisName = diagnosisName;
     }
 
     @Basic
     @Column(name = "diagnosis_time")
-    public String getDiagnosis_time() {
-        return diagnosis_time;
+    public String getDiagnosisTime() {
+        return diagnosisTime;
     }
 
-    public void setDiagnosis_time(String diagnosis_time) {
-        this.diagnosis_time = diagnosis_time;
+    public void setDiagnosisTime(String diagnosisTime) {
+        this.diagnosisTime = diagnosisTime;
     }
 
     @Basic
     @Column(name = "in_time")
-    public String getIn_time() {
-        return in_time;
+    public String getInTime() {
+        return inTime;
     }
 
-    public void setIn_time(String in_time) {
-        this.in_time = in_time;
+    public void setInTime(String inTime) {
+        this.inTime = inTime;
     }
 
     @Basic
     @Column(name = "page_source")
-    public String getPage_source() {
-        return page_source;
+    public String getPageSource() {
+        return pageSource;
     }
 
-    public void setPage_source(String page_source) {
-        this.page_source = page_source;
+    public void setPageSource(String pageSource) {
+        this.pageSource = pageSource;
+    }
+
+    @Basic
+    @Column(name = "doctor_id", nullable = true, length = 50)
+    public String getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(String doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    @Basic
+    @Column(name = "doctor_name", nullable = true, length = 50)
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    @Basic
+    @Column(name = "dept_code", nullable = true, length = 50)
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
     }
 }
