@@ -206,7 +206,6 @@ public class BaseEntityController<P> extends BaseController {
 
         //调用方法查询
         Page<P> intrPage = jpaSpecificationExecutor.findAll(sf, pageable);
-//        Page<P> intrPage1 = service.findAll(sf, pageable);
         //设置查询数据
         List<P> intrList = intrPage.getContent();
         params.put(LIST_DATA, intrList);
@@ -373,6 +372,24 @@ public class BaseEntityController<P> extends BaseController {
      * @return
      */
     public AtResponse viewData(String id, BaseRepService repository) {
+        AtResponse<P> resp = new AtResponse(System.currentTimeMillis());
+        P p = (P) repository.findOne(id);
+        if (p == null) {
+            resp.setMessage("查无数据");
+            resp.setResponseCode(ResponseCode.INERERROR);
+        } else {
+            resp.setData(p);
+            resp.setResponseCode(ResponseCode.OK);
+        }
+        return resp;
+    }    /**
+     * 查看
+     *
+     * @param id
+     * @param
+     * @return
+     */
+    public AtResponse viewData(Integer id, BaseRepService repository) {
         AtResponse<P> resp = new AtResponse(System.currentTimeMillis());
         P p = (P) repository.findOne(id);
         if (p == null) {

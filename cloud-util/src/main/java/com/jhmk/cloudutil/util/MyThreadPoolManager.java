@@ -39,6 +39,7 @@ public class MyThreadPoolManager {
 
     // 使用线程池，线程池中线程的创建完全是由线程池自己来维护的，我们不需要创建任何的线程
     // 我们所需要做的事情就是往这个池子里面丢一个又一个的任务
+    @SuppressWarnings("AlibabaThreadShouldSetName")
     public void execute(Runnable r) {
         if (executor == null) {
             /**

@@ -11,6 +11,7 @@ import com.jhmk.cloudservice.warnService.service.RuleService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.StringUtil;
+import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +34,9 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/warn")
+@Api(description = "预警提醒页面功能列表", value = "预警提醒控制层")
 public class WarnController extends BaseController {
-    @Value("hospital")
+    @Value("${hospital}")
     private String hospital;
     Logger logger = LoggerFactory.getLogger(WarnController.class);
     @Autowired
@@ -44,10 +46,16 @@ public class WarnController extends BaseController {
     @Autowired
     RuleService ruleService;
 
+    @ApiOperation(value = "规则提醒", notes = "注意参数:(病历信息，如入院记录，病历诊断等)",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
+    })
     @PostMapping("/ruleMatch")
     public void ruleMatch(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
-
+        System.out.println(hospital);
         //1. 拼接规则  基本信息 检验检查 医嘱
         Rule rule = warnService.getRule(map, hospital);
         //2. 规则匹配
@@ -63,6 +71,32 @@ public class WarnController extends BaseController {
         resp.setData(logList);
         resp.setResponseCode(ResponseCode.OK);
         //4. 返回信息
+        wirte(response, resp);
+    }
+
+    /**
+     * 检验报告解读
+     *
+     * @param response
+     * @param map
+     */
+
+    @ApiOperation(value = "获取检验报告解读", notes = "注意参数:(patientId，visitId，doctorId)，从数据库查此病历触发的检验报告lab项",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
+    })
+    @PostMapping("/interpretLab")
+    public void interpretLab (HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        JSONObject object = JSONObject.parseObject(map);
+        String patientId = object.getString("patientId");
+        String visitId = object.getString("visitId");
+        String doctorId = object.getString("doctorId");
+        List<SmShowLog> lab = smShowLogRepService.findAllByDoctorIdAndPatientIdAndVisitIdAndType(doctorId, patientId, visitId, "lab");
+        resp.setData(lab);
+        resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
 

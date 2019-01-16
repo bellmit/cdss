@@ -78,6 +78,7 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
      */
     @PostMapping("/addParticularLog")
     public void addParticularLog(HttpServletResponse response, @RequestBody ClickRate clickRate) {
+        //点击时间
         clickRate.setCreateTime(new Date());
         clickRateRepService.save(clickRate);
         AtResponse resp = new AtResponse();
@@ -101,13 +102,6 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
      *
      * @param response //     * @param params
      */
-//    @RequestMapping(value = "/list")
-//    @ResponseBody
-//    public void roleList(HttpServletResponse response, @RequestBody String params) {
-//        Map<String, Object> parse = (Map) JSON.parse(params);
-//        AtResponse<Map<String, Object>> resp = super.listDataByMap(parse, clickRateRepService, "createTime");
-//        wirte(response, resp);
-//    }
     @RequestMapping(value = "/list")
     public void roleList(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
@@ -284,14 +278,6 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         resp.setData(result);
         wirte(response, resp);
     }
-
-
-//    @PostMapping("/getClickRateByCondition")
-//    public void getAllData(HttpServletResponse response, @RequestBody(required = false) Map<String, Object> map) {
-//        AtResponse<Map<String, Object>> resp = super.listData(map, clickRateRepService, "createTime");
-//        resp.setResponseCode(ResponseCode.OK);
-//        wirte(response, resp);
-//    }
 
 
     @PostMapping("/getClickRateByCondition")

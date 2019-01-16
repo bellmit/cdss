@@ -50,20 +50,20 @@ public class YizhuService {
         JSONObject object = JSONObject.parseObject(data);
         String patientId = object.getString("patient_id");
         String visitId = object.getString("visit_id");
-        if (hospitalName.equals("bysy")) {//北医三院
+        if ("bysy".equals(hospitalName)) {//北医三院
             yizhuList = analyzeJson2Yizhu(data);
             //更新医嘱
             saveAndFlush(yizhuList, patientId, visitId);
-        } else if (hospitalName.equals("gam")) {//广安门
+        } else if ("gam".equals(hospitalName)) {//广安门
             //解析医嘱
             List<Yizhu> anaYizhuList = analyzeJson2Yizhu(data);
             //更新最新在执行医嘱
             saveOrUpdateYizhuByOrderNo(anaYizhuList);
             //查询最新在执行医嘱
             yizhuList = yizhuRepService.findAllByPatientIdAndVisitId(patientId, visitId);
-        } else if (hospitalName.equals("xzey")) {//徐州二院
+        } else if ("xzey".equals(hospitalName)) {//徐州二院
             // TODO: 2019/1/15 未接入此功能
-        } else if (hospitalName.equals("gyey")) {//广医二院
+        } else if ("gyey".equals(hospitalName)) {//广医二院
             // TODO: 2019/1/15 未接入此功能
         }
         return yizhuList;
@@ -81,18 +81,18 @@ public class YizhuService {
         List<Yizhu> yizhuList = null;
         String patientId = map.get("patient_id");
         String visitId = map.get("visit_id");
-        if (hospitalName.equals("bysy")) {//北医三院
+        if ("bysy".equals(hospitalName)) {//北医三院
             yizhuList = yizhuRepService.findAllByPatientIdAndVisitId(patientId, visitId);
             if (yizhuList == null || yizhuList.size() == 0) {
 //            //获取数据中心医嘱
                 yizhuList = getYizhuFromCdr(map);
             }
-        } else if (hospitalName.equals("gam")) {//广安门
+        } else if ("gam".equals(hospitalName)) {//广安门
             yizhuList = yizhuRepService.findAllByPatientIdAndVisitId(patientId, visitId);
-        } else if (hospitalName.equals("xzey")) {//徐州二院
+        } else if ("xzey".equals(hospitalName)) {//徐州二院
             // TODO: 2019/1/15 未有此功能
 //            jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
-        } else if (hospitalName.equals("gyey")) {//广医二院
+        } else if ("gyey".equals(hospitalName)) {//广医二院
             // TODO: 2019/1/15 未有此功能
         }
         return yizhuList;

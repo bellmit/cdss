@@ -14,8 +14,7 @@ import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.util.JWTUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +32,7 @@ import java.util.Map;
 
 
 @Controller
-@Api("swaggerCmsController相关的api")
+@Api(description = "登录注销功能", value = "用户登录注销")
 public class CmsController extends BaseEntityController<SmUsers> {
     @Autowired
     SmDeptsRepService smDeptsRepService;
@@ -51,9 +51,18 @@ public class CmsController extends BaseEntityController<SmUsers> {
      */
 
     @RequestMapping(value = "/warn/login")
-    @ApiOperation(value = "登录", notes = "登录")
+    @ApiOperation(value = "登录", notes = "注意参数:(username,password)",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body",
+                    examples = @Example(value = {
+                            @ExampleProperty(mediaType = "username", value = "ww"),
+                            @ExampleProperty(mediaType = "password", value = "12345")
+                    }))
+    })
     @ResponseBody
-    public void loginPost(HttpServletRequest httpServletRequest, HttpServletResponse response, @RequestBody String map) {
+    public void loginPost(HttpServletRequest httpServletRequest, HttpServletResponse response, @RequestBody @ApiIgnore String map) {
         logger.info("登录信息：{}", map);
         Map<String, String> param = (Map) JSONObject.parse(map);
         AtResponse resp = new AtResponse<>(System.currentTimeMillis());
@@ -129,7 +138,9 @@ public class CmsController extends BaseEntityController<SmUsers> {
      */
     @RequestMapping(value = "/warn/loginout", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation(value = "退出登录", notes = "退出登录")
+    @ApiOperation(value = "退出登录", notes = "无需传参",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
     public void loginout(HttpServletRequest request, HttpServletResponse response) {
         request.removeAttribute(BaseConstants.USER_ID);
         request.removeAttribute(BaseConstants.CURRENT_ROLE_ID);
@@ -142,7 +153,7 @@ public class CmsController extends BaseEntityController<SmUsers> {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
         resp.setMessage(BaseConstants.SUCCESS);
         resp.setResponseCode(ResponseCode.OK);
-        logger.info("退出成功");
+        logger.info(BaseConstants.USER_ID + "退出成功");
         resp.setMessage("退出成功");
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);

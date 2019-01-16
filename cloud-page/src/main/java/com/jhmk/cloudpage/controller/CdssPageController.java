@@ -128,23 +128,6 @@ public class CdssPageController extends BaseController {
         wirte(response, resp);
     }
 
-    /**
-     * 检验报告解读
-     *
-     * @param response
-     * @param map
-     */
-    @PostMapping("/interpretLab")
-    public void interpretLab (HttpServletResponse response, @RequestBody String map) {
-        AtResponse resp = new AtResponse(System.currentTimeMillis());
-        JSONObject object = JSONObject.parseObject(map);
-        String patientId = object.getString("patientId");
-        String visitId = object.getString("visitId");
-        String doctorId = object.getString("doctorId");
-        List<SmShowLog> lab = smShowLogRepService.findAllByDoctorIdAndPatientIdAndVisitIdAndType(doctorId, patientId, visitId, "lab");
-        resp.setData(lab);
-        resp.setResponseCode(ResponseCode.OK);
-        wirte(response, resp);
-    }
+
 
 }
