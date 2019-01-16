@@ -17,6 +17,7 @@ import com.jhmk.cloudutil.model.ResponseCode;
 import com.jhmk.cloudutil.model.WebPage;
 import com.jhmk.cloudutil.util.CompareUtil;
 import com.jhmk.cloudutil.util.DateFormatUtil;
+import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,13 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
      * @param clickRate
      */
     @PostMapping("/addParticularLog")
+
+    @ApiOperation(value = "添加详细医生操作日志信息", notes = "请求demo：{{\"type\":\"\",\"doctorId\":\"10401\",\"patientId\":\"3123\",\"visitId\":\"3\",\"deptCode\":\"3123\",\"deptName\":\"心血管科\",\"diagnosisCode\":\"疾病编码\",\"diagnosisName\":\"高血压\"}}",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "clickRate", value = "请求参数", required = true, paramType = "body")
+    })
     public void addParticularLog(HttpServletResponse response, @RequestBody ClickRate clickRate) {
         //点击时间
         clickRate.setCreateTime(new Date());
@@ -279,7 +287,12 @@ public class ClickRateController extends BaseEntityController<ClickRate> {
         wirte(response, resp);
     }
 
-
+    @ApiOperation(value = "按条件查询医生点击信息", notes = "请求demo：{\"startTime\":\"2017-01-01 00:00:00\",\"endTime\":\"2019-01-01 00:00:00\",\"deptCode\":\"1010100\"}",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "clickRate", value = "请求参数", required = false, paramType = "body")
+    })
     @PostMapping("/getClickRateByCondition")
     public void getClickRateByCondition(HttpServletResponse response, @RequestBody(required = false) String map) {
         Map<String, Object> result = new HashMap<>();
