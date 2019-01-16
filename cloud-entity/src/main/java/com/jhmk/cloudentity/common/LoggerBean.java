@@ -2,6 +2,7 @@ package com.jhmk.cloudentity.common;
 
 import com.jhmk.cloudutil.util.DateFormatUtil;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -92,7 +93,7 @@ public class LoggerBean {
                 ", uri='" + uri + '\'' +
                 ", params='" + params + '\'' +
                 ", ip='" + ip + '\'' +
-                ", startTime=" + startTime +
+                ", startTime=" + DateFormatUtil.format(new Timestamp(startTime),DateFormatUtil.DATETIME_PATTERN_SS) +
                 ", result='" + result + '\'' +
                 '}';
     }
