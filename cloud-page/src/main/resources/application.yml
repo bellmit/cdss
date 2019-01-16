@@ -6,8 +6,8 @@ eureka:
     service-url:
       defaultZone: http://${eureka.instance.hostname}:8000/eureka/
   instance:
-#    hostname: 192.168.8.20
-    hostname: localhost
+    hostname: 192.168.8.20
+#    hostname: localhost
 spring:
   application:
     name: jhmk-page
