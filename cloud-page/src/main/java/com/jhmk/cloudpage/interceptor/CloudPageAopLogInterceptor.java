@@ -34,18 +34,12 @@ public class CloudPageAopLogInterceptor {
     private static ThreadLocal<LoggerBean> param = new ThreadLocal<LoggerBean>();
 
 
-//    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-//    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     @Pointcut("execution(public * com.jhmk.cloudpage.controller..*.*(..))")
     public void controllerMethodPointcut() {
     }
 
 
-    //    @Pointcut("@annotation(org.springframework.beans.factory.annotation.)")
-
-    //    @Pointcut("execution(public * org.springframework.web.client.RestTemplate.*(..))")
     @Pointcut("execution(public * org.springframework.web.client.RestTemplate.*(..))")
-//    @Pointcut("execution(public * org.springframework.web.client.RestTemplate.postForObject())||execution(public * org.springframework.web.client.RestTemplate.getForObject())")
     public void restTempletePointcut() {
     }
 
@@ -58,7 +52,6 @@ public class CloudPageAopLogInterceptor {
         // 请求开始时间
         LoggerBean loggerBean = new LoggerBean();
         loggerBean.setStartTime(System.currentTimeMillis());
-//        startTime.set(System.currentTimeMillis());
         RequestAttributes ra = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes sra = (ServletRequestAttributes) ra;
         HttpServletRequest request = sra.getRequest();
@@ -70,7 +63,6 @@ public class CloudPageAopLogInterceptor {
             // get请求
             String queryString = request.getQueryString();
             if (StringUtils.isNotBlank(queryString)) {
-//                params.append(URLEncodedUtils.encode(queryString, "UTF-8"));
                 params.append(queryString);
             }
         } else {
@@ -85,7 +77,6 @@ public class CloudPageAopLogInterceptor {
             }
         }
         loggerBean.setParams(params.toString());
-//        key.set(uri);
         param.set(loggerBean);
         logger.info("request params>>>>>>{}", loggerBean.toString());
     }
@@ -109,20 +100,10 @@ public class CloudPageAopLogInterceptor {
 
 
     @Around("restTempletePointcut()")
-    public Object doAround(ProceedingJoinPoint pjp) throws ChangeSetPersister.NotFoundException, NotFoundException {
+    public Object doAround(ProceedingJoinPoint pjp) {
         LoggerBean loggerBean = new LoggerBean();
         long startTime = System.currentTimeMillis();
         loggerBean.setStartTime(startTime);
-//        String classType = pjp.getTarget().getClass().getName();
-//        Class<?> clazz = null;
-//        try {
-//            clazz = Class.forName(classType);
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        String clazzName = clazz.getName();
-        //post
-//        String methodName = pjp.getSignature().getName(); //获取调用方式名称
         Object[] args = pjp.getArgs();
         if (Objects.nonNull(args) && args.length > 2) {
             String url = args[0].toString();
@@ -144,7 +125,6 @@ public class CloudPageAopLogInterceptor {
             throwable.printStackTrace();
         }
         logger.info("restTempLete调用结束： result<<<<<<{} ", loggerBean.toString());
-        param.remove();
         return result;
     }
 

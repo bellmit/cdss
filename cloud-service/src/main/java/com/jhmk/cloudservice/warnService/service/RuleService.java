@@ -922,9 +922,7 @@ public class RuleService {
             Object o = JSONObject.parse(map);
             String result = "";
             try {
-                logger.info(UrlConstants.getTipList + "：发送的数据为：{}", map);
                 result = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.getTipList, o, String.class);
-                logger.info(UrlConstants.getTipList + "：获取到的数据为：{}", result);
                 if (StringUtils.isNotBlank(result) && !symbol.equals(result)) {
                     JSONArray array = JSONArray.parseArray(result);
                     Iterator<Object> iterator = array.iterator();
