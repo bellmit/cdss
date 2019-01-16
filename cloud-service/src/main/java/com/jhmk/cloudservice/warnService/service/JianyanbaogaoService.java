@@ -44,13 +44,13 @@ public class JianyanbaogaoService {
         String visitId = rule.getVisit_id();
         String inpNo = rule.getInp_no();
         List<Jianyanbaogao> jianyanbaogaoList = null;
-        if (hospitalName.equals("bysy")) {//北医三院
+        if ("bysy".equals(hospitalName)) {//北医三院
             jianyanbaogaoList = getJianyanbaogaoFromBysyCDR(patientId, visitId);
-        } else if (hospitalName.equals("gam")) {//广安门
+        } else if ("gam".equals(hospitalName)) {//广安门
             jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
-        } else if (hospitalName.equals("xzey")) {//徐州二院
+        } else if ("xzey".equals(hospitalName)) {//徐州二院
             jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
-        } else if (hospitalName.equals("gyey")) {//广医二院
+        } else if ("gyey".equals(hospitalName)) {//广医二院
             getJianyanbaogaoFromGyeyCdr(inpNo, patientId);
         }
         return jianyanbaogaoList;

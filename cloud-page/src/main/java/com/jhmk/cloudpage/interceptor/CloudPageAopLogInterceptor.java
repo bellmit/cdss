@@ -104,6 +104,7 @@ public class CloudPageAopLogInterceptor {
         }
         loggerBean.setResult(result);
         logger.info("response result<<<<<<{}", loggerBean.toString());
+        param.remove();
     }
 
 
@@ -143,6 +144,7 @@ public class CloudPageAopLogInterceptor {
             throwable.printStackTrace();
         }
         logger.info("restTempLete调用结束： result<<<<<<{} ", loggerBean.toString());
+        param.remove();
         return result;
     }
 
