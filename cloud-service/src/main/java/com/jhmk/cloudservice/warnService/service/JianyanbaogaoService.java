@@ -1,13 +1,12 @@
 package com.jhmk.cloudservice.warnService.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
 import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
-import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
-import com.jhmk.cloudservice.warnService.webservice.CdrService;
+import com.jhmk.cloudservice.webservice.AnalysisXmlService;
+import com.jhmk.cloudservice.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.DbConnectionUtil;

@@ -1,4 +1,4 @@
-package com.jhmk.cloudpage.service;
+package com.jhmk.cloudservice.cdssPageService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -9,7 +9,6 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
 import com.jhmk.cloudservice.warnService.service.*;
 import com.jhmk.cloudutil.util.StringUtil;
-import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.jhmk.cloudpage.service;
+package com.jhmk.cloudservice.cdssPageService;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.SmDepts;

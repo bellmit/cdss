@@ -1,4 +1,4 @@
-package com.jhmk.cloudpage.service;
+package com.jhmk.cloudservice.cdssPageService;
 
 import org.springframework.stereotype.Service;
 

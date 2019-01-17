@@ -1,15 +1,13 @@
 package com.jhmk.cloudservice.warnService.service;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhuRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.*;
-import com.jhmk.cloudservice.warnService.webservice.AnalysisXmlService;
-import com.jhmk.cloudservice.warnService.webservice.CdrService;
+import com.jhmk.cloudservice.webservice.AnalysisXmlService;
+import com.jhmk.cloudservice.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.OrderStatusConstants;
 import com.jhmk.cloudutil.util.MapUtil;
 import org.apache.commons.lang3.StringUtils;

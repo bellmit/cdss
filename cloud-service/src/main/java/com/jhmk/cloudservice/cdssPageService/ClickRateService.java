@@ -1,4 +1,4 @@
-package com.jhmk.cloudpage.service;
+package com.jhmk.cloudservice.cdssPageService;
 
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.bean.repository.service.ClickRateRepService;

@@ -30,8 +30,6 @@ public class CdssPageService {
     RestTemplate restTemplate;
     @Autowired
     CdssPageService cdssPageService;
-//    @Autowired
-//    CommonService commonService;
 
     /**
      * 获取变化趋势
