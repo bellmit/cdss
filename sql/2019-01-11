@@ -1,0 +1,2 @@
+ALTER TABLE `rule_log_mapping` MODIFY COLUMN `log_id`  int(11) NOT NULL AFTER `id`;
+
