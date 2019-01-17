@@ -9,7 +9,7 @@ import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepServ
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
 import com.jhmk.cloudentity.page.bean.ClickRate;
 import com.jhmk.cloudentity.page.bean.repository.service.ClickRateRepService;
-import com.jhmk.cloudpage.service.ClickRateService;
+import com.jhmk.cloudservice.cdssPageService.ClickRateService;
 import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.model.AtResponse;

@@ -5,7 +5,7 @@ import com.jhmk.cloudentity.earlywaring.entity.SmDepts;
 import com.jhmk.cloudentity.earlywaring.entity.SmUsers;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmDeptsRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmUsersRepService;
-import com.jhmk.cloudpage.service.SchedulerTask;
+import com.jhmk.cloudservice.cdssPageService.SchedulerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

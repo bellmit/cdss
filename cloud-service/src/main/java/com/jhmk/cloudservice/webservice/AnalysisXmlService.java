@@ -1,4 +1,4 @@
-package com.jhmk.cloudservice.warnService.webservice;
+package com.jhmk.cloudservice.webservice;
 
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;

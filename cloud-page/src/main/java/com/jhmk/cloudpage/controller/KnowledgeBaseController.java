@@ -1,15 +1,8 @@
 package com.jhmk.cloudpage.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
-import com.jhmk.cloudpage.service.KnowledgeBaseService;
-import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.config.UrlConstants;
+import com.jhmk.cloudservice.cdssPageService.KnowledgeBaseService;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
-import com.jhmk.cloudutil.util.StringUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 /**
  * @author ziyu.zhou
