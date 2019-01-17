@@ -41,20 +41,6 @@ public class WarnService {
     @Autowired
     RuleService ruleService;
 
-    public void ruleMatch(String data, String hospitalName) {
-        JSONObject object = JSON.parseObject(data);
-        logger.info("接受到的初始数据{}", JSONObject.toJSONString(object));
-        //页面来源 入院记录： 0 :保存病历 1：下诊断 2：打开病例 3：新建病例 6：下医嘱 7：病案首页 8：其他
-        String pageSource = object.getString("pageSource");//页面来源
-        logger.info("页面来源：{}", pageSource);
-        Rule rule = getRule(data, hospitalName);
-        //获取响应结果
-        String ruleMatchGetResp = ruleService.ruleMatchGetResp(rule);
-
-
-
-    }
-
     public Rule getRule(String data, String hospital) {
         JSONObject object = JSONObject.parseObject(data);
         String pageSource = object.getString("pageSource");//页面来源

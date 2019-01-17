@@ -49,7 +49,7 @@ public class JianyanbaogaoService {
         } else if ("gam".equals(hospitalName)) {//广安门
             jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
         } else if ("xzey".equals(hospitalName)) {//徐州二院
-            jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
+            jianyanbaogaoList = getXzeyJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
         } else if ("gyey".equals(hospitalName)) {//广医二院
             getJianyanbaogaoFromGyeyCdr(inpNo, patientId);
         }
@@ -163,113 +163,6 @@ public class JianyanbaogaoService {
         }
         return resultList;
     }
-
-    /**
-     * 徐州二院
-     * @param patientId
-     * @param visitId
-     * @return
-     */
-    public List<Jianyanbaogao> getXZEYJianyanbaogaoBypatientIdAndVisitId(String patientId, String visitId) {
-        List<Jianyanbaogao> jianyanbaogaoList = new LinkedList<>();
-        Connection conn = null;
-        CallableStatement cstmt = null;
-        ResultSet rs = null;
-        try {
-            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
-
-//            cstmt = conn.prepareCall(" select * from v_cdss_exam_report");
-            cstmt = conn.prepareCall("select * from v_cdss_lab_report WHERE patient_id=? and visit_id=?");
-            cstmt.setString(1, patientId);
-            cstmt.setString(2, visitId);
-            rs = cstmt.executeQuery();// 执行
-//            List<Company> companyList = new ArrayList<Company>();
-            while (rs.next()) {
-
-                Jianyanbaogao jianyanbaogao = new Jianyanbaogao();
-                Optional.ofNullable(rs.getString("lab_item_name")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setLab_item_name(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("report_time")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setReport_time(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("lab_qual_result")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setLab_qual_result(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("result_status_code")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setResult_status_code(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("reference_range")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setReference_range(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("specimen")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setSpecimen(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("lab_result_value")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setLab_result_value(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("lab_result_value_unit")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setLab_result_value_unit(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Optional.ofNullable(rs.getString("lab_sub_item_name")).ifPresent(s -> {
-                    try {
-                        jianyanbaogao.setLab_sub_item_name(new String(s.getBytes("iso-8859-1"), "GBK"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                });
-                jianyanbaogaoList.add(jianyanbaogao);
-            }
-        } catch (SQLException ex2) {
-            ex2.printStackTrace();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        } finally {
-            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
-        }
-
-        //检验报告获取最近时间的
-        Map<String, Optional<Jianyanbaogao>> collect = jianyanbaogaoList.stream().collect(Collectors.groupingBy(Jianyanbaogao::getIwantData, Collectors.maxBy((o1, o2) -> DateFormatUtil.parseDateBySdf(o1.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS).compareTo(DateFormatUtil.parseDateBySdf(o2.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS)))));
-        List<Jianyanbaogao> resultList = new ArrayList<>();
-        for (Map.Entry<String, Optional<Jianyanbaogao>> entry : collect.entrySet()) {
-            Jianyanbaogao student = entry.getValue().get();
-            resultList.add(student);
-        }
-        return resultList;
-    }
-
     /**
      * 3院数据中心
      */

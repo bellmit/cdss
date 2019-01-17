@@ -51,7 +51,7 @@ public class JianchabaogaoService {
         } else if ("gam".equals(hospitalName)) {//广安门
             jianchabaogaoList = getJianchabaogaoBypatientIdAndVisitId(patientId, visitId);
         } else if ("xzey".equals(hospitalName)) {//徐州二院
-//            jianchabaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
+            jianchabaogaoList = getXuZhouJianchabaogaoBypatientIdAndVisitId(patientId, visitId);
         } else if ("gyey".equals(hospitalName)) {//广医二院
             jianchabaogaoList = getJianchabaogaoFromGyeyCdr(rule);
         }
