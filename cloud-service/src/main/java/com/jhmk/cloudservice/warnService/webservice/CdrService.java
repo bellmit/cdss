@@ -22,10 +22,10 @@ public class CdrService {
     private static final Logger logger = LoggerFactory.getLogger(CdrService.class);
     static HdrQueryDataWsImpl hdrQueryDataWsImplPort = null;
 
-    static {
+  /*  static {
         HdrQueryDataService hdrQueryDataService = new HdrQueryDataService();
         hdrQueryDataWsImplPort = hdrQueryDataService.getHdrQueryDataWsImplPort();
-    }
+    }*/
 
     public static String getXml(Map<String, String> params, List<Map<String, String>> conditions) {
         StringBuffer sb = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

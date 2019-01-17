@@ -215,6 +215,58 @@ public class JianchabaogaoService {
         return jianchabaogaoList;
     }
 
+
+
+    /**
+     * 徐州二院
+     * @param
+     */
+    public List<Jianchabaogao> getXuZhouJianchabaogaoBypatientIdAndVisitId(String patientId, String visitId) {
+        List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
+        Connection conn = null;
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try {
+            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
+
+            cs = conn.prepareCall("select * from jhcdr_exam_report WHERE patient_id=? and visit_id=?");
+            cs.setString(1, patientId);
+            cs.setString(2, visitId);
+            rs = cs.executeQuery();// 执行
+            while (rs.next()) {
+                Jianchabaogao jianchabaogao = new Jianchabaogao();
+                //检查号
+                Optional.ofNullable(rs.getString("exam_no")).ifPresent(s -> {
+                    jianchabaogao.setExam_no(s);
+                });
+                //检查类别名称
+                Optional.ofNullable(rs.getString("exam_class")).ifPresent(s -> {
+                    jianchabaogao.setExam_item_name(s);
+                });
+                //检查时间
+                Optional.ofNullable(rs.getString("exam_date_time")).ifPresent(s -> {
+                    jianchabaogao.setExam_time(s);
+                });
+                //诊断所见
+                Optional.ofNullable(rs.getString("report_text_1")).ifPresent(s -> {
+                    jianchabaogao.setExam_feature(s);
+                });
+                //诊断印象
+                Optional.ofNullable(rs.getString("report_text_2")).ifPresent(s -> {
+                    jianchabaogao.setExam_diag(s);
+                });
+                jianchabaogaoList.add(jianchabaogao);
+            }
+        } catch (SQLException ex2) {
+            ex2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            dbConnectionUtil.closeConnectionDB(conn, cs, rs);
+        }
+        return jianchabaogaoList;
+    }
+
     public static void main(String[] args) {
 //        List<Jianchabaogao> jianyanbaogaoBypatientIdAndVisitId = getJianchabaogaoBypatientIdAndVisitId("115608460", "2");
 //        System.out.println(JSONObject.toJSONString(jianyanbaogaoBypatientIdAndVisitId));

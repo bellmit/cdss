@@ -366,6 +366,56 @@ public class JianyanbaogaoService {
         }
     }
 
+    /**
+     * 徐州二院
+     *
+     * @param patientId
+     * @param visitId
+     * @return
+     */
+    public List<Jianyanbaogao> getXzeyJianyanbaogaoBypatientIdAndVisitId(String patientId, String visitId) {
+        List<Jianyanbaogao> jianyanbaogaoList = new LinkedList<>();
+        Connection conn = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
+
+//            cstmt = conn.prepareCall(" select * from v_cdss_exam_report");
+            cstmt = conn.prepareCall("select * from jhcdr_lab_report WHERE patient_id=? and visit_id=?");
+            cstmt.setString(1, patientId);
+            cstmt.setString(2, visitId);
+            rs = cstmt.executeQuery();// 执行
+//            List<Company> companyList = new ArrayList<Company>();
+            while (rs.next()) {
+                Jianyanbaogao jianyanbaogao = new Jianyanbaogao();
+                Optional.ofNullable(rs.getString("tnp_no")).ifPresent(s -> {
+                    jianyanbaogao.setReport_no(s);
+                });
+                Optional.ofNullable(rs.getString("specimen")).ifPresent(s -> {
+                    jianyanbaogao.setSpecimen(s);
+                });
+                Optional.ofNullable(rs.getString("specimen")).ifPresent(s -> {
+                    jianyanbaogao.setSpecimen(s);
+                });
+                jianyanbaogaoList.add(jianyanbaogao);
+            }
+        } catch (SQLException ex2) {
+            ex2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+        }
+        //检验报告获取最近时间的
+        Map<String, Optional<Jianyanbaogao>> collect = jianyanbaogaoList.stream().collect(Collectors.groupingBy(Jianyanbaogao::getIwantData, Collectors.maxBy((o1, o2) -> DateFormatUtil.parseDateBySdf(o1.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS).compareTo(DateFormatUtil.parseDateBySdf(o2.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS)))));
+        List<Jianyanbaogao> resultList = new ArrayList<>();
+        for (Map.Entry<String, Optional<Jianyanbaogao>> entry : collect.entrySet()) {
+            Jianyanbaogao student = entry.getValue().get();
+            resultList.add(student);
+        }
+        return resultList;
+    }
 
     public static void main(String[] args) {
         JianyanbaogaoService jianyanbaogaoService = new JianyanbaogaoService();
