@@ -11,6 +11,7 @@ import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +49,7 @@ public class JianyanbaogaoService {
         } else if ("gam".equals(hospitalName)) {//广安门
             jianyanbaogaoList = getJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
         } else if ("xzey".equals(hospitalName)) {//徐州二院
-            jianyanbaogaoList = getXzeyJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
+            jianyanbaogaoList = getXZEYJianyanbaogaoBypatientIdAndVisitId(patientId, visitId);
         } else if ("gyey".equals(hospitalName)) {//广医二院
             getJianyanbaogaoFromGyeyCdr(inpNo, patientId);
         }
@@ -162,6 +163,98 @@ public class JianyanbaogaoService {
         }
         return resultList;
     }
+
+    /**
+     * 徐州二院 检验报告
+     * @param patientId
+     * @param visitId
+     * @return
+     */
+    public List<Jianyanbaogao> getXZEYJianyanbaogaoBypatientIdAndVisitId(String patientId, String visitId) {
+        List<OriginalJianyanbaogao> originalJianyanbaogaoList = new LinkedList<>();
+        Connection conn = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
+
+            cstmt = conn.prepareCall("select * from jhcdr_lab_report WHERE patient_id= ? and visit_id=?");
+            cstmt.setString(1, patientId);
+            cstmt.setString(2, visitId);
+            rs = cstmt.executeQuery();// 执行
+            //查询检验报告主表的数据
+            while (rs.next()) {
+                OriginalJianyanbaogao originalJianyanbaogao = new OriginalJianyanbaogao();
+                //住院号
+                Optional.ofNullable(rs.getString("report_date_time")).ifPresent(s -> {
+                    originalJianyanbaogao.setReport_time(s);
+                });
+                //样本名称
+                Optional.ofNullable(rs.getString("specimen")).ifPresent(s -> {
+                    originalJianyanbaogao.setSpecimen(s);
+                });
+                //医嘱名称
+                Optional.ofNullable(rs.getString("order_text")).ifPresent(s -> {
+                    originalJianyanbaogao.setLab_item_name(s);
+                });
+                //申请号（预检验报告细项关联的主表字段）
+                Optional.ofNullable(rs.getString("lab_apply_no")).ifPresent(s -> {
+                    originalJianyanbaogao.setReport_no(s);
+                });
+                //查询检验报告明细表
+                cstmt = conn.prepareCall("select * from jhcdr_lab_report_items WHERE lab_apply_no=? ");
+                cstmt.setString(1, originalJianyanbaogao.getReport_no());
+                rs = cstmt.executeQuery();// 执行
+
+                List<JianyanbaogaoForAuxiliary> jianyanbaogaoForAuxiliaryList = new ArrayList<>();
+                while (rs.next()) {
+                    JianyanbaogaoForAuxiliary jianyanbaogaoForAuxiliary = new JianyanbaogaoForAuxiliary();
+                    //检验项目名称
+                    Optional.ofNullable(rs.getString("lab_item_sname")).ifPresent(s -> {
+                        jianyanbaogaoForAuxiliary.setName(s);
+                    });
+                    //定性结果
+                    /*Optional.ofNullable(rs.getString("specimen")).ifPresent(s -> {
+                        jianyanbaogaoForAuxiliary.setSpecimen(s);
+                    });*/
+                    //检验定量结果值
+                    Optional.ofNullable(rs.getString("result")).ifPresent(s -> {
+                        jianyanbaogaoForAuxiliary.setLab_result(s);
+                    });
+                    //检验定量结果单位
+                    Optional.ofNullable(rs.getString("units")).ifPresent(s -> {
+                        jianyanbaogaoForAuxiliary.setUnit(s);
+                    });
+                    //检验定量结果变化 正常：N    偏高：H   偏低：L
+                    Optional.ofNullable(rs.getString("status")).ifPresent(s -> {
+                        jianyanbaogaoForAuxiliary.setResult_status_code(s);
+                    });
+                    //参考区间
+                    Optional.ofNullable(rs.getString("result_range")).ifPresent(s -> {
+                        jianyanbaogaoForAuxiliary.setReference_range(s);
+                    });
+                    //和检验主表关系字段
+                    Optional.ofNullable(rs.getString("lab_apply_no")).ifPresent(s -> {
+                        jianyanbaogaoForAuxiliary.setReport_no(s);
+                    });
+                    jianyanbaogaoForAuxiliaryList.add(jianyanbaogaoForAuxiliary);
+                }
+                originalJianyanbaogao.setLabTestItems(jianyanbaogaoForAuxiliaryList);
+                originalJianyanbaogaoList.add(originalJianyanbaogao);
+            }
+        } catch (SQLException ex2) {
+            ex2.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            dbConnectionUtil.closeConnectionDB(conn, cstmt, rs);
+        }
+
+        //检验报告获取最近时间的
+        List<Jianyanbaogao> jianyanbaogaoList = analysisXmlService.analysisOriginalJianyanbaogao2Jianyanbaogao(originalJianyanbaogaoList);
+        return jianyanbaogaoList;
+    }
+
     /**
      * 3院数据中心
      */

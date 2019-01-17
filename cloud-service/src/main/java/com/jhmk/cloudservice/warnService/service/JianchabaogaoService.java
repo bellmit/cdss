@@ -216,7 +216,7 @@ public class JianchabaogaoService {
 
 
     /**
-     * 徐州二院
+     * 徐州二院 检查报告
      * @param
      */
     public List<Jianchabaogao> getXuZhouJianchabaogaoBypatientIdAndVisitId(String patientId, String visitId) {
