@@ -38,6 +38,11 @@ public class KnowledgeBaseService {
         typeMap.put("lab_sub", "检验细项");
     }
 
+    /**
+     * 获取uurl
+     * @param map
+     * @return
+     */
     public String getResultUrl(String map) {
         JSONObject object = JSONObject.parseObject(map);
         String name = object.getString("name");
