@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * @author ziyu.zhou
  * @date 2018/7/23 14:55
+ * 检验报告主项
  */
 
 public class OriginalJianyanbaogao {
