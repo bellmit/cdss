@@ -1,5 +1,6 @@
 package com.jhmk.cloudpage.controller;
 
+import com.jhmk.cloudentity.base.BaseController;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,5 +13,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping
 @Api(description = "治疗页面功能列表", value = "治疗页面控制层")
-public class TreatmentController {
+public class TreatmentController extends BaseController{
 }

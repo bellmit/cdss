@@ -46,7 +46,7 @@ public class WarnController extends BaseController {
     @Autowired
     RuleService ruleService;
 
-    @ApiOperation(value = "规则提醒", notes = "注意参数:(病历信息，如入院记录，病历诊断等)",
+    @ApiOperation(value = "规则提醒", notes = "请求数据:    @ApiOperation(value = \"规则提醒\", notes = \"请求数据:(病历信息，如入院记录，病历诊断等)\",\n",
             httpMethod = "POST", responseContainer = "Map")
     @ApiResponses({@ApiResponse(code = 200, message = "成功")})
     @ApiImplicitParams({
