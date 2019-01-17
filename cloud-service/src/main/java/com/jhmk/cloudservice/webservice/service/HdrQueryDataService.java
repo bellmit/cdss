@@ -1,5 +1,5 @@
 
-package com.jhmk.cloudservice.warnService.webservice.service;
+package com.jhmk.cloudservice.webservice.service;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.*;

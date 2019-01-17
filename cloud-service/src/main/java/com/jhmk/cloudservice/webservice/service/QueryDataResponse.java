@@ -1,5 +1,5 @@
 
-package com.jhmk.cloudservice.warnService.webservice.service;
+package com.jhmk.cloudservice.webservice.service;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,16 +8,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>testWSResponse complex type�� Java �ࡣ
+ * <p>queryDataResponse complex type�� Java �ࡣ
  *
  * <p>����ģʽƬ��ָ�������ڴ����е�Ԥ�����ݡ�
  *
  * <pre>
- * &lt;complexType name="testWSResponse">
+ * &lt;complexType name="queryDataResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -27,23 +27,23 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TestWSResponse", propOrder = {
+@XmlType(name = "QueryDataResponse", propOrder = {
     "_return"
 })
-public class TestWSResponse {
+public class QueryDataResponse {
 
     @XmlElement(name = "return")
-    protected Integer _return;
+    protected String _return;
 
     /**
      * ��ȡreturn���Ե�ֵ��
      *
      * @return
      *     possible object is
-     *     {@link Integer }
+     *     {@link String }
      *
      */
-    public Integer getReturn() {
+    public String getReturn() {
         return _return;
     }
 
@@ -52,10 +52,10 @@ public class TestWSResponse {
      *
      * @param value
      *     allowed object is
-     *     {@link Integer }
+     *     {@link String }
      *
      */
-    public void setReturn(Integer value) {
+    public void setReturn(String value) {
         this._return = value;
     }
 

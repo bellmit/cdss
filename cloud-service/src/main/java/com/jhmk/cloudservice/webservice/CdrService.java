@@ -1,10 +1,9 @@
-package com.jhmk.cloudservice.warnService.webservice;
+package com.jhmk.cloudservice.webservice;
 
 
-import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataService;
-import com.jhmk.cloudservice.warnService.webservice.service.HdrQueryDataWsImpl;
+import com.jhmk.cloudservice.webservice.service.HdrQueryDataService;
+import com.jhmk.cloudservice.webservice.service.HdrQueryDataWsImpl;
 import com.jhmk.cloudutil.config.BaseConstants;
-import com.jhmk.cloudutil.util.DateFormatUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
