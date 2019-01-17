@@ -67,7 +67,7 @@ public class DiagnoseService {
                 diagnosis_time = blzd.getDiagnosis_time();
             }
         }
-        String page_source = "目前没填写数据，不清楚数据传递是在那一层";
+        String page_source = rule.getPageSource();
         DiagnosisReqLog reqLog = new DiagnosisReqLog();
         reqLog.setPid(pid);
         reqLog.setVid(vid);
