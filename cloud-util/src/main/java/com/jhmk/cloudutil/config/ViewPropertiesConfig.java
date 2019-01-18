@@ -20,6 +20,7 @@ public class ViewPropertiesConfig {
     private String ryjlurl;
     private String ryjlusername;
     private String ryjlpassword;
+    private String baogaourl;
 
     public String getDriver() {
         return driver;
@@ -75,5 +76,13 @@ public class ViewPropertiesConfig {
 
     public void setRyjlpassword(String ryjlpassword) {
         this.ryjlpassword = ryjlpassword;
+    }
+
+    public String getBaogaourl() {
+        return baogaourl;
+    }
+
+    public void setBaogaourl(String baogaourl) {
+        this.baogaourl = baogaourl;
     }
 }

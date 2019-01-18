@@ -126,6 +126,25 @@ public class DbConnectionUtil {
         }
     }
 
+
+    /**
+     * 生产数据库连接
+     * @return
+     */
+    public Connection openConnectionDBForProduct() {
+        Connection conn = null;
+        try {
+            Class.forName(viewPropertiesConfig.getDriver());
+            conn = DriverManager.getConnection(viewPropertiesConfig.getBaogaourl(), viewPropertiesConfig.getBaogaousername(), viewPropertiesConfig.getBaogaopassword());
+        } catch (SQLException ex2) {
+            ex2.printStackTrace();
+        } catch (Exception ex2) {
+            ex2.printStackTrace();
+        } finally {
+            return conn;
+        }
+    }
+
     public static void main(String[] args) {
 //        List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
         DbConnectionUtil dbConnectionUtil = new DbConnectionUtil();

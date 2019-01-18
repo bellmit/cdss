@@ -176,7 +176,7 @@ public class JianyanbaogaoService {
         CallableStatement cstmt = null;
         ResultSet rs = null;
         try {
-            conn = dbConnectionUtil.openGamConnectionDBForBaogao();
+            conn = dbConnectionUtil.openConnectionDBForProduct();
 
             cstmt = conn.prepareCall("select * from jhcdr_lab_report WHERE patient_id= ? and visit_id=?");
             cstmt.setString(1, patientId);
