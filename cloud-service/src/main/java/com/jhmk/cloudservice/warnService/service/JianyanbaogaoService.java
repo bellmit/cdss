@@ -5,6 +5,7 @@ import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
 import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
+import com.jhmk.cloudservice.cdssPageService.AnalyzeService;
 import com.jhmk.cloudservice.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
@@ -13,9 +14,11 @@ import com.jhmk.cloudutil.util.DbConnectionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.Socket;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -36,7 +39,14 @@ public class JianyanbaogaoService {
     @Autowired
     CdrService cdrService;
     @Autowired
+    AnalyzeService analyzeService;
+    @Autowired
     DbConnectionUtil dbConnectionUtil;
+
+    @Value("${socket.ip}")
+    private String ip;
+    @Value("${socket.port}")
+    private Integer port;
 
 
     public List<Jianyanbaogao> getJianyanbaogao(Rule rule, String hospitalName) {
@@ -54,6 +64,56 @@ public class JianyanbaogaoService {
             getJianyanbaogaoFromGyeyCdr(inpNo, patientId);
         }
         return jianyanbaogaoList;
+    }
+
+    public List<Jianyanbaogao> getJianyanbaogao(Rule rule) {
+        String patientId = rule.getPatient_id();
+        String visitId = rule.getVisit_id();
+        String inpNo = rule.getInp_no();
+        String returnData = getReturnData(ip, port, patientId, visitId, BaseConstants.JIANYANBAOGAO);
+        List<Jianyanbaogao> jianyanbaogaoList = analyzeService.analyzeJson2Jianyanbaogao(returnData);
+        return jianyanbaogaoList;
+    }
+
+    private String getReturnData(String ip, int port, String patientId, String visitId, String type) {
+
+        Socket socket = null; // 从socket中获取输入输出流
+        OutputStream os = null;
+        PrintWriter pw = null;
+        InputStream is = null;
+        BufferedReader br = null;
+        try {
+            socket = new Socket(ip, port);
+            //2、获取输出流，向服务器端发送信息
+            os = socket.getOutputStream();//字节输出流
+            pw = new PrintWriter(os);//将输出流包装成打印流
+            pw.write(patientId + "#" + visitId + "#2006-04-12 00:00:00##" + type);
+            pw.flush();
+            socket.shutdownOutput();
+            //3、获取输入流，并读取服务器端的响应信息
+            is = socket.getInputStream();
+            br = new BufferedReader(new InputStreamReader(is));
+            String info = null;
+            while ((info = br.readLine()) != null) {
+                System.out.println("我是客户端，服务器说：" + info);
+                return info;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4、关闭资源
+            try {
+                br.close();
+                is.close();
+                pw.close();
+                os.close();
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return null;
     }
 
 
@@ -166,6 +226,7 @@ public class JianyanbaogaoService {
 
     /**
      * 徐州二院 检验报告
+     *
      * @param patientId
      * @param visitId
      * @return
