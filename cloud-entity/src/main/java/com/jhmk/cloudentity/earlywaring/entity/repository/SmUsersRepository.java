@@ -10,13 +10,7 @@ import java.util.List;
 
 public interface SmUsersRepository extends PagingAndSortingRepository<SmUsers, String>, JpaSpecificationExecutor<SmUsers> {
 
-//    SmUsers findByUserIdAndStatus(String id, String status);
 
-    //    //删除
-//    @Modifying
-//    @Query("update SmUser u set u.deleted = ?1 where u.userId = ?2")
-//    int setUserDeleted(String deleted, String id);
-//
     //修改密码
     @Modifying
     @Query("update SmUsers u set u.userPwd = ?1 where u.userId = ?2")
@@ -29,4 +23,5 @@ public interface SmUsersRepository extends PagingAndSortingRepository<SmUsers, S
     long count();
 
     List<SmUsers> findByUserName(String username);
+
 }
