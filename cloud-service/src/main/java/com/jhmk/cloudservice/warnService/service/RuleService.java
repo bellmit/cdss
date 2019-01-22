@@ -1071,7 +1071,7 @@ public class RuleService {
             logger.info("当前rule实体类为：{}", JSONObject.toJSONString(rule));
             basicInfoService.saveAndFlush(rule);
             binganshouyeService.saveAndFlush(rule);
-            zhenduanService.saveAndFlush(rule);
+            zhenduanService.saveAndFlush(rule);//病例诊断、首页诊断
             ruyuanjiluService.saveAndFlush(rule);
         } catch (Exception e) {
             e.printStackTrace();

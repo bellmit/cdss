@@ -1,6 +1,7 @@
 package com.jhmk.cloudservice.warnService.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudentity.earlywaring.webservice.JianyanbaogaoForAuxiliary;
@@ -8,6 +9,7 @@ import com.jhmk.cloudentity.earlywaring.webservice.OriginalJianyanbaogao;
 import com.jhmk.cloudservice.cdssPageService.AnalyzeService;
 import com.jhmk.cloudservice.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.webservice.CdrService;
+import com.jhmk.cloudservice.webservice.SocketClientUtil;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
@@ -125,6 +127,10 @@ public class JianyanbaogaoService {
      * @return
      */
     public List<Jianyanbaogao> getJianyanbaogaoBypatientIdAndVisitId(String patientId, String visitId) {
+        /*SocketClientUtil util = new SocketClientUtil(ip, port);
+        util.sendData(patientId, visitId, "jianyanbaogao");
+        String jianyanbaogao = util.getData();
+        List<Jianyanbaogao> jianyanbaogaoList = analyzeService.analyzeJson2Jianyanbaogao(jianyanbaogao);*/
         List<Jianyanbaogao> jianyanbaogaoList = new LinkedList<>();
         Connection conn = null;
         CallableStatement cstmt = null;

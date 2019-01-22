@@ -48,6 +48,17 @@ public class EtlTest {
 
         System.out.println(beanList);
 
+    }@Test
+    public void testJianchabaogao() {
+        AnalyzeService analyzeService = new AnalyzeService();
+
+//        String data = getReturnData("192.168.8.42", 6667, "0009530899", "1", "jianyanbaogao");
+        String data = getReturnData("192.168.8.42", 6667, "0009583961", "1", "jianchabaogao");
+        List<Jianchabaogao> beanList = analyzeService.analyzeJson2Jianchabaogao(data);
+//        List<Jianchabaogao> beanList1 = analyzeService.analyzeJson2Jianchabaogao(data);
+
+        System.out.println(beanList);
+
     }
 
     private String getReturnData(String patientId, String visitId, String type) {
