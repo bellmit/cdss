@@ -1,16 +1,17 @@
 #可配置文件
 
 #urlConfig:
-#cdss规则匹配接口
+#cdss 的 resin 地址
 #cdssurl: http://172.16.254.163:8010
 #cdssurl: http://192.168.8.33:8011
 cdssurl: http://192.168.8.20:8011
-knowbaseurl: http://192.168.8.32:8889
+#知识库 同义词 层级表
+#knowbaseurl: http://192.168.8.32:8889
+knowbaseurl: http://192.168.8.31:8877
 #诊疗计划
 pageurl: http://172.16.254.163:8800
 #pageurl: http://172.16.254.163:8800
 #   分词接口
-participleurl: http://172.16.254.163:8802
-participleurl: http://172.16.254.163:8802
-knowbasePageurl: http://192.168.8.31:8877
+participleurl: http://192.168.8.20:8801
+
 
