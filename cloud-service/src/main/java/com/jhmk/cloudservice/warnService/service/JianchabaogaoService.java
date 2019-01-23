@@ -1,7 +1,10 @@
 package com.jhmk.cloudservice.warnService.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudentity.common.JiaheRuleBean;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Binganshouye;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
 import com.jhmk.cloudservice.cdssPageService.AnalyzeService;
 import com.jhmk.cloudservice.webservice.AnalysisXmlService;
@@ -10,6 +13,7 @@ import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
 import com.jhmk.cloudutil.util.MapUtil;
 import com.jhmk.cloudservice.webservice.SocketClientUtil;
+import com.jhmk.cloudutil.util.SocketUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +45,26 @@ public class JianchabaogaoService {
     @Autowired
     DbConnectionUtil dbConnectionUtil;
     @Autowired
+    JianyanbaogaoService jianyanbaogaoService;
+    @Autowired
+    SocketUtil socketUtil;
+    @Autowired
     AnalyzeService analyzeService;
     @Value("${socket.ip}")
     private String ip;
     @Value("${socket.port}")
     private Integer port;
+
+
+    public List<Jianchabaogao> getJianchabaogao(JiaheRuleBean rule) {
+        Binganshouye binganshouye = rule.getBinganshouye();
+        String patientId = binganshouye.getPatient_id();
+        String visitId = binganshouye.getVisit_id();
+        String admission_time = binganshouye.getAdmission_time();
+        String returnData = socketUtil.getReturnData(ip, port, patientId, visitId, admission_time, BaseConstants.JIANCHABAOGAO);
+        List<Jianchabaogao> jianchabaogaoList = analyzeService.analyzeJson2Jianchabaogao(returnData);
+        return jianchabaogaoList;
+    }
 
     public List<Jianchabaogao> getJianchabaogao(Rule rule, String hospitalName) {
         String patientId = rule.getPatient_id();
@@ -222,9 +241,9 @@ public class JianchabaogaoService {
     }
 
 
-
     /**
      * 徐州二院 检查报告
+     *
      * @param
      */
     public List<Jianchabaogao> getXuZhouJianchabaogaoBypatientIdAndVisitId(String patientId, String visitId) {

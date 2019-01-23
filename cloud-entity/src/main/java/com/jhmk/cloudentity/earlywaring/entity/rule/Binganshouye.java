@@ -1,5 +1,7 @@
 package com.jhmk.cloudentity.earlywaring.entity.rule;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,6 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "rule_binganshouye", schema = "jhmk_waring")
+@Data
 public class Binganshouye {
     private int id;
     private String patient_id;
@@ -25,6 +28,8 @@ public class Binganshouye {
     private String pat_visit_dept_discharge_from_name;
     private String pat_visit_dept_discharge_from_code;
     private String drug_allergy_name;
+    private String admission_time;
+    private String discharge_time;
 
     private String inp_no;
     private String name;//病人姓名

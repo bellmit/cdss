@@ -1,6 +1,8 @@
 package com.jhmk.cloudservice.warnService.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudentity.common.JiaheRuleBean;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Binganshouye;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
@@ -13,8 +15,11 @@ import com.jhmk.cloudservice.webservice.SocketClientUtil;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DateFormatUtil;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
+import com.jhmk.cloudutil.util.SocketUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -36,12 +41,16 @@ import java.util.stream.Collectors;
 
 @Component
 public class JianyanbaogaoService {
+    Logger logger = LoggerFactory.getLogger(JianyanbaogaoService.class);
+
     @Autowired
     AnalysisXmlService analysisXmlService;
     @Autowired
     CdrService cdrService;
     @Autowired
     AnalyzeService analyzeService;
+    @Autowired
+    SocketUtil socketUtil;
     @Autowired
     DbConnectionUtil dbConnectionUtil;
 
@@ -68,54 +77,26 @@ public class JianyanbaogaoService {
         return jianyanbaogaoList;
     }
 
-    public List<Jianyanbaogao> getJianyanbaogao(Rule rule) {
+
+/*    public List<Jianyanbaogao> getJianyanbaogao(Rule rule) {
         String patientId = rule.getPatient_id();
         String visitId = rule.getVisit_id();
         String inpNo = rule.getInp_no();
-        String returnData = getReturnData(ip, port, patientId, visitId, BaseConstants.JIANYANBAOGAO);
+        String admission_time = rule.getAdmission_time();
+        String returnData = getReturnData(ip, port, patientId, visitId, admission_time, BaseConstants.JIANYANBAOGAO);
         List<Jianyanbaogao> jianyanbaogaoList = analyzeService.analyzeJson2Jianyanbaogao(returnData);
         return jianyanbaogaoList;
-    }
+    }*/
 
-    private String getReturnData(String ip, int port, String patientId, String visitId, String type) {
-
-        Socket socket = null; // 从socket中获取输入输出流
-        OutputStream os = null;
-        PrintWriter pw = null;
-        InputStream is = null;
-        BufferedReader br = null;
-        try {
-            socket = new Socket(ip, port);
-            //2、获取输出流，向服务器端发送信息
-            os = socket.getOutputStream();//字节输出流
-            pw = new PrintWriter(os);//将输出流包装成打印流
-            pw.write(patientId + "#" + visitId + "#2006-04-12 00:00:00##" + type);
-            pw.flush();
-            socket.shutdownOutput();
-            //3、获取输入流，并读取服务器端的响应信息
-            is = socket.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            String info = null;
-            while ((info = br.readLine()) != null) {
-                System.out.println("我是客户端，服务器说：" + info);
-                return info;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            //4、关闭资源
-            try {
-                br.close();
-                is.close();
-                pw.close();
-                os.close();
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return null;
+    //获取嘉和服务检验报告
+    public List<Jianyanbaogao> getJianyanbaogao(JiaheRuleBean rule) {
+        Binganshouye binganshouye = rule.getBinganshouye();
+        String patientId = binganshouye.getPatient_id();
+        String visitId = binganshouye.getVisit_id();
+        String admission_time = binganshouye.getAdmission_time();
+        String returnData = socketUtil.getReturnData(ip, port, patientId, visitId, admission_time, BaseConstants.JIANYANBAOGAO);
+        List<Jianyanbaogao> jianyanbaogaoList = analyzeService.analyzeJson2Jianyanbaogao(returnData);
+        return jianyanbaogaoList;
     }
 
 
