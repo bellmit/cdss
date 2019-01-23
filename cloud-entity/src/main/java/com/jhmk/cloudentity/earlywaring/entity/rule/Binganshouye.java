@@ -29,11 +29,15 @@ public class Binganshouye {
     private String pat_visit_dept_discharge_from_code;
     private String drug_allergy_name;
     private String admission_time;
+    private String doctor_name;
+    private String patient_name;
     private String discharge_time;
 
     private String inp_no;
     private String name;//病人姓名
     private String bed_no;//床号
+
+
 
     @Id
     @Column(name = "id", nullable = false)
