@@ -211,6 +211,18 @@ public class JianyanbaogaoService {
         return resultList;
     }
 
+
+    public List<Jianyanbaogao> getDistinctJianyanbaogao(List<Jianyanbaogao> jianyanbaogaoList) {
+        //检验报告获取最近时间的
+        Map<String, Optional<Jianyanbaogao>> collect = jianyanbaogaoList.stream().collect(Collectors.groupingBy(Jianyanbaogao::getIwantData, Collectors.maxBy((o1, o2) -> DateFormatUtil.parseDateBySdf(o1.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS).compareTo(DateFormatUtil.parseDateBySdf(o2.getReport_time(), DateFormatUtil.DATETIME_PATTERN_SS)))));
+        List<Jianyanbaogao> resultList = new ArrayList<>();
+        for (Map.Entry<String, Optional<Jianyanbaogao>> entry : collect.entrySet()) {
+            Jianyanbaogao student = entry.getValue().get();
+            resultList.add(student);
+        }
+        return resultList;
+    }
+
     /**
      * 徐州二院 检验报告
      *
