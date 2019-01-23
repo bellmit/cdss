@@ -75,7 +75,7 @@ public class KnowledgeBaseService {
      * @return
      */
     public String getUrl(String keywords, String id, String type) {
-        StringBuilder sb = new StringBuilder(urlPropertiesConfig.getKnowbasePageurl() + "/detail.html?keywords=");
+        StringBuilder sb = new StringBuilder(urlPropertiesConfig.getKnowbaseurl() + "/detail.html?keywords=");
         sb.append(keywords)
                 .append("&thkey=")
                 .append(keywords)
@@ -93,7 +93,7 @@ public class KnowledgeBaseService {
      * @return
      */
     public String getUrl(String keywords) {
-        StringBuilder sb = new StringBuilder(urlPropertiesConfig.getKnowbasePageurl() + "/detail.html?keywords=");
+        StringBuilder sb = new StringBuilder(urlPropertiesConfig.getKnowbaseurl() + "/detail.html?keywords=");
         sb.append(keywords)
                 .append("&filterField=");
         return sb.toString();

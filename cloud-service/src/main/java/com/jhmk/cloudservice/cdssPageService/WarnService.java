@@ -2,11 +2,9 @@ package com.jhmk.cloudservice.cdssPageService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudentity.earlywaring.entity.repository.service.RuyuanjiluRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhuRepService;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Jianyanbaogao;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
-import com.jhmk.cloudentity.earlywaring.entity.rule.Yizhu;
+import com.jhmk.cloudentity.earlywaring.entity.rule.*;
 import com.jhmk.cloudservice.warnService.service.*;
 import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +35,10 @@ public class WarnService {
     YizhuRepService yizhuRepService;
     @Autowired
     YizhuService yizhuService;
+    @Autowired
+    RuyuanjiluRepService ruyuanjiluRepService;
+    @Autowired
+    RuyuanjiluService ruyuanjiluService;
     @Autowired
     RuleService ruleService;
 
@@ -83,5 +85,34 @@ public class WarnService {
         }
         return null;
     }
+
+    /**
+     * @param data 原始数据
+     * @param form emr厂商  分为嘉和和其他
+     * @return
+     */
+    public Rule analyzeEmrData2Rule(String data, String form) {
+        JSONObject parse = JSONObject.parseObject(data);
+        Rule rule = Rule.fill(parse);
+        String wenshuxinxi = parse.getString("wenshuxinxi");
+        JSONObject wenshuxinxiJsonObj = parse.getJSONObject("wenshuxinxi");
+        String key = wenshuxinxiJsonObj.getString("key");
+        Ruyuanjilu ruyuanjilu = null;
+        if (StringUtils.isNotBlank(key) && "EMR09.00.01".equals(key)) {
+            String participleStringResult = ruyuanjiluService.getParticipleStringResult(wenshuxinxi, null);
+            ruyuanjilu = ruyuanjiluService.analyzeParticipleResult2Ruyuanjilu(participleStringResult, null);
+            rule.setRuyuanjilu(ruyuanjilu);
+            //更新入院记录
+            ruyuanjiluService.saveAndFlush(rule);
+        } else {
+            List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findAllByPatientIdAndVisitId(rule.getPatient_id(), rule.getVisit_id());
+            if (allByPatientIdAndVisitId != null && allByPatientIdAndVisitId.size() > 0) {
+                ruyuanjilu = allByPatientIdAndVisitId.get(0);
+                rule.setRuyuanjilu(ruyuanjilu);
+            }
+        }
+        return rule;
+    }
+
 
 }
