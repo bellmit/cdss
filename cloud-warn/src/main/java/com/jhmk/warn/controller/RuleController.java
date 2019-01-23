@@ -39,7 +39,7 @@ import java.util.concurrent.*;
  * 规则管理对外接口
  */
 @Controller
-@RequestMapping("/warn/rule")
+@RequestMapping("/rule")
 public class RuleController extends BaseEntityController<Object> {
 
     @Autowired

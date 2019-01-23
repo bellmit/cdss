@@ -35,7 +35,7 @@ import java.util.*;
  * @date 2018/9/21 14:36
  */
 @Controller
-@RequestMapping("warn/temp")
+@RequestMapping("/temp")
 public class TempController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(CmsController.class);
 

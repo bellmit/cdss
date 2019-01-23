@@ -27,7 +27,7 @@ import java.util.Map;
  * 菜单对外接口
  */
 @Controller
-@RequestMapping("/warn/module")
+@RequestMapping("/module")
 public class ModuleController extends BaseEntityController<SmModule> {
 
     private static final Logger logger = LoggerFactory.getLogger(ModuleController.class);

@@ -36,7 +36,7 @@ import java.util.concurrent.ExecutionException;
  * @date 2018/7/24 15:46
  */
 @Controller
-@RequestMapping("/warn/match")
+@RequestMapping("/match")
 public class RuleMatchController extends BaseEntityController<UserModel> {
 
     private static final Logger logger = LoggerFactory.getLogger(RuleMatchController.class);

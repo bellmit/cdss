@@ -27,7 +27,7 @@ import java.util.Map;
  * 用户管理对外接口
  */
 @Controller
-@RequestMapping("/warn/users")
+@RequestMapping("/users")
 public class UsersController extends BaseEntityController<SmUsers> {
 
     private static final Logger logger = LoggerFactory.getLogger(UsersController.class);

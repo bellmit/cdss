@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutionException;
  */
 
 @Controller
-@RequestMapping("warn/standard")
+@RequestMapping("/standard")
 public class StandardRuleController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(StandardRuleController.class);
 

@@ -37,7 +37,7 @@ import java.util.*;
  * 触发规则日志对外接口
  */
 @Controller
-@RequestMapping("/warn/smHosptailLog")
+@RequestMapping("/smHosptailLog")
 public class HosptailLogController extends BaseEntityController<SmHospitalLog> {
 
 
