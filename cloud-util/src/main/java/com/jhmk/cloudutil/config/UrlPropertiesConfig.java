@@ -1,5 +1,6 @@
 package com.jhmk.cloudutil.config;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties()
 @PropertySource(value = "classpath:urlConfig.yml")
+@Data
 public class UrlPropertiesConfig {
 
     private String cdssurl;
@@ -19,54 +21,4 @@ public class UrlPropertiesConfig {
     private String esurl;
     //知识库
     private String knowbaseurl;
-    //知识库页面地址
-    private String knowbasePageurl;
-
-    public String getCdssurl() {
-        return cdssurl;
-    }
-
-    public void setCdssurl(String cdssurl) {
-        this.cdssurl = cdssurl;
-    }
-
-    public String getPageurl() {
-        return pageurl;
-    }
-
-    public void setPageurl(String pageurl) {
-        this.pageurl = pageurl;
-    }
-
-    public String getParticipleurl() {
-        return participleurl;
-    }
-
-    public void setParticipleurl(String participleurl) {
-        this.participleurl = participleurl;
-    }
-
-    public String getEsurl() {
-        return esurl;
-    }
-
-    public void setEsurl(String esurl) {
-        this.esurl = esurl;
-    }
-
-    public String getKnowbaseurl() {
-        return knowbaseurl;
-    }
-
-    public void setKnowbaseurl(String knowbaseurl) {
-        this.knowbaseurl = knowbaseurl;
-    }
-
-    public String getKnowbasePageurl() {
-        return knowbasePageurl;
-    }
-
-    public void setKnowbasePageurl(String knowbasePageurl) {
-        this.knowbasePageurl = knowbasePageurl;
-    }
 }
