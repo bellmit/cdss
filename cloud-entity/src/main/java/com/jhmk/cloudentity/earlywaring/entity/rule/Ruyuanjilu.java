@@ -143,22 +143,22 @@ public class Ruyuanjilu {
             return false;
         }
         Ruyuanjilu that = (Ruyuanjilu) o;
-        return id == that.id &&
+        return
                 Objects.equals(patient_id, that.patient_id) &&
-                Objects.equals(visit_id, that.visit_id) &&
-                Objects.equals(chief_complaint, that.chief_complaint) &&
-                Objects.equals(history_of_present_illness, that.history_of_present_illness) &&
-                Objects.equals(history_of_past_illness, that.history_of_past_illness) &&
-                Objects.equals(social_history, that.social_history) &&
-                Objects.equals(history_of_family_member_diseases, that.history_of_family_member_diseases) &&
-                Objects.equals(menstrual_and_obstetrical_histories, that.menstrual_and_obstetrical_histories) &&
-                Objects.equals(physical_examination, that.physical_examination) &&
-                Objects.equals(auxiliary_examination, that.auxiliary_examination);
+                        Objects.equals(visit_id, that.visit_id) &&
+                        Objects.equals(chief_complaint, that.chief_complaint) &&
+                        Objects.equals(history_of_present_illness, that.history_of_present_illness) &&
+                        Objects.equals(history_of_past_illness, that.history_of_past_illness) &&
+                        Objects.equals(social_history, that.social_history) &&
+                        Objects.equals(history_of_family_member_diseases, that.history_of_family_member_diseases) &&
+                        Objects.equals(menstrual_and_obstetrical_histories, that.menstrual_and_obstetrical_histories) &&
+                        Objects.equals(physical_examination, that.physical_examination) &&
+                        Objects.equals(auxiliary_examination, that.auxiliary_examination);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, patient_id, visit_id, chief_complaint, history_of_present_illness, history_of_past_illness, social_history, history_of_family_member_diseases, menstrual_and_obstetrical_histories, physical_examination, auxiliary_examination);
+        return Objects.hash(patient_id, visit_id, chief_complaint, history_of_present_illness, history_of_past_illness, social_history, history_of_family_member_diseases, menstrual_and_obstetrical_histories, physical_examination, auxiliary_examination);
     }
 }
