@@ -48,12 +48,19 @@ public class RuyuanjiluService {
         String patient_id = rule.getPatient_id();
         String visit_id = rule.getVisit_id();
         Ruyuanjilu ruyuanjilu = rule.getRuyuanjilu();
-        if (ruyuanjilu.getChief_complaint() == null && ruyuanjilu.getHistory_of_present_illness() == null) {
-        } else {
-            ruyuanjiluRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
+        List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
+        if (allByPatientIdAndVisitId != null && allByPatientIdAndVisitId.size() > 0) {
+            Ruyuanjilu ruyuanjilu1 = allByPatientIdAndVisitId.get(0);
+            if (ruyuanjilu.equals(ruyuanjilu1)){
+            }else {
+                ruyuanjiluRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
+                ruyuanjiluRepService.save(ruyuanjilu);
+            }
+        }else {
             ruyuanjiluRepService.save(ruyuanjilu);
         }
     }
+
 
     /**
      * 广安门 获取视图的入院记录
@@ -205,6 +212,47 @@ public class RuyuanjiluService {
             mapList.add(map);
         }
         return mapList;
+    }
+
+
+    /**
+     * @param ruyaunjiluHtml 入院记录的htmk
+     * @param form           厂商
+     * @return 分词后的结果
+     */
+    public String getParticipleStringResult(String ruyaunjiluHtml, String form) {
+        Object parse = JSONObject.parse(ruyaunjiluHtml);
+        String returnData = restTemplate.postForObject(urlPropertiesConfig.getParticipleurl() + UrlConstants.segwordment, JSONObject.toJSON(parse), String.class);
+        JSONObject object = JSONObject.parseObject(returnData);
+        return JSONObject.toJSONString(object);
+    }
+
+
+    /**
+     * 解析分词后的数据为 实体
+     *
+     * @param ruyaunjilurRsult
+     * @param form
+     * @return
+     */
+    public Ruyuanjilu analyzeParticipleResult2Ruyuanjilu(String ruyaunjilurRsult, String form) {
+        Ruyuanjilu ruyuanjilu = new Ruyuanjilu();
+        if (StringUtils.isNotBlank(ruyaunjilurRsult)) {
+            JSONObject jsonObject = JSONObject.parseObject(ruyaunjilurRsult);
+            JSONObject resultStatus = jsonObject.getJSONObject("result_status");
+            if ("success".equals(resultStatus.getString("result_code"))) {
+                JSONObject result = jsonObject.getJSONObject("result");
+                JSONObject ruyuanjiluJObj = result.getJSONObject("ruyuanjilu");
+                Optional.ofNullable(ruyuanjiluJObj.getJSONObject("chief_complaint")).ifPresent(s -> ruyuanjilu.setChief_complaint(s.getString("src")));
+                Optional.ofNullable(ruyuanjiluJObj.getJSONObject("physical_examination")).ifPresent(s -> ruyuanjilu.setPhysical_examination(s.getString("src")));
+                Optional.ofNullable(ruyuanjiluJObj.getJSONObject("social_history")).ifPresent(s -> ruyuanjilu.setSocial_history(s.getString("src")));
+                Optional.ofNullable(ruyuanjiluJObj.getJSONObject("history_of_family_member_diseases")).ifPresent(s -> ruyuanjilu.setHistory_of_family_member_diseases(s.getString("src")));
+                Optional.ofNullable(ruyuanjiluJObj.getJSONObject("history_of_present_illness")).ifPresent(s -> ruyuanjilu.setHistory_of_present_illness(s.getString("src")));
+                Optional.ofNullable(ruyuanjiluJObj.getJSONObject("menstrual_and_obstetrical_histories")).ifPresent(s -> ruyuanjilu.setMenstrual_and_obstetrical_histories(s.getString("src")));
+                Optional.ofNullable(ruyuanjiluJObj.getJSONObject("history_of_past_illness")).ifPresent(s -> ruyuanjilu.setHistory_of_past_illness(s.getString("src")));
+            }
+        }
+        return ruyuanjilu;
     }
 
 
