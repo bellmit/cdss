@@ -81,6 +81,12 @@ public class UrlConstants {
     public static final String getAllChildDisease = "/med/cdss/getAllChildDisease.json";
     //根据药品层级，返回该层级的所有药品
     public static final String getMedicineFromLevelName = "/med/cdss/getMedicineFromLevelName.json";
+//    public static final String parseCdss = "/med/query/parseCdss.json";
+
+
+
+    //亚飞分词接口
+    public static final String segwordment = "/document/segwordment";
 
 
 
