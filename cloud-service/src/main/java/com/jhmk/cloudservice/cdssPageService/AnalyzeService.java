@@ -102,14 +102,16 @@ public class AnalyzeService {
         List<Jianchabaogao> beanList = new ArrayList<>();
         if (StringUtils.isNotBlank(json)) {
             JSONObject object = JSONObject.parseObject(json);
-            JSONArray jsonArray = object.getJSONArray(BaseConstants.JIANCHABAOGAO);
+            Object o = object.get(BaseConstants.JIANCHABAOGAO);
+            beanList = JSONObject.parseObject(o.toString(), new TypeReference<List<Jianchabaogao>>() {});
+            /*JSONArray jsonArray = object.getJSONArray(BaseConstants.JIANCHABAOGAO);
             Iterator<Object> iterator = jsonArray.iterator();
             while (iterator.hasNext()) {
                 Binglizhenduan bean = new Binglizhenduan();
                 JSONObject next = (JSONObject) iterator.next();
 //                Optional.ofNullable(next.getString("DIAGNOSIS_TIME"))
 //                System.out.println(next);
-            }
+            }*/
         }
         return beanList;
 

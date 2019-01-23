@@ -3,15 +3,18 @@ package com.jhmk.cloudservice.warnService.service;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Jianchabaogao;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
+import com.jhmk.cloudservice.cdssPageService.AnalyzeService;
 import com.jhmk.cloudservice.webservice.AnalysisXmlService;
 import com.jhmk.cloudservice.webservice.CdrService;
 import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
 import com.jhmk.cloudutil.util.MapUtil;
+import com.jhmk.cloudservice.webservice.SocketClientUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -37,7 +40,12 @@ public class JianchabaogaoService {
     AnalysisXmlService analysisXmlService;
     @Autowired
     DbConnectionUtil dbConnectionUtil;
-
+    @Autowired
+    AnalyzeService analyzeService;
+    @Value("${socket.ip}")
+    private String ip;
+    @Value("${socket.port}")
+    private Integer port;
 
     public List<Jianchabaogao> getJianchabaogao(Rule rule, String hospitalName) {
         String patientId = rule.getPatient_id();
@@ -220,6 +228,12 @@ public class JianchabaogaoService {
      * @param
      */
     public List<Jianchabaogao> getXuZhouJianchabaogaoBypatientIdAndVisitId(String patientId, String visitId) {
+
+//        SocketClientUtil util = new SocketClientUtil(ip, port);
+//        util.sendData(patientId, visitId, "jianchabaogao");
+//        String jianchabaogao = util.getData();
+//        List<Jianchabaogao> jianchabaogaoList = analyzeService.analyzeJson2Jianchabaogao(jianchabaogao);
+
         List<Jianchabaogao> jianchabaogaoList = new LinkedList<>();
         Connection conn = null;
         CallableStatement cs = null;

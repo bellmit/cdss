@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,6 +81,8 @@ public class MatchRuleController extends BaseEntityController<Object> {
     @Autowired
     ResolveRuleService resolveRuleService;
 
+    @Value("hospital")
+    private String hospital;
     /**
      * 广安门规则匹配
      *
@@ -125,9 +128,11 @@ public class MatchRuleController extends BaseEntityController<Object> {
             //解析一诉五史
             JSONObject temp = JSONObject.parseObject(s);
             rule = Rule.fill(temp);
-            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
+//            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogaoBypatientIdAndVisitId(patient_id, visit_id);
+            List<Jianyanbaogao> jianyanbaogaoList = jianyanbaogaoService.getJianyanbaogao(rule,hospital);
             rule.setJianyanbaogao(jianyanbaogaoList);
-            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogaoBypatientIdAndVisitId(patient_id, visit_id);
+//            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getXuZhouJianchabaogaoBypatientIdAndVisitId(patient_id, visit_id);
+            List<Jianchabaogao> jianchabaogaoList = jianchabaogaoService.getJianchabaogao(rule,hospital);
             rule.setJianchabaogao(jianchabaogaoList);
             List<Yizhu> yizhu = yizhuRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
             rule.setYizhu(yizhu);
