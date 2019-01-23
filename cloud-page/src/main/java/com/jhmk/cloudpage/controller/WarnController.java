@@ -84,7 +84,7 @@ public class WarnController extends BaseController {
             @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
     })
     @PostMapping("/interpretLab")
-    public void interpretLab (HttpServletResponse response, @RequestBody String map) {
+    public void interpretLab(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
         JSONObject object = JSONObject.parseObject(map);
         String patientId = object.getString("patientId");
@@ -95,5 +95,43 @@ public class WarnController extends BaseController {
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
+
+    @PostMapping("/ruleMatchNew")
+    public void ruleMatchNew(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        System.out.println(hospital);
+        //1. 拼接规则  基本信息 检验检查 医嘱
+        Rule rule = warnService.getRule(map, hospital);
+        //2. 规则匹配
+        logger.info("下诊断规则匹配json串：{}", JSONObject.toJSONString(rule));
+        String data = ruleService.ruleMatchByRuleBase(rule);
+        // 2.1 修改页面显示触发项的状态为  由 0（未修改的原始状态） 到 3（自动置灰的状态）
+        smShowLogRepService.updateShowLogStatus(3, rule.getDoctor_id(), rule.getPatient_id(), rule.getVisit_id(), 0);
+        // 2.2 将匹配结果入库
+        ruleService.add2LogTableNew(data, rule);
+        //3. 既往史匹配
+        //3.1 匹配结果入库
+        List<SmShowLog> logList = ruleService.add2ShowLog(rule, map);
+        resp.setData(logList);
+        resp.setResponseCode(ResponseCode.OK);
+        //4. 返回信息
+        wirte(response, resp);
+    }
+
+    @ApiOperation(value = "解析emr传参", notes = "将html解析为可用数据",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
+    })
+    @PostMapping("/analyzeHtml")
+    public void analyzeHtml(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        Rule rule = warnService.analyzeEmrData2Rule(map, null);
+        resp.setData(rule);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
 
 }
