@@ -2,14 +2,20 @@ package com.jhmk.cloudpage.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
+import com.jhmk.cloudentity.common.JiaheRuleBean;
 import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmShowLogRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Rule;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Ruyuanjilu;
+import com.jhmk.cloudpage.config.SocketPropConf;
 import com.jhmk.cloudservice.cdssPageService.WarnService;
 import com.jhmk.cloudservice.warnService.service.RuleService;
 import com.jhmk.cloudutil.model.AtResponse;
 import com.jhmk.cloudutil.model.ResponseCode;
+import com.jhmk.cloudutil.util.SocketUtil;
+import com.jhmk.cloudutil.util.StringUtil;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author ziyu.zhou
@@ -39,6 +45,8 @@ public class WarnController extends BaseController {
     WarnService warnService;
     @Autowired
     SmShowLogRepService smShowLogRepService;
+    @Autowired
+    SocketPropConf socketPropConf;
     @Autowired
     RuleService ruleService;
 
@@ -118,7 +126,7 @@ public class WarnController extends BaseController {
         wirte(response, resp);
     }
 
-    @ApiOperation(value = "解析emr传参", notes = "将html解析为可用数据",
+    @ApiOperation(value = "解析emr传参,规则匹配所需", notes = "将html解析为可用数据",
             httpMethod = "POST", responseContainer = "Map")
     @ApiResponses({@ApiResponse(code = 200, message = "成功")})
     @ApiImplicitParams({
@@ -127,11 +135,55 @@ public class WarnController extends BaseController {
     @PostMapping("/analyzeHtml")
     public void analyzeHtml(HttpServletResponse response, @RequestBody String map) {
         AtResponse resp = new AtResponse(System.currentTimeMillis());
-        Rule rule = warnService.analyzeEmrData2Rule(map, null);
-        resp.setData(rule);
+        JiaheRuleBean jiaheRuleBean = warnService.analyzeEmrData2Jiaherulebean(map, null, socketPropConf.getIp(), socketPropConf.getPort2());
+        resp.setData(jiaheRuleBean);
         resp.setResponseCode(ResponseCode.OK);
         wirte(response, resp);
     }
 
+    public void analyzeHtml2JiaheRuleBean(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        JiaheRuleBean jiaheRuleBean = warnService.analyzeEmrData2Jiaherulebean(map, null, socketPropConf.getIp(), socketPropConf.getPort2());
+        resp.setData(jiaheRuleBean);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+    @ApiOperation(value = "解析emr传参，常见病，罕见病等数据结构", notes = "将html解析为可用数据",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
+    })
+    @PostMapping("/analyzeHtmlTemp")
+    public void analyzeHtmlTemp(HttpServletResponse response, @RequestBody String map) {
+        AtResponse resp = new AtResponse(System.currentTimeMillis());
+        JiaheRuleBean jiaheRuleBean = warnService.analyzeEmrData2Jiaherulebean(map, null,socketPropConf.getIp(),socketPropConf.getPort2());
+        Ruyuanjilu ruyuanjilu = jiaheRuleBean.getRuyuanjilu();
+        List<Map<String, String>> ruyuanjiluMapList = new ArrayList<>(8);
+        Optional.ofNullable(ruyuanjilu.getChief_complaint()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("主诉", s)));
+        Optional.ofNullable(ruyuanjilu.getAuxiliary_examination()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("辅助检查", s)));
+        Optional.ofNullable(ruyuanjilu.getHistory_of_family_member_diseases()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("家族史", s)));
+        Optional.ofNullable(ruyuanjilu.getHistory_of_past_illness()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("既往史", s)));
+        Optional.ofNullable(ruyuanjilu.getHistory_of_present_illness()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("现病史", s)));
+        Optional.ofNullable(ruyuanjilu.getSocial_history()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("个人史", s)));
+        Optional.ofNullable(ruyuanjilu.getMenstrual_and_obstetrical_histories()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("婚育史", s)));
+        Optional.ofNullable(ruyuanjilu.getPhysical_examination()).ifPresent(s -> ruyuanjiluMapList.add(ruyuanjiluMap("专科检查", s)));
+        String string = JSONObject.toJSONString(jiaheRuleBean);
+        JSONObject object = JSONObject.parseObject(string);
+        object.put("ruyuanjilu", ruyuanjiluMapList);
+        resp.setData(object);
+        resp.setResponseCode(ResponseCode.OK);
+        wirte(response, resp);
+    }
+
+
+    public Map<String, String> ruyuanjiluMap(String key, String value) {
+        Map<String, String> tempMap = new HashMap<>(2);
+        tempMap.put("key", key);
+        tempMap.put("value", value);
+        return tempMap;
+
+    }
 
 }

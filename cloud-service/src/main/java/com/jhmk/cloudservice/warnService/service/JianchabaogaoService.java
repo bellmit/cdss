@@ -50,13 +50,10 @@ public class JianchabaogaoService {
     SocketUtil socketUtil;
     @Autowired
     AnalyzeService analyzeService;
-    @Value("${socket.ip}")
-    private String ip;
-    @Value("${socket.port}")
-    private Integer port;
 
 
-    public List<Jianchabaogao> getJianchabaogao(JiaheRuleBean rule) {
+
+    public List<Jianchabaogao> getJianchabaogao(JiaheRuleBean rule,String ip,int port) {
         Binganshouye binganshouye = rule.getBinganshouye();
         String patientId = binganshouye.getPatient_id();
         String visitId = binganshouye.getVisit_id();

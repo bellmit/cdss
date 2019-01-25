@@ -59,6 +59,7 @@ public class BaseConstants {
 
     public static final String BINGANSHOUYE="binganshouye";
     public static final String BINGLIZHENDUAN="binglizhenduan";
+    public static final String RUYUANJILU="ruyuanjilu";
     public static final String JIANYANBAOGAO="jianyanbaogao";
     public static final String JIANCHABAOGAO="jianchabaogao";
 

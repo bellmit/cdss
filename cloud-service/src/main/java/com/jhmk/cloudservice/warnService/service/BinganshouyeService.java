@@ -38,10 +38,7 @@ public class BinganshouyeService {
     SocketUtil socketUtil;
     @Autowired
     BinganshouyeRepService binganshouyeRepService;
-    @Value("${socket.ip}")
-    private String ip;
-    @Value("${socket.port2}")
-    private Integer port2;
+
 
     /**
      * 添加、覆盖规则基本信息 如果存在 就执行先删除 在添加操作
@@ -65,7 +62,7 @@ public class BinganshouyeService {
      *
      * @return
      */
-    public Binganshouye getBinganshouyeFromETL(String patientId, String visitId) {
+    public Binganshouye getBinganshouyeFromETL(String patientId, String visitId,String ip,int port2) {
         String returnData = socketUtil.getReturnData(ip, port2, patientId, visitId, null, BaseConstants.BINGANSHOUYE);
         Binganshouye binganshouye = analyzeJson2Binganshouye(returnData);
         return binganshouye;

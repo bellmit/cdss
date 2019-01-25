@@ -2,6 +2,7 @@ package com.jhmk.cloudentity.common;
 
 import com.jhmk.cloudentity.earlywaring.entity.rule.Binganshouye;
 import com.jhmk.cloudentity.earlywaring.entity.rule.Binglizhenduan;
+import com.jhmk.cloudentity.earlywaring.entity.rule.Ruyuanjilu;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 public class JiaheRuleBean implements Serializable {
     private Binganshouye binganshouye;
+    private Ruyuanjilu ruyuanjilu;
     private Huanzhexinxi huanzhexinxi;
     private Wenshuxinxi wenshuxinxi;
     private List<Binglizhenduan> binglizhenduanList;

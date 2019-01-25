@@ -54,10 +54,6 @@ public class JianyanbaogaoService {
     @Autowired
     DbConnectionUtil dbConnectionUtil;
 
-    @Value("${socket.ip}")
-    private String ip;
-    @Value("${socket.port}")
-    private Integer port;
 
 
     public List<Jianyanbaogao> getJianyanbaogao(Rule rule, String hospitalName) {
@@ -89,7 +85,7 @@ public class JianyanbaogaoService {
     }*/
 
     //获取嘉和服务检验报告
-    public List<Jianyanbaogao> getJianyanbaogao(JiaheRuleBean rule) {
+    public List<Jianyanbaogao> getJianyanbaogao(JiaheRuleBean rule,String ip,int port) {
         Binganshouye binganshouye = rule.getBinganshouye();
         String patientId = binganshouye.getPatient_id();
         String visitId = binganshouye.getVisit_id();

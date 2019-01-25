@@ -2,6 +2,7 @@ package com.jhmk.cloudservice.cdssPageService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jhmk.cloudentity.common.JiaheRuleBean;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.RuyuanjiluRepService;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.YizhuRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.*;
@@ -86,14 +87,60 @@ public class WarnService {
         return null;
     }
 
+    public Rule getRuleFromETL(String data, String hospital) {
+        JSONObject object = JSONObject.parseObject(data);
+        String pageSource = object.getString("pageSource");//页面来源
+        if (StringUtils.isEmpty(pageSource) || "test".equals(pageSource)) {
+            Map<String, String> paramMap = (Map) JSON.parse(data);
+            String s = ruleService.anaRule(paramMap);
+            String replace = StringUtil.stringTransform(s);
+            JSONObject parse = JSONObject.parseObject(replace);
+            Rule rule = Rule.fill(parse);
+            return rule;
+        } else if ("6".equals(pageSource)) {//医嘱 为6 其他做下诊断处理
+            List<Yizhu> yizhus = yizhuService.getYizhu(data, hospital);
+            if (Objects.nonNull(object)) {
+                String patient_id = object.getString("patient_id");
+                String visit_id = object.getString("visit_id");
+                String doctor_id = object.getString("doctor_id");
+                Rule rule = ruleService.getDiagnoseFromDatabase(patient_id, visit_id);
+                rule.setYizhu(yizhus);
+                rule.setDoctor_id(doctor_id);
+                //获取 拼接检验检查报告
+                List<Jianyanbaogao> jianyanbaogao = jianyanbaogaoService.getJianyanbaogao(rule, hospital);
+                rule.setJianyanbaogao(jianyanbaogao);
+                List<Jianchabaogao> jianchabaogao = jianchabaogaoService.getJianchabaogao(rule, hospital);
+                rule.setJianchabaogao(jianchabaogao);
+                return rule;
+            }
+        } else {
+            Map<String, String> parse = (Map) JSONObject.parse(data);
+            String s = ruleService.anaRule(parse);
+            JSONObject object1 = JSONObject.parseObject(s);
+            //解析一诉五史
+            Rule rule = Rule.fill(object1);
+            //获取 拼接检验检查报告
+            List<Jianyanbaogao> jianyanbaogao = jianyanbaogaoService.getJianyanbaogao(rule, hospital);
+            rule.setJianyanbaogao(jianyanbaogao);
+            List<Jianchabaogao> jianchabaogao = jianchabaogaoService.getJianchabaogao(rule, hospital);
+            rule.setJianchabaogao(jianchabaogao);
+            List<Yizhu> yizhuList = yizhuService.getYizhu(parse, hospital);
+            rule.setYizhu(yizhuList);
+            return rule;
+        }
+        return null;
+    }
+
     /**
      * @param data 原始数据
      * @param form emr厂商  分为嘉和和其他
      * @return
      */
-    public Rule analyzeEmrData2Rule(String data, String form) {
+    public JiaheRuleBean analyzeEmrData2Jiaherulebean(String data, String form, String ip, int port) {
+        JiaheRuleBean jiaheRuleBean=new JiaheRuleBean();
         JSONObject parse = JSONObject.parseObject(data);
-        Rule rule = Rule.fill(parse);
+        Binganshouye binganshouye = parse.getObject("binganshouye", Binganshouye.class);
+        jiaheRuleBean.setBinganshouye(binganshouye);
         String wenshuxinxi = parse.getString("wenshuxinxi");
         JSONObject wenshuxinxiJsonObj = parse.getJSONObject("wenshuxinxi");
         String key = wenshuxinxiJsonObj.getString("key");
@@ -101,17 +148,17 @@ public class WarnService {
         if (StringUtils.isNotBlank(key) && "EMR09.00.01".equals(key)) {
             String participleStringResult = ruyuanjiluService.getParticipleStringResult(wenshuxinxi, null);
             ruyuanjilu = ruyuanjiluService.analyzeParticipleResult2Ruyuanjilu(participleStringResult, null);
-            rule.setRuyuanjilu(ruyuanjilu);
+            jiaheRuleBean.setRuyuanjilu(ruyuanjilu);
             //更新入院记录
-            ruyuanjiluService.saveAndFlush(rule);
+//            ruyuanjiluService.saveAndFlush(rule);
         } else {
-            List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findAllByPatientIdAndVisitId(rule.getPatient_id(), rule.getVisit_id());
+            List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findAllByPatientIdAndVisitId(binganshouye.getPatient_id(), binganshouye.getVisit_id());
             if (allByPatientIdAndVisitId != null && allByPatientIdAndVisitId.size() > 0) {
                 ruyuanjilu = allByPatientIdAndVisitId.get(0);
-                rule.setRuyuanjilu(ruyuanjilu);
+                jiaheRuleBean.setRuyuanjilu(ruyuanjilu);
             }
         }
-        return rule;
+        return jiaheRuleBean;
     }
 
 

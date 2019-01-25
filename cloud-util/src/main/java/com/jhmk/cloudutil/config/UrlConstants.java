@@ -39,7 +39,13 @@ public class UrlConstants {
     public static final String groupbyidentification = "/med/cindecision/groupbyidentification.json";//  分组统计专科标识数据
     public static final String groupbycreatetime = "/med/cindecision/groupbycreatetime.json";// 传入 startDate  endDate 两个参数  按时间分组统计规则
     public static final String getWikiInfoByExpress = "/med/cdss/getWikiInfoByExpress.json";
+
     public static final String Emrdiseaseinfo = "/med/machinelearn/Emrdiseaseinfo.json";//推荐诊断
+    public static final String rareDiseaseinfo = "/med/machinelearn/rareDiseaseinfo.json";//疑似罕见病
+    public static final String recommendeddiffdiagnosis = "/med/cdss/recommendeddiffdiagnosis.json";//鉴别诊断
+
+    public static final String searchdiseaseassessment = "/med/cdss/searchdiseaseassessment.json";//评分量表自动化评分
+    public static final String list = "/med/case/list.json";//相似病历
 
 
     //医问道接口

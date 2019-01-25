@@ -2,15 +2,20 @@ package com.jhmk.cloudservice.warnService.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.jhmk.cloudentity.common.JiaheRuleBean;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.RuyuanjiluRepService;
 import com.jhmk.cloudentity.earlywaring.entity.rule.*;
+import com.jhmk.cloudutil.config.BaseConstants;
 import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlConstants;
 import com.jhmk.cloudutil.config.UrlPropertiesConfig;
 import com.jhmk.cloudutil.util.DbConnectionUtil;
 import com.jhmk.cloudutil.util.MapUtil;
+import com.jhmk.cloudutil.util.SocketUtil;
+import com.jhmk.cloudutil.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +46,8 @@ public class RuyuanjiluService {
     @Autowired
     RestTemplate restTemplate;
     @Autowired
+    SocketUtil socketUtil;
+    @Autowired
     RuyuanjiluRepService ruyuanjiluRepService;
 
     @Transactional
@@ -51,14 +58,42 @@ public class RuyuanjiluService {
         List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findAllByPatientIdAndVisitId(patient_id, visit_id);
         if (allByPatientIdAndVisitId != null && allByPatientIdAndVisitId.size() > 0) {
             Ruyuanjilu ruyuanjilu1 = allByPatientIdAndVisitId.get(0);
-            if (ruyuanjilu.equals(ruyuanjilu1)){
-            }else {
+            if (ruyuanjilu.equals(ruyuanjilu1)) {
+            } else {
                 ruyuanjiluRepService.deleteByPatient_idAndVisit_id(patient_id, visit_id);
                 ruyuanjiluRepService.save(ruyuanjilu);
             }
-        }else {
+        } else {
             ruyuanjiluRepService.save(ruyuanjilu);
         }
+    }
+
+
+    //获取嘉和服务检验报告
+    public Ruyuanjilu getRuyuanjilu(JiaheRuleBean rule, String ip, Integer port) {
+        Ruyuanjilu ruyuanjilu = new Ruyuanjilu();
+        Binganshouye binganshouye = rule.getBinganshouye();
+        String patientId = binganshouye.getPatient_id();
+        String visitId = binganshouye.getVisit_id();
+        String admission_time = binganshouye.getAdmission_time();
+
+        String json = socketUtil.getReturnData(ip, port, patientId, visitId, admission_time, BaseConstants.RUYUANJILU);
+        if (StringUtils.isNotBlank(json)) {
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray(BaseConstants.RUYUANJILU);
+            if (!jsonArray.isEmpty()) {
+                JSONObject object = jsonArray.getJSONObject(0);
+                JSONObject o = object.getJSONObject(BaseConstants.RUYUANJILU);
+                String mr_content_html = o.getString("MR_CONTENT_HTML");
+                Map<String, String> stringMap = new HashMap<>(3);
+                stringMap.put("key", "EMR09.00.01");
+                stringMap.put("topic", "入院记录");
+                stringMap.put("data", mr_content_html);
+                String participleStringResult = getParticipleStringResult(JSONObject.toJSONString(stringMap), null);
+                ruyuanjilu = analyzeParticipleResult2Ruyuanjilu(participleStringResult, null);
+            }
+        }
+        return ruyuanjilu;
     }
 
 

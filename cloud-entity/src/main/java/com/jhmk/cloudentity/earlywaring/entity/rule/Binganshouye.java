@@ -14,9 +14,19 @@ import java.util.Objects;
 @Table(name = "rule_binganshouye", schema = "jhmk_waring")
 @Data
 public class Binganshouye {
-    private int id;
+    private String doctor_id;
+    private String doctor_name;
+    private String dept_code;
+    private String inp_no;
+    private String warnSource;
     private String patient_id;
     private String visit_id;
+    private String pageSource;
+    //入院时间
+    private String admission_time;
+    //出院时间
+    private String discharge_time;
+    private int id;
     private String pat_info_sex_name;
     private String pat_info_age_value;
     private String pat_info_age_value_unit;
@@ -28,12 +38,7 @@ public class Binganshouye {
     private String pat_visit_dept_discharge_from_name;
     private String pat_visit_dept_discharge_from_code;
     private String drug_allergy_name;
-    private String admission_time;
-    private String doctor_name;
     private String patient_name;
-    private String discharge_time;
-
-    private String inp_no;
     private String name;//病人姓名
     private String bed_no;//床号
 
