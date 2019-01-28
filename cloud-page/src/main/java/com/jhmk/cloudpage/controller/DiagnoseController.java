@@ -84,10 +84,38 @@ public class DiagnoseController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
     })
-  @PostMapping("/recommendeddiffdiagnosis")
+    @PostMapping("/recommendeddiffdiagnosis")
     public void recommendeddiffdiagnosis(HttpServletResponse response, @RequestBody String map) {
         Object parse = JSONObject.parse(map);
         String s = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.recommendeddiffdiagnosis, parse, String.class);
+        //将接口返回的数据返回给前台
+        wirte(response, s);
+    }
+
+    @ApiOperation(value = "推荐检验", notes = "请求demo:{\"diseaseNames\":{\"脊椎关节强硬\":0.9994206428527832,\"颈椎间盘突出\":0.000306850706692785,\"颈后纵韧带骨化\":0.00015227560652419925,\"脊髓空洞症\":0.00006962403131183237,\"后纵韧带骨化\":0.000012698646969511174,\"颈椎不稳定\":0.000011994572560070083,\"神经根炎\":0.000008092190910247155,\"颈部脊髓损伤\":0.0000031228955776896328,\"泪道阻塞\":0.000002285853270223015,\"椎管内外占位性病变\":0.0000018172207774114213}}",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
+    })
+    @PostMapping("/labproperty")
+    public void labproperty(HttpServletResponse response, @RequestBody String map) {
+        Object parse = JSONObject.parse(map);
+        String s = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.labproperty, parse, String.class);
+        //将接口返回的数据返回给前台
+        wirte(response, s);
+    }
+
+    @ApiOperation(value = "推荐检查", notes = "请求demo:",
+            httpMethod = "POST", responseContainer = "Map")
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "map", value = "请求参数", required = true, paramType = "body")
+    })
+    @PostMapping("/examproperty")
+    public void examproperty(HttpServletResponse response, @RequestBody String map) {
+        Object parse = JSONObject.parse(map);
+        String s = restTemplate.postForObject(urlPropertiesConfig.getCdssurl() + UrlConstants.examproperty, parse, String.class);
         //将接口返回的数据返回给前台
         wirte(response, s);
     }

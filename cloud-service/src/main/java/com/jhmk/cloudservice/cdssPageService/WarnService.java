@@ -137,7 +137,7 @@ public class WarnService {
      * @return
      */
     public JiaheRuleBean analyzeEmrData2Jiaherulebean(String data, String form, String ip, int port) {
-        JiaheRuleBean jiaheRuleBean=new JiaheRuleBean();
+        JiaheRuleBean jiaheRuleBean = new JiaheRuleBean();
         JSONObject parse = JSONObject.parseObject(data);
         Binganshouye binganshouye = parse.getObject("binganshouye", Binganshouye.class);
         jiaheRuleBean.setBinganshouye(binganshouye);
@@ -152,11 +152,8 @@ public class WarnService {
             //更新入院记录
 //            ruyuanjiluService.saveAndFlush(rule);
         } else {
-            List<Ruyuanjilu> allByPatientIdAndVisitId = ruyuanjiluRepService.findAllByPatientIdAndVisitId(binganshouye.getPatient_id(), binganshouye.getVisit_id());
-            if (allByPatientIdAndVisitId != null && allByPatientIdAndVisitId.size() > 0) {
-                ruyuanjilu = allByPatientIdAndVisitId.get(0);
-                jiaheRuleBean.setRuyuanjilu(ruyuanjilu);
-            }
+            ruyuanjilu = ruyuanjiluService.getRuyuanjilu(jiaheRuleBean, ip, port);
+            jiaheRuleBean.setRuyuanjilu(ruyuanjilu);
         }
         return jiaheRuleBean;
     }

@@ -8,7 +8,6 @@ package com.jhmk.cloudpage.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jhmk.cloudentity.base.BaseController;
-import com.jhmk.cloudentity.earlywaring.entity.SmShowLog;
 import com.jhmk.cloudentity.earlywaring.entity.repository.service.SmShowLogRepService;
 import com.jhmk.cloudentity.page.bean.DrugTendency;
 import com.jhmk.cloudservice.cdssPageService.CdssPageService;
@@ -75,6 +74,7 @@ public class CdssPageController extends BaseController {
 
     /**
      * 诊疗计划
+     * todo 以后要删的功能
      *
      * @param response
      * @param map

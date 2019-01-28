@@ -43,6 +43,8 @@ public class UrlConstants {
     public static final String Emrdiseaseinfo = "/med/machinelearn/Emrdiseaseinfo.json";//推荐诊断
     public static final String rareDiseaseinfo = "/med/machinelearn/rareDiseaseinfo.json";//疑似罕见病
     public static final String recommendeddiffdiagnosis = "/med/cdss/recommendeddiffdiagnosis.json";//鉴别诊断
+    public static final String labproperty = "/med/disease/labproperty.json";//推荐检验
+    public static final String examproperty = "/med/disease/examproperty.json";//推荐检查
 
     public static final String searchdiseaseassessment = "/med/cdss/searchdiseaseassessment.json";//评分量表自动化评分
     public static final String list = "/med/case/list.json";//相似病历
