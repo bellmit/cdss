@@ -27,4 +27,5 @@ spring:
 hospital: bysy
 socket:
   ip: 192.168.8.42
-  port: 6667
+  port: 6667 #  端口号6667 可以测试：检查,检验,医嘱,门诊西医处方
+  port2: 6666 #   端口号6666 可以测试：binganshouye,binglizhenduan,shouyezhenduan,shouyeshoushu 以及病历文书
