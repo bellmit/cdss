@@ -257,6 +257,7 @@ public class RuyuanjiluService {
      */
     public String getParticipleStringResult(String ruyaunjiluHtml, String form) {
         Object parse = JSONObject.parse(ruyaunjiluHtml);
+        //调用亚飞分词接口
         String returnData = restTemplate.postForObject(urlPropertiesConfig.getParticipleurl() + UrlConstants.segwordment, JSONObject.toJSON(parse), String.class);
         JSONObject object = JSONObject.parseObject(returnData);
         return JSONObject.toJSONString(object);

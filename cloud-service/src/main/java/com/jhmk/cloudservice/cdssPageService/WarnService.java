@@ -143,10 +143,11 @@ public class WarnService {
         jiaheRuleBean.setBinganshouye(binganshouye);
         String wenshuxinxi = parse.getString("wenshuxinxi");
         JSONObject wenshuxinxiJsonObj = parse.getJSONObject("wenshuxinxi");
-        String key = wenshuxinxiJsonObj.getString("key");
+        String key = wenshuxinxiJsonObj.getString("mr_class_code");
         Ruyuanjilu ruyuanjilu = null;
         if (StringUtils.isNotBlank(key) && "EMR09.00.01".equals(key)) {
-            String participleStringResult = ruyuanjiluService.getParticipleStringResult(wenshuxinxi, null);
+            //调用亚飞分词接口
+           String participleStringResult = ruyuanjiluService.getParticipleStringResult(wenshuxinxi, null);
             ruyuanjilu = ruyuanjiluService.analyzeParticipleResult2Ruyuanjilu(participleStringResult, null);
             jiaheRuleBean.setRuyuanjilu(ruyuanjilu);
             //更新入院记录
